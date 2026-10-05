@@ -76,6 +76,19 @@ class VelaGuidanceEngineTest {
     }
 
     @Test
+    fun directionsOnlyLanesAreNotTreatedAsUsableGuidance() {
+        val lane =
+            VelaLane(
+                directionsMask = 2,
+                validMask = null,
+                activeMask = null
+            )
+
+        assertTrue(!lane.isActive)
+        assertTrue(!lane.isValid)
+    }
+
+    @Test
     fun activeLaneWinsOverValidLane() {
         val maneuver =
             VelaRouteManeuver(
