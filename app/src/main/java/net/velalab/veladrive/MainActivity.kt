@@ -22,6 +22,7 @@ import com.stadiamaps.ferrostar.core.NavigationUiState
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.ValhallaRouteClient
 import net.velalab.veladrive.core.navigation.VelaFerrostarController
+import net.velalab.veladrive.core.navigation.VelaGuidanceEngine
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     ferrostarController.isMuted,
                     null
                 )
-                guidance = VelaGuidanceSnapshot.from(uiState)
+                guidance = VelaGuidanceEngine.from(uiState)
                 isSimulationMuted = ferrostarController.isMuted
             }
         }
