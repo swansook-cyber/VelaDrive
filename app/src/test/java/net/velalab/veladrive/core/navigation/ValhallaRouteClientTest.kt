@@ -50,6 +50,56 @@ class ValhallaRouteClientTest {
         assertEquals(540.0, route.durationSeconds, 0.0001)
         assertEquals(2, route.points.size)
         assertTrue(route.points.first().latitude > 8.0)
+        assertTrue(route.maneuvers.isEmpty())
+    }
+
+    @Test
+    fun parsesValhallaTurnLanes() {
+        val points = listOf(
+            RoutePoint(8.086300, 98.906300),
+            RoutePoint(8.059000, 98.916700)
+        )
+        val shape = encodePolyline6(points)
+        val payload = """
+            {
+              "trip": {
+                "summary": {
+                  "length": 4.2,
+                  "time": 540.0
+                },
+                "legs": [
+                  {
+                    "shape": "$shape",
+                    "maneuvers": [
+                      {
+                        "instruction": "เลี้ยวซ้าย",
+                        "verbal_transition_alert_instruction": "เตรียมเลี้ยวซ้าย",
+                        "length": 0.2,
+                        "time": 30,
+                        "begin_shape_index": 0,
+                        "end_shape_index": 1,
+                        "lanes": [
+                          {"directions": 8, "active": 8},
+                          {"directions": 10, "valid": 8}
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+        """.trimIndent()
+
+        val route = ValhallaRouteClient("https://example.com").parseRoute(payload)
+
+        assertEquals(1, route.maneuvers.size)
+        val maneuver = route.maneuvers.first()
+        assertEquals("เลี้ยวซ้าย", maneuver.instruction)
+        assertEquals(listOf(0), maneuver.preferredLaneIndexes)
+        assertEquals("←", maneuver.lanes[0].displaySymbol)
+        assertEquals("←↑", maneuver.lanes[1].displaySymbol)
+        assertTrue(maneuver.lanes[0].isActive)
+        assertTrue(maneuver.lanes[1].isValid)
     }
 
     private fun encodePolyline6(points: List<RoutePoint>): String {
