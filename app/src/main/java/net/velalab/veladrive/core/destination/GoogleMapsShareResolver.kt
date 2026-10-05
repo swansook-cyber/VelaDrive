@@ -65,7 +65,7 @@ class GoogleMapsShareResolver(
 
         fun isAllowedGoogleMapsDestinationUrl(rawUrl: String): Boolean {
             return runCatching {
-                val url = okhttp3.HttpUrl.get(rawUrl)
+                val url = rawUrl.toHttpUrlOrNull() ?: return@runCatching false
                 val host = url.host.lowercase()
                 host == "google.com" ||
                     host.endsWith(".google.com") ||
