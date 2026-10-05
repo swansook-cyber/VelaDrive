@@ -56,7 +56,7 @@ class LongdoPoiClient(
 
             httpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
-                    throw IOException("Longdo POI HTTP \${response.code}")
+                    throw IOException("Longdo POI HTTP ${response.code}")
                 }
 
                 val body = response.body.string()
