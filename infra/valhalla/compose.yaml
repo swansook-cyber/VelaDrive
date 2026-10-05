@@ -9,7 +9,7 @@ services:
       tile_urls: "https://download.geofabrik.de/asia/thailand-latest.osm.pbf"
       server_threads: "2"
       use_tiles_ignore_pbf: "True"
-      force_rebuild: "False"
+      force_rebuild: "${VALHALLA_FORCE_REBUILD:-False}"
       build_elevation: "False"
       build_admins: "True"
       build_time_zones: "True"
