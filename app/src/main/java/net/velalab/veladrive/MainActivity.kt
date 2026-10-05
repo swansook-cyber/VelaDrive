@@ -172,11 +172,13 @@ class MainActivity : ComponentActivity() {
                     simulationError = null
                     shareError = null
                 }
-                ShareResolution.Unsupported -> {
-                    shareError = "ลิงก์ที่แชร์มายังไม่ใช่รูปแบบ Google Maps ที่รองรับ"
+                is ShareResolution.Unsupported -> {
+                    shareError =
+                        "ลิงก์ที่แชร์มายังไม่ใช่รูปแบบ Google Maps ที่รองรับ\n\nDIAG:\n${result.detail}"
                 }
-                ShareResolution.CouldNotResolve -> {
-                    shareError = "อ่านพิกัดจาก Google Maps ไม่สำเร็จ"
+                is ShareResolution.CouldNotResolve -> {
+                    shareError =
+                        "อ่านพิกัดจาก Google Maps ไม่สำเร็จ\n\nDIAG:\n${result.detail}"
                 }
             }
             isResolvingShare = false
