@@ -1,9 +1,6 @@
 package net.velalab.veladrive.core.navigation
 
 import android.content.Context
-import android.speech.tts.TextToSpeech
-import com.stadiamaps.ferrostar.core.AndroidTtsObserver
-import com.stadiamaps.ferrostar.core.AndroidTtsStatusListener
 import com.stadiamaps.ferrostar.core.FerrostarCore
 import com.stadiamaps.ferrostar.core.NavigationState
 import com.stadiamaps.ferrostar.core.http.OkHttpClientProvider.Companion.toOkHttpClientProvider
@@ -11,7 +8,6 @@ import com.stadiamaps.ferrostar.core.location.SimulatedLocationProvider
 import com.stadiamaps.ferrostar.core.withJsonOptions
 import java.time.Duration
 import java.time.Instant
-import java.util.Locale
 import kotlinx.coroutines.flow.StateFlow
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
@@ -42,27 +38,13 @@ class VelaFerrostarController(
             .build()
             .toOkHttpClientProvider()
 
-    private val ttsObserver = AndroidTtsObserver(context.applicationContext).apply {
-        statusObserver = object : AndroidTtsStatusListener {
-            override fun onTtsInitialized(tts: TextToSpeech?, status: Int) {
-                if (status == TextToSpeech.SUCCESS) {
-                    tts?.language = Locale("th", "TH")
-                }
-            }
-
-            override fun onTtsShutdownAndRelease() = Unit
-
-            override fun onTtsSpeakError(utteranceId: String, status: Int) = Unit
-        }
-    }
-
     private val routeProvider =
         WellKnownRouteProvider
             .Valhalla(valhallaBaseUrl.trimEnd('/') + "/route", "auto")
             .withJsonOptions(
                 mapOf(
                     "units" to "kilometers",
-                    "language" to "th-TH",
+                    "language" to "en-US",
                     "turn_lanes" to true
                 )
             )
@@ -80,33 +62,17 @@ class VelaFerrostarController(
                     RouteDeviationTracking.StaticThreshold(15u, 50.0),
                     CourseFiltering.SNAP_TO_ROUTE
                 )
-        ).apply {
-            spokenInstructionObserver = ttsObserver
-        }
+        )
 
     val state: StateFlow<NavigationState>
         get() = core.state
 
-    val isMuted: Boolean
-        get() = ttsObserver.isMuted
-
-    fun startTts() {
-        if (ttsObserver.tts == null) {
-            ttsObserver.start()
-        }
-    }
-
     fun shutdown() {
         core.stopNavigation()
-        ttsObserver.shutdown()
     }
 
     fun stopSimulation() {
         core.stopNavigation()
-    }
-
-    fun toggleMute() {
-        ttsObserver.setMuted(!ttsObserver.isMuted)
     }
 
     suspend fun startSimulation(

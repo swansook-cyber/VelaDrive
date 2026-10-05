@@ -24,6 +24,7 @@ import net.velalab.veladrive.core.navigation.ValhallaRouteClient
 import net.velalab.veladrive.core.navigation.VelaFerrostarController
 import net.velalab.veladrive.core.navigation.VelaGuidanceEngine
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
+import net.velalab.veladrive.core.navigation.VelaThaiTts
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 
@@ -32,6 +33,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var locationController: AndroidLocationController
     private val routeClient by lazy { ValhallaRouteClient(BuildConfig.VALHALLA_BASE_URL) }
     private lateinit var ferrostarController: VelaFerrostarController
+    private lateinit var thaiTts: VelaThaiTts
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -64,17 +66,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         locationController = AndroidLocationController(this)
         ferrostarController = VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL)
+        thaiTts = VelaThaiTts(this)
         locationPermissionGranted = hasLocationPermission()
 
         lifecycleScope.launch {
             ferrostarController.state.collect { state ->
                 val uiState = NavigationUiState.fromFerrostar(
                     state,
-                    ferrostarController.isMuted,
+                    thaiTts.isMuted,
                     null
                 )
-                guidance = VelaGuidanceEngine.from(uiState)
-                isSimulationMuted = ferrostarController.isMuted
+                val nextGuidance = VelaGuidanceEngine.from(uiState, routePreview)
+                guidance = nextGuidance
+                thaiTts.speakGuidance(nextGuidance)
+                isSimulationMuted = thaiTts.isMuted
             }
         }
 
@@ -119,7 +124,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        ferrostarController.startTts()
+        thaiTts.start()
         locationPermissionGranted = hasLocationPermission()
         if (locationPermissionGranted) {
             startLocationUpdates()
@@ -133,6 +138,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         ferrostarController.shutdown()
+        thaiTts.shutdown()
         super.onDestroy()
     }
 
@@ -158,6 +164,7 @@ class MainActivity : ComponentActivity() {
                     routeError = null
                     ferrostarController.stopSimulation()
                     guidance = null
+                    thaiTts.resetDeduplication()
                     simulationError = null
                     shareError = null
                 }
@@ -207,12 +214,13 @@ class MainActivity : ComponentActivity() {
     private fun stopSimulation() {
         ferrostarController.stopSimulation()
         guidance = null
+        thaiTts.resetDeduplication()
         simulationError = null
     }
 
     private fun toggleSimulationMute() {
-        ferrostarController.toggleMute()
-        isSimulationMuted = ferrostarController.isMuted
+        thaiTts.toggleMuted()
+        isSimulationMuted = thaiTts.isMuted
     }
 
     private fun requestLocationPermission() {
