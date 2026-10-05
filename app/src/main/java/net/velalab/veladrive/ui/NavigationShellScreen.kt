@@ -40,13 +40,16 @@ fun NavigationShellScreen(
     isLoadingRoute: Boolean,
     routeError: String?,
     guidance: VelaGuidanceSnapshot?,
+    isNavigationStarting: Boolean,
     isSimulationStarting: Boolean,
+    navigationError: String?,
     simulationError: String?,
     isSimulationMuted: Boolean,
     onRequestLocationPermission: () -> Unit,
     onCalculateRoute: () -> Unit,
+    onStartNavigation: () -> Unit,
     onStartSimulation: () -> Unit,
-    onStopSimulation: () -> Unit,
+    onStopNavigation: () -> Unit,
     onToggleMute: () -> Unit,
     onBackToSearch: () -> Unit
 ) {
@@ -63,7 +66,7 @@ fun NavigationShellScreen(
                 guidance = guidance,
                 isMuted = isSimulationMuted,
                 onToggleMute = onToggleMute,
-                onStopNavigation = onStopSimulation
+                onStopNavigation = onStopNavigation
             )
         }
         return
@@ -185,9 +188,12 @@ fun NavigationShellScreen(
                 RoutePreviewBottomCard(
                     routePreview = routePreview,
                     destination = destination,
+                    isNavigationStarting = isNavigationStarting,
                     isSimulationStarting = isSimulationStarting,
+                    navigationError = navigationError,
                     simulationError = simulationError,
                     onCalculateRoute = onCalculateRoute,
+                    onStartNavigation = onStartNavigation,
                     onStartSimulation = onStartSimulation,
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
@@ -200,9 +206,12 @@ fun NavigationShellScreen(
 private fun RoutePreviewBottomCard(
     routePreview: RoutePreview,
     destination: Destination,
+    isNavigationStarting: Boolean,
     isSimulationStarting: Boolean,
+    navigationError: String?,
     simulationError: String?,
     onCalculateRoute: () -> Unit,
+    onStartNavigation: () -> Unit,
     onStartSimulation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -245,27 +254,51 @@ private fun RoutePreviewBottomCard(
             }
 
             Button(
-                onClick = onStartSimulation,
-                enabled = !isSimulationStarting,
+                onClick = onStartNavigation,
+                enabled = !isNavigationStarting && !isSimulationStarting,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    if (isSimulationStarting) {
-                        "กำลังเริ่ม…"
+                    if (isNavigationStarting) {
+                        "กำลังเริ่มนำทาง…"
                     } else {
-                        "ทดลองนำทาง"
+                        "เริ่มนำทาง"
+                    }
+                )
+            }
+
+            OutlinedButton(
+                onClick = onStartSimulation,
+                enabled = !isNavigationStarting && !isSimulationStarting,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text(
+                    if (isSimulationStarting) {
+                        "กำลังเริ่มจำลอง…"
+                    } else {
+                        "ทดลองจำลองเส้นทาง"
                     }
                 )
             }
 
             OutlinedButton(
                 onClick = onCalculateRoute,
-                enabled = !isSimulationStarting,
+                enabled = !isNavigationStarting && !isSimulationStarting,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
             ) {
                 Text("คำนวณเส้นทางใหม่")
+            }
+
+            navigationError?.let {
+                Text(
+                    it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
 
             simulationError?.let {

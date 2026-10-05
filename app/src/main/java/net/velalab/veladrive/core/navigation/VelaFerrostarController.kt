@@ -4,6 +4,8 @@ import android.content.Context
 import com.stadiamaps.ferrostar.core.FerrostarCore
 import com.stadiamaps.ferrostar.core.NavigationState
 import com.stadiamaps.ferrostar.core.http.OkHttpClientProvider.Companion.toOkHttpClientProvider
+import com.stadiamaps.ferrostar.core.location.AndroidLocationProvider
+import com.stadiamaps.ferrostar.core.location.NavigationLocationProvider
 import com.stadiamaps.ferrostar.core.location.SimulatedLocationProvider
 import com.stadiamaps.ferrostar.core.withJsonOptions
 import java.time.Duration
@@ -32,6 +34,12 @@ class VelaFerrostarController(
 ) {
     private val simulatedLocationProvider = SimulatedLocationProvider(warpFactor = 8u)
 
+    private val navigationLocationProvider =
+        NavigationLocationProvider(
+            liveProviding = AndroidLocationProvider(context.applicationContext),
+            simulatedProvider = simulatedLocationProvider
+        )
+
     private val httpClient =
         OkHttpClient.Builder()
             .callTimeout(Duration.ofSeconds(30))
@@ -53,7 +61,7 @@ class VelaFerrostarController(
         FerrostarCore(
             wellKnownRouteProvider = routeProvider,
             httpClient = httpClient,
-            locationProvider = simulatedLocationProvider,
+            locationProvider = navigationLocationProvider,
             navigationControllerConfig =
                 NavigationControllerConfig(
                     WaypointAdvanceMode.WaypointWithinRange(100.0),
@@ -67,18 +75,40 @@ class VelaFerrostarController(
     val state: StateFlow<NavigationState>
         get() = core.state
 
+    val isSimulating: StateFlow<Boolean>
+        get() = navigationLocationProvider.isSimulating
+
     fun shutdown() {
+        stopNavigation()
+    }
+
+    fun stopNavigation() {
+        navigationLocationProvider.disableSimulation()
         core.stopNavigation()
     }
 
-    fun stopSimulation() {
-        core.stopNavigation()
+    suspend fun startLiveNavigation(
+        origin: LocationSnapshot,
+        destination: Destination
+    ) {
+        navigationLocationProvider.disableSimulation()
+        val route = fetchRoute(origin, destination)
+        core.startNavigation(route)
     }
 
     suspend fun startSimulation(
         origin: LocationSnapshot,
         destination: Destination
     ) {
+        val route = fetchRoute(origin, destination)
+        navigationLocationProvider.enableSimulationOn(route)
+        core.startNavigation(route)
+    }
+
+    private suspend fun fetchRoute(
+        origin: LocationSnapshot,
+        destination: Destination
+    ): uniffi.ferrostar.Route {
         val initialLocation =
             UserLocation(
                 GeographicCoordinate(origin.latitude, origin.longitude),
@@ -108,9 +138,6 @@ class VelaFerrostarController(
             )
 
         check(routes.isNotEmpty()) { "Ferrostar did not return a route" }
-
-        val route = routes.first()
-        simulatedLocationProvider.setRoute(route)
-        core.startNavigation(route)
+        return routes.first()
     }
 }
