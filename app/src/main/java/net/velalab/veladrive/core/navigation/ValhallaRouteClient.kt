@@ -1,6 +1,12 @@
 package net.velalab.veladrive.core.navigation
 
+import java.security.KeyStore
+import java.security.SecureRandom
 import java.time.Duration
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -11,10 +17,12 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
+import okhttp3.ConnectionSpec
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.conscrypt.Conscrypt
 
 class ValhallaRouteClient(
     baseUrl: String,
@@ -57,6 +65,13 @@ class ValhallaRouteClient(
                 }
                 parseRoute(responseBody)
             }
+        }.recoverCatching { error ->
+            val chain = generateSequence(error as Throwable?) { it.cause }
+                .take(5)
+                .joinToString(" -> ") { cause ->
+                    "${cause.javaClass.simpleName}: ${cause.message.orEmpty()}"
+                }
+            error("Route request failed at $routeUrl | $chain")
         }
     }
 
@@ -124,11 +139,35 @@ class ValhallaRouteClient(
     }
 
     companion object {
-        private fun defaultClient() =
-            OkHttpClient.Builder()
+        private fun defaultClient(): OkHttpClient {
+            val provider = Conscrypt.newProvider()
+            val trustManagerFactory = TrustManagerFactory.getInstance(
+                TrustManagerFactory.getDefaultAlgorithm()
+            )
+            trustManagerFactory.init(null as KeyStore?)
+            val trustManager = trustManagerFactory.trustManagers
+                .filterIsInstance<X509TrustManager>()
+                .single()
+
+            val sslContext = SSLContext.getInstance("TLS", provider)
+            sslContext.init(
+                null,
+                arrayOf<TrustManager>(trustManager),
+                SecureRandom()
+            )
+
+            return OkHttpClient.Builder()
+                .sslSocketFactory(sslContext.socketFactory, trustManager)
+                .connectionSpecs(
+                    listOf(
+                        ConnectionSpec.MODERN_TLS,
+                        ConnectionSpec.COMPATIBLE_TLS
+                    )
+                )
                 .connectTimeout(Duration.ofSeconds(10))
                 .readTimeout(Duration.ofSeconds(20))
                 .callTimeout(Duration.ofSeconds(30))
                 .build()
+        }
     }
 }
