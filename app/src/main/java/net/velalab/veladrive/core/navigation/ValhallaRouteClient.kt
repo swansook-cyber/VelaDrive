@@ -4,7 +4,9 @@ import java.time.Duration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.double
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -36,6 +38,7 @@ class ValhallaRouteClient(
                   "costing": "auto",
                   "units": "kilometers",
                   "language": "th-TH",
+                  "turn_lanes": true,
                   "directions_options": {
                     "units": "kilometers"
                   }
@@ -80,10 +83,39 @@ class ValhallaRouteClient(
 
         check(points.size >= 2) { "Route shape is empty" }
 
+        val maneuvers = legs.flatMap { legElement ->
+            legElement.jsonObject["maneuvers"]?.jsonArray.orEmpty().map { maneuverElement ->
+                val maneuver = maneuverElement.jsonObject
+                val lanes =
+                    maneuver["lanes"]?.jsonArray.orEmpty().map { laneElement ->
+                        val lane = laneElement.jsonObject
+                        VelaLane(
+                            directionsMask = lane["directions"]?.jsonPrimitive?.intOrNull ?: 0,
+                            validMask = lane["valid"]?.jsonPrimitive?.intOrNull,
+                            activeMask = lane["active"]?.jsonPrimitive?.intOrNull
+                        )
+                    }
+
+                VelaRouteManeuver(
+                    instruction = maneuver["instruction"]?.jsonPrimitive?.content.orEmpty(),
+                    verbalAlert =
+                        maneuver["verbal_transition_alert_instruction"]
+                            ?.jsonPrimitive
+                            ?.content,
+                    lengthKilometers = maneuver["length"]?.jsonPrimitive?.double ?: 0.0,
+                    timeSeconds = maneuver["time"]?.jsonPrimitive?.double ?: 0.0,
+                    beginShapeIndex = maneuver["begin_shape_index"]?.jsonPrimitive?.intOrNull,
+                    endShapeIndex = maneuver["end_shape_index"]?.jsonPrimitive?.intOrNull,
+                    lanes = lanes
+                )
+            }
+        }
+
         return RoutePreview(
             points = points,
             distanceKilometers = distanceKm,
-            durationSeconds = durationSeconds
+            durationSeconds = durationSeconds,
+            maneuvers = maneuvers
         )
     }
 
