@@ -6,10 +6,10 @@ data class RoutePoint(
 )
 
 enum class LaneDirection(val bit: Int, val symbol: String) {
-    THROUGH(2, "↑"),
     SHARP_LEFT(4, "↙"),
     LEFT(8, "←"),
     SLIGHT_LEFT(16, "↖"),
+    THROUGH(2, "↑"),
     SLIGHT_RIGHT(32, "↗"),
     RIGHT(64, "→"),
     SHARP_RIGHT(128, "↘"),
