@@ -36,7 +36,7 @@ class ValhallaRouteClient(
                   ],
                   "costing": "auto",
                   "units": "kilometers",
-                  "language": "th-TH",
+                  "language": "en-US",
                   "turn_lanes": true,
                   "directions_options": {
                     "units": "kilometers"
@@ -96,11 +96,16 @@ class ValhallaRouteClient(
                     }
 
                 VelaRouteManeuver(
+                    type = maneuver["type"]?.jsonPrimitive?.intOrNull ?: 0,
                     instruction = maneuver["instruction"]?.jsonPrimitive?.content.orEmpty(),
                     verbalAlert =
                         maneuver["verbal_transition_alert_instruction"]
                             ?.jsonPrimitive
                             ?.content,
+                    streetNames =
+                        maneuver["street_names"]?.jsonArray.orEmpty().mapNotNull {
+                            runCatching { it.jsonPrimitive.content }.getOrNull()
+                        },
                     lengthKilometers = maneuver["length"]?.jsonPrimitive?.double ?: 0.0,
                     timeSeconds = maneuver["time"]?.jsonPrimitive?.double ?: 0.0,
                     beginShapeIndex = maneuver["begin_shape_index"]?.jsonPrimitive?.intOrNull,
