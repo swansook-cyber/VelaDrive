@@ -55,6 +55,77 @@ class VelaGuidanceEngineTest {
     }
 
     @Test
+    fun preparationDistanceGrowsWithSpeed() {
+        assertEquals(220, VelaGuidanceEngine.preparationDistanceMeters(0.0))
+        assertEquals(370, VelaGuidanceEngine.preparationDistanceMeters(13.9))
+        assertEquals(520, VelaGuidanceEngine.preparationDistanceMeters(22.2))
+    }
+
+    @Test
+    fun labelsThisJunctionAndNextTurnWhenCurrentManeuverIsStraight() {
+        val current =
+            VelaRouteManeuver(
+                type = 8,
+                instruction = "Continue straight.",
+                verbalAlert = null,
+                streetNames = listOf("Road A"),
+                lengthKilometers = 0.2,
+                timeSeconds = 20.0,
+                beginShapeIndex = 1,
+                endShapeIndex = 2,
+                lanes = emptyList()
+            )
+        val next =
+            VelaRouteManeuver(
+                type = 15,
+                instruction = "Turn left.",
+                verbalAlert = null,
+                streetNames = listOf("Road B"),
+                lengthKilometers = 0.1,
+                timeSeconds = 10.0,
+                beginShapeIndex = 2,
+                endShapeIndex = 3,
+                lanes = emptyList()
+            )
+
+        assertEquals(
+            "แยกนี้ตรงไป — แยกถัดไป เลี้ยวซ้าย เข้า Road B",
+            VelaGuidanceEngine.buildJunctionInstruction(
+                currentManeuver = current,
+                nextManeuver = next,
+                distanceToCurrentManeuverMeters = 120.0,
+                preparationDistanceMeters = 350.0
+            )
+        )
+    }
+
+    @Test
+    fun doesNotClaimJunctionWhenCurrentManeuverIsAlreadyATurn() {
+        val current =
+            VelaRouteManeuver(
+                type = 10,
+                instruction = "Turn right.",
+                verbalAlert = null,
+                streetNames = emptyList(),
+                lengthKilometers = 0.1,
+                timeSeconds = 10.0,
+                beginShapeIndex = 1,
+                endShapeIndex = 2,
+                lanes = emptyList()
+            )
+        val next = current.copy(type = 15, instruction = "Turn left.")
+
+        assertNull(
+            VelaGuidanceEngine.buildJunctionInstruction(
+                currentManeuver = current,
+                nextManeuver = next,
+                distanceToCurrentManeuverMeters = 100.0,
+                preparationDistanceMeters = 350.0
+            )
+        )
+    }
+
+    @Test
     fun translatesValhallaLeftTurnToThaiWithRoadName() {
         val maneuver =
             VelaRouteManeuver(
