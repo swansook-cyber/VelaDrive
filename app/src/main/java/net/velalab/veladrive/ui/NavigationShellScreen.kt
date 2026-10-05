@@ -43,6 +43,25 @@ fun NavigationShellScreen(
     onToggleMute: () -> Unit,
     onOpenGoogleSearch: () -> Unit
 ) {
+    if (
+        guidance?.isNavigating == true &&
+        routePreview != null &&
+        currentLocation != null
+    ) {
+        MaterialTheme {
+            DriveModeScreen(
+                destination = destination,
+                currentLocation = currentLocation,
+                routePreview = routePreview,
+                guidance = guidance,
+                isMuted = isSimulationMuted,
+                onToggleMute = onToggleMute,
+                onStopNavigation = onStopSimulation
+            )
+        }
+        return
+    }
+
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
