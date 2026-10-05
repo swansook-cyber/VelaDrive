@@ -34,6 +34,9 @@ jobs:
       - name: Validate lane audit tool
         run: python3 tools/lane_audit.py --self-test
 
+      - name: Validate route smoke tool
+        run: python3 tools/route_smoke_test.py --self-test
+
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
 
