@@ -7,8 +7,10 @@ cd "$ROOT"
 stamp="$(date +%Y%m%d-%H%M%S)"
 backup="$ROOT/data-backup-$stamp"
 
+docker compose down
+
 if [ -d "$ROOT/data" ]; then
-  cp -a "$ROOT/data" "$backup"
+  mv "$ROOT/data" "$backup"
 fi
 
 cleanup_backup() {
@@ -28,12 +30,10 @@ rollback() {
 }
 trap rollback ERR
 
-docker compose down
-rm -rf "$ROOT/data"
 mkdir -p "$ROOT/data"
 
 # Force the scripted image to refresh the Thailand PBF and rebuild graph tiles once.
-force_rebuild=True docker compose up -d
+VALHALLA_FORCE_REBUILD=True docker compose up -d
 
 echo "Waiting for Valhalla status endpoint..."
 for _ in $(seq 1 180); do
