@@ -31,6 +31,7 @@ import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.core.navigation.VelaThaiTts
 import net.velalab.veladrive.core.poi.LongdoPoiClient
 import net.velalab.veladrive.core.poi.PoiSearchResult
+import net.velalab.veladrive.core.poi.VelaPlaceStore
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 import org.maplibre.android.MapLibre
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var ferrostarController: VelaFerrostarController
     private lateinit var thaiTts: VelaThaiTts
     private val longdoPoiClient by lazy { LongdoPoiClient(BuildConfig.LONGDO_MAP_API_KEY) }
+    private val placeStore by lazy { VelaPlaceStore(this) }
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -61,6 +63,8 @@ class MainActivity : ComponentActivity() {
     private var poiResults by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var isSearchingPois by mutableStateOf(false)
     private var poiError by mutableStateOf<String?>(null)
+    private var recentPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
+    private var savedPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -89,6 +93,7 @@ class MainActivity : ComponentActivity() {
         ferrostarController = VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL)
         thaiTts = VelaThaiTts(this)
         locationPermissionGranted = hasLocationPermission()
+        refreshStoredPlaces()
 
         lifecycleScope.launch {
             ferrostarController.state.collect { state ->
@@ -122,10 +127,13 @@ class MainActivity : ComponentActivity() {
                     locationPermissionGranted = locationPermissionGranted,
                     isSearchingPois = isSearchingPois || isResolvingShare,
                     poiResults = poiResults,
+                    recentPlaces = recentPlaces,
+                    savedPlaces = savedPlaces,
                     poiError = poiError ?: shareError,
                     isLongdoConfigured = longdoPoiClient.isConfigured(),
                     onSearchPoi = ::searchPoi,
                     onSelectPoi = ::selectPoi,
+                    onSavePoi = ::savePoi,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
                 )
@@ -225,7 +233,8 @@ class MainActivity : ComponentActivity() {
         val location = currentLocation
 
         lifecycleScope.launch {
-            val result = withContext(Dispatchers.IO) {
+            val localResults = placeStore.searchSaved(cleanKeyword)
+            val remoteResult = withContext(Dispatchers.IO) {
                 longdoPoiClient.search(
                     keyword = cleanKeyword,
                     latitude = location?.latitude,
@@ -233,15 +242,21 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            result
-                .onSuccess { results ->
-                    poiResults = results
-                    if (results.isEmpty()) {
+            remoteResult
+                .onSuccess { remote ->
+                    poiResults = mergePoiResults(localResults, remote)
+                    if (poiResults.isEmpty()) {
                         poiError = "ไม่พบสถานที่ใน Vela POI"
                     }
                 }
                 .onFailure {
-                    poiError = it.message ?: "ค้นหาสถานที่ไม่สำเร็จ"
+                    poiResults = localResults
+                    poiError =
+                        if (localResults.isEmpty()) {
+                            it.message ?: "ค้นหาสถานที่ไม่สำเร็จ"
+                        } else {
+                            "Longdo ใช้งานไม่ได้ชั่วคราว แสดงสถานที่ที่บันทึกไว้"
+                        }
                 }
 
             isSearchingPois = false
@@ -249,6 +264,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun selectPoi(poi: PoiSearchResult) {
+        placeStore.addRecent(poi)
+        refreshStoredPlaces()
         destination = Destination(
             latitude = poi.latitude,
             longitude = poi.longitude,
@@ -263,6 +280,31 @@ class MainActivity : ComponentActivity() {
         guidance = null
         thaiTts.resetDeduplication()
         simulationError = null
+    }
+
+    private fun savePoi(poi: PoiSearchResult) {
+        placeStore.save(poi)
+        refreshStoredPlaces()
+    }
+
+    private fun refreshStoredPlaces() {
+        recentPlaces = placeStore.recentPlaces().map { it.toPoiSearchResult() }
+        savedPlaces = placeStore.savedPlaces().map { it.toPoiSearchResult() }
+    }
+
+    private fun mergePoiResults(
+        local: List<PoiSearchResult>,
+        remote: List<PoiSearchResult>
+    ): List<PoiSearchResult> {
+        val merged = mutableListOf<PoiSearchResult>()
+        (local + remote).forEach { candidate ->
+            val duplicate = merged.any {
+                kotlin.math.abs(it.latitude - candidate.latitude) < 0.00001 &&
+                    kotlin.math.abs(it.longitude - candidate.longitude) < 0.00001
+            }
+            if (!duplicate) merged += candidate
+        }
+        return merged
     }
 
     private fun clearDestination() {
