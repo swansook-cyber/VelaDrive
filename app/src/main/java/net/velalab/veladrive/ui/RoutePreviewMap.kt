@@ -57,8 +57,8 @@ fun RoutePreviewMap(
         LineLayer(
             id = "vela-route",
             source = routeSource,
-            color = const(Color(0xFF1565C0)),
-            width = const(6.dp)
+            color = const(Color(0xFFD000D7)),
+            width = const(7.dp)
         )
 
         val originSource = rememberGeoJsonSource(
@@ -78,7 +78,7 @@ fun RoutePreviewMap(
         CircleLayer(
             id = "vela-origin",
             source = originSource,
-            color = const(Color(0xFF0D47A1)),
+            color = const(Color(0xFF1565C0)),
             radius = const(7.dp),
             strokeColor = const(Color.White),
             strokeWidth = const(2.dp)
