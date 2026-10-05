@@ -22,7 +22,8 @@ class GoogleMapsShareResolver(
             return ShareResolution.Resolved(it)
         }
 
-        val shortUrl = extractSupportedGoogleShortUrl(sharedText)\n            ?: return ShareResolution.Unsupported("payload=${sharedText.take(500)}")
+        val shortUrl = extractSupportedGoogleShortUrl(sharedText)
+            ?: return ShareResolution.Unsupported("payload=${sharedText.take(500)}")
 
         return withContext(Dispatchers.IO) {
             runCatching {
@@ -53,7 +54,11 @@ class GoogleMapsShareResolver(
                             }
                         )
                 }
-            }.getOrElse { error ->\n                ShareResolution.CouldNotResolve(\n                    "payload=${sharedText.take(500)}\\nerror=${error.javaClass.simpleName}: ${error.message.orEmpty().take(500)}"\n                )\n            }
+            }.getOrElse { error ->
+                ShareResolution.CouldNotResolve(
+                    "payload=${sharedText.take(500)}\nerror=${error.javaClass.simpleName}: ${error.message.orEmpty().take(500)}"
+                )
+            }
         }
     }
 
