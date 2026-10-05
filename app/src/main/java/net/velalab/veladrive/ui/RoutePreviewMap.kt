@@ -6,11 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlin.math.log2
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.expressions.dsl.const
 import org.maplibre.compose.layers.CircleLayer
 import org.maplibre.compose.layers.LineLayer
+import org.maplibre.compose.layers.SymbolLayer
 import org.maplibre.compose.map.MaplibreMap
 import org.maplibre.compose.camera.rememberCameraState
 import org.maplibre.compose.sources.GeoJsonData
@@ -76,12 +78,20 @@ fun RoutePreviewMap(
         )
 
         CircleLayer(
-            id = "vela-origin",
+            id = "vela-origin-halo",
             source = originSource,
-            color = const(Color(0xFF1565C0)),
-            radius = const(7.dp),
-            strokeColor = const(Color.White),
-            strokeWidth = const(2.dp)
+            color = const(Color.White),
+            radius = const(13.dp),
+            strokeColor = const(Color(0xFF1565C0)),
+            strokeWidth = const(3.dp)
+        )
+
+        SymbolLayer(
+            id = "vela-car-marker",
+            source = originSource,
+            textField = const("🚗"),
+            textSize = const(22.sp),
+            textColor = const(Color.Black)
         )
 
         val destinationSource = rememberGeoJsonSource(
