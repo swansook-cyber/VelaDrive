@@ -37,13 +37,18 @@ data class VelaLane(
     val isActive: Boolean
         get() = (activeMask ?: 0) != 0
 
+    val preferredDirection: LaneDirection?
+        get() = LaneDirection.fromMask(activeMask ?: validMask ?: 0).firstOrNull()
+
     val displaySymbol: String
         get() = directions.joinToString("") { it.symbol }.ifBlank { "•" }
 }
 
 data class VelaRouteManeuver(
+    val type: Int,
     val instruction: String,
     val verbalAlert: String?,
+    val streetNames: List<String>,
     val lengthKilometers: Double,
     val timeSeconds: Double,
     val beginShapeIndex: Int?,
@@ -56,6 +61,9 @@ data class VelaRouteManeuver(
             if (active.isNotEmpty()) return active
             return lanes.mapIndexedNotNull { index, lane -> index.takeIf { lane.isValid } }
         }
+
+    val primaryStreetName: String?
+        get() = streetNames.firstOrNull()?.takeIf { it.isNotBlank() }
 }
 
 data class RoutePreview(
