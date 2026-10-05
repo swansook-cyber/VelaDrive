@@ -72,8 +72,10 @@ class ValhallaRouteClientTest {
                     "shape": "$shape",
                     "maneuvers": [
                       {
-                        "instruction": "เลี้ยวซ้าย",
-                        "verbal_transition_alert_instruction": "เตรียมเลี้ยวซ้าย",
+                        "type": 15,
+                        "instruction": "Turn left onto Maharaj Road.",
+                        "verbal_transition_alert_instruction": "Turn left.",
+                        "street_names": ["Maharaj Road"],
                         "length": 0.2,
                         "time": 30,
                         "begin_shape_index": 0,
@@ -94,7 +96,9 @@ class ValhallaRouteClientTest {
 
         assertEquals(1, route.maneuvers.size)
         val maneuver = route.maneuvers.first()
-        assertEquals("เลี้ยวซ้าย", maneuver.instruction)
+        assertEquals("Turn left onto Maharaj Road.", maneuver.instruction)
+        assertEquals(15, maneuver.type)
+        assertEquals("Maharaj Road", maneuver.primaryStreetName)
         assertEquals(listOf(0), maneuver.preferredLaneIndexes)
         assertEquals("←", maneuver.lanes[0].displaySymbol)
         assertEquals("←↑", maneuver.lanes[1].displaySymbol)
