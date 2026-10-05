@@ -1,61 +1,256 @@
 package net.velalab.veladrive.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import net.velalab.veladrive.core.destination.Destination
+import net.velalab.veladrive.core.location.LocationSnapshot
+import net.velalab.veladrive.core.poi.PoiSearchResult
+import org.maplibre.compose.camera.CameraPosition
+import org.maplibre.compose.camera.rememberCameraState
+import org.maplibre.compose.expressions.dsl.const
+import org.maplibre.compose.layers.CircleLayer
+import org.maplibre.compose.map.MaplibreMap
+import org.maplibre.compose.sources.GeoJsonData
+import org.maplibre.compose.sources.rememberGeoJsonSource
+import org.maplibre.compose.style.BaseStyle
+import org.maplibre.spatialk.geojson.Feature
+import org.maplibre.spatialk.geojson.Point
+import org.maplibre.spatialk.geojson.Position
 
 @Composable
 fun HomeScreen(
-    sharedDestination: Destination?,
-    isResolvingShare: Boolean,
-    shareError: String?,
+    currentLocation: LocationSnapshot?,
+    locationPermissionGranted: Boolean,
+    isSearchingPois: Boolean,
+    poiResults: List<PoiSearchResult>,
+    poiError: String?,
+    isLongdoConfigured: Boolean,
+    onSearchPoi: (String) -> Unit,
+    onSelectPoi: (PoiSearchResult) -> Unit,
+    onRequestLocationPermission: () -> Unit,
     onGoogleSearch: () -> Unit
 ) {
+    var query by remember { mutableStateOf("") }
+
     MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            HomeMap(
+                currentLocation = currentLocation,
+                modifier = Modifier.fillMaxSize()
+            )
+
             Column(
-                modifier = Modifier.padding(24.dp),
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text("Vela Drive", style = MaterialTheme.typography.headlineLarge)
-                Text("Search like Google. Drive with clearer guidance.")
-                Spacer(Modifier.height(24.dp))
-
-                Button(onClick = onGoogleSearch, modifier = Modifier.fillMaxWidth()) {
-                    Text("ค้นหาด้วย Google Maps")
+                Surface(
+                    tonalElevation = 10.dp,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        OutlinedTextField(
+                            value = query,
+                            onValueChange = { query = it },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            label = { Text("ค้นหาสถานที่ใน Vela Drive") },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                            keyboardActions = KeyboardActions(
+                                onSearch = { onSearchPoi(query) }
+                            )
+                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Button(
+                                onClick = { onSearchPoi(query) },
+                                enabled = query.isNotBlank() && !isSearchingPois,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("ค้นหา")
+                            }
+                            if (!locationPermissionGranted) {
+                                OutlinedButton(onClick = onRequestLocationPermission) {
+                                    Text("เปิด GPS")
+                                }
+                            }
+                        }
+                    }
                 }
 
-                if (isResolvingShare) {
-                    Spacer(Modifier.height(24.dp))
-                    CircularProgressIndicator()
-                    Spacer(Modifier.height(8.dp))
-                    Text("กำลังอ่านปลายทางจาก Google Maps…")
-                }
+                if (
+                    isSearchingPois ||
+                    poiResults.isNotEmpty() ||
+                    poiError != null ||
+                    (query.isNotBlank() && !isLongdoConfigured)
+                ) {
+                    Surface(
+                        tonalElevation = 10.dp,
+                        shape = MaterialTheme.shapes.large,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 330.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState())
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            if (isSearchingPois) {
+                                CircularProgressIndicator()
+                                Text("กำลังค้นหา Vela POI…")
+                            }
 
-                sharedDestination?.let {
-                    Spacer(Modifier.height(24.dp))
-                    Text("รับปลายทางแล้ว", style = MaterialTheme.typography.titleMedium)
-                    Text("${it.latitude}, ${it.longitude}")
-                }
+                            poiResults.forEach { poi ->
+                                Surface(
+                                    tonalElevation = 2.dp,
+                                    shape = MaterialTheme.shapes.medium,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { onSelectPoi(poi) }
+                                ) {
+                                    Column(modifier = Modifier.padding(12.dp)) {
+                                        Text(
+                                            poi.name,
+                                            style = MaterialTheme.typography.titleMedium
+                                        )
+                                        poi.address?.let {
+                                            Text(it, style = MaterialTheme.typography.bodySmall)
+                                        }
+                                        poi.distanceText?.let {
+                                            Text("ระยะประมาณ $it")
+                                        }
+                                    }
+                                }
+                            }
 
-                shareError?.let {
-                    Spacer(Modifier.height(16.dp))
-                    Text(it)
+                            poiError?.let {
+                                Text(it, style = MaterialTheme.typography.bodyMedium)
+                            }
+
+                            if (query.isNotBlank() && !isLongdoConfigured) {
+                                Text(
+                                    "ยังไม่ได้ตั้งค่า Longdo API Key บนอุปกรณ์นี้",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+                            if (!isSearchingPois && poiResults.isEmpty() && query.isNotBlank()) {
+                                OutlinedButton(
+                                    onClick = onGoogleSearch,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("หาไม่เจอ? ค้นหาเพิ่มเติมใน Google Maps")
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
+            Surface(
+                tonalElevation = 10.dp,
+                shape = MaterialTheme.shapes.extraLarge,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(12.dp)
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Vela Drive", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        if (currentLocation != null) "GPS พร้อม" else "กำลังหาตำแหน่ง…",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun HomeMap(
+    currentLocation: LocationSnapshot?,
+    modifier: Modifier
+) {
+    val initialPosition = Position(
+        longitude = currentLocation?.longitude ?: 101.0,
+        latitude = currentLocation?.latitude ?: 13.0
+    )
+    val cameraState = rememberCameraState(
+        CameraPosition(
+            target = initialPosition,
+            zoom = if (currentLocation == null) 5.5 else 15.0
+        )
+    )
+
+    MaplibreMap(
+        modifier = modifier,
+        baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
+        cameraState = cameraState
+    ) {
+        currentLocation?.let { location ->
+            val source = rememberGeoJsonSource(
+                GeoJsonData.Features(
+                    Feature(
+                        geometry = Point(
+                            Position(
+                                longitude = location.longitude,
+                                latitude = location.latitude
+                            )
+                        ),
+                        properties = null
+                    )
+                )
+            )
+            CircleLayer(
+                id = "vela-home-location",
+                source = source,
+                color = const(Color(0xFF1565C0)),
+                radius = const(8.dp),
+                strokeColor = const(Color.White),
+                strokeWidth = const(3.dp)
+            )
         }
     }
 }
