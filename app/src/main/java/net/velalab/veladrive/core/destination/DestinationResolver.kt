@@ -1,22 +1,51 @@
 package net.velalab.veladrive.core.destination
 
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
+
 private val coordinateRegex = Regex(
     pattern = """(?<![0-9.])(-?\d{1,2}(?:\.\d+)?)\s*[, ]\s*(-?\d{1,3}(?:\.\d+)?)(?![0-9.])"""
 )
-private val googleAtRegex = Regex("""@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)""")
-private val googleQueryRegex = Regex("""[?&](?:q|query|destination)=(-?\d{1,2}(?:\.\d+)?)[,%2C ]+(-?\d{1,3}(?:\.\d+)?)""", RegexOption.IGNORE_CASE)
+private val googleAtRegex = Regex("""@(-?\d{1,2}(?:\.\d+)?),(-?\d{1,3}(?:\.\d+)?)""")
+private val googleDataRegex = Regex("""!3d(-?\d{1,2}(?:\.\d+)?)!4d(-?\d{1,3}(?:\.\d+)?)""")
+private val queryValueRegex = Regex("""[?&](?:q|query|destination)=([^&#]+)""", RegexOption.IGNORE_CASE)
 
 class DestinationResolver {
     fun resolveLocally(sharedText: String): Destination? {
-        googleAtRegex.find(sharedText)?.let { match ->
+        val text = sharedText.trim()
+
+        googleAtRegex.find(text)?.let { match ->
             return destination(match.groupValues[1], match.groupValues[2], DestinationSource.GOOGLE_MAPS_LINK)
         }
-        googleQueryRegex.find(sharedText)?.let { match ->
+
+        googleDataRegex.find(text)?.let { match ->
             return destination(match.groupValues[1], match.groupValues[2], DestinationSource.GOOGLE_MAPS_LINK)
         }
-        coordinateRegex.find(sharedText)?.let { match ->
+
+        queryValueRegex.find(text)?.let { match ->
+            val decoded = runCatching {
+                URLDecoder.decode(match.groupValues[1], StandardCharsets.UTF_8)
+            }.getOrDefault(match.groupValues[1])
+
+            coordinateRegex.find(decoded)?.let { coords ->
+                return destination(
+                    coords.groupValues[1],
+                    coords.groupValues[2],
+                    DestinationSource.GOOGLE_MAPS_LINK
+                )
+            }
+        }
+
+        if (text.startsWith("geo:", ignoreCase = true)) {
+            coordinateRegex.find(text.removePrefix("geo:"))?.let { match ->
+                return destination(match.groupValues[1], match.groupValues[2], DestinationSource.GEO_URI)
+            }
+        }
+
+        coordinateRegex.find(text)?.let { match ->
             return destination(match.groupValues[1], match.groupValues[2], DestinationSource.RAW_COORDINATES)
         }
+
         return null
     }
 
