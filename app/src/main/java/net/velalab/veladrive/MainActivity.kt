@@ -12,8 +12,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.velalab.veladrive.core.destination.Destination
+import net.velalab.veladrive.core.destination.DestinationSource
 import net.velalab.veladrive.core.destination.GoogleMapsShareResolver
 import net.velalab.veladrive.core.destination.ShareResolution
 import net.velalab.veladrive.core.location.AndroidLocationController
@@ -25,6 +28,8 @@ import net.velalab.veladrive.core.navigation.VelaFerrostarController
 import net.velalab.veladrive.core.navigation.VelaGuidanceEngine
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.core.navigation.VelaThaiTts
+import net.velalab.veladrive.core.poi.LongdoPoiClient
+import net.velalab.veladrive.core.poi.PoiSearchResult
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 import org.maplibre.android.MapLibre
@@ -35,6 +40,7 @@ class MainActivity : ComponentActivity() {
     private val routeClient by lazy { ValhallaRouteClient(BuildConfig.VALHALLA_BASE_URL) }
     private lateinit var ferrostarController: VelaFerrostarController
     private lateinit var thaiTts: VelaThaiTts
+    private val longdoPoiClient by lazy { LongdoPoiClient(BuildConfig.LONGDO_MAP_API_KEY) }
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -49,6 +55,9 @@ class MainActivity : ComponentActivity() {
     private var isSimulationStarting by mutableStateOf(false)
     private var simulationError by mutableStateOf<String?>(null)
     private var isSimulationMuted by mutableStateOf(false)
+    private var poiResults by mutableStateOf<List<PoiSearchResult>>(emptyList())
+    private var isSearchingPois by mutableStateOf(false)
+    private var poiError by mutableStateOf<String?>(null)
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -99,9 +108,15 @@ class MainActivity : ComponentActivity() {
             val activeDestination = destination
             if (activeDestination == null) {
                 HomeScreen(
-                    sharedDestination = null,
-                    isResolvingShare = isResolvingShare,
-                    shareError = shareError,
+                    currentLocation = currentLocation,
+                    locationPermissionGranted = locationPermissionGranted,
+                    isSearchingPois = isSearchingPois || isResolvingShare,
+                    poiResults = poiResults,
+                    poiError = poiError ?: shareError,
+                    isLongdoConfigured = longdoPoiClient.isConfigured(),
+                    onSearchPoi = ::searchPoi,
+                    onSelectPoi = ::selectPoi,
+                    onRequestLocationPermission = ::requestLocationPermission,
                     onGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
                 )
             } else {
@@ -185,6 +200,56 @@ class MainActivity : ComponentActivity() {
             }
             isResolvingShare = false
         }
+    }
+
+    private fun searchPoi(keyword: String) {
+        val cleanKeyword = keyword.trim()
+        if (cleanKeyword.isBlank()) return
+
+        isSearchingPois = true
+        poiError = null
+        poiResults = emptyList()
+        val location = currentLocation
+
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                longdoPoiClient.search(
+                    keyword = cleanKeyword,
+                    latitude = location?.latitude,
+                    longitude = location?.longitude
+                )
+            }
+
+            result
+                .onSuccess { results ->
+                    poiResults = results
+                    if (results.isEmpty()) {
+                        poiError = "ไม่พบสถานที่ใน Vela POI"
+                    }
+                }
+                .onFailure {
+                    poiError = it.message ?: "ค้นหาสถานที่ไม่สำเร็จ"
+                }
+
+            isSearchingPois = false
+        }
+    }
+
+    private fun selectPoi(poi: PoiSearchResult) {
+        destination = Destination(
+            latitude = poi.latitude,
+            longitude = poi.longitude,
+            label = poi.name,
+            source = DestinationSource.LONGDO_POI
+        )
+        poiResults = emptyList()
+        poiError = null
+        routePreview = null
+        routeError = null
+        ferrostarController.stopSimulation()
+        guidance = null
+        thaiTts.resetDeduplication()
+        simulationError = null
     }
 
     private fun calculateRoute() {

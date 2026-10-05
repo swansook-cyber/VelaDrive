@@ -11,5 +11,6 @@ enum class DestinationSource {
     SHARED_TEXT,
     GEO_URI,
     RAW_COORDINATES,
-    GOOGLE_MAPS_LINK
+    GOOGLE_MAPS_LINK,
+    LONGDO_POI
 }

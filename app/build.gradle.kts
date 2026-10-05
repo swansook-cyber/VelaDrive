@@ -18,6 +18,11 @@ android {
             .orElse("https://valhalla1.openstreetmap.de")
             .get()
         buildConfigField("String", "VALHALLA_BASE_URL", "\"$valhallaBaseUrl\"")
+
+        val longdoMapApiKey = providers.gradleProperty("LONGDO_MAP_API_KEY")
+            .orElse("")
+            .get()
+        buildConfigField("String", "LONGDO_MAP_API_KEY", "\"$longdoMapApiKey\"")
     }
 
     buildFeatures {
