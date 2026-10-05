@@ -42,7 +42,7 @@ object VelaGuidanceEngine {
                 ?: currentVisual?.secondaryContent?.laneInfo
                 ?: emptyList()
 
-        val distanceToNext = currentVisual?.triggerDistanceBeforeManeuver
+        val distanceToNext = uiState.progress?.distanceToNextManeuver
         val nextStepDistance = nextStep?.distance
 
         return VelaGuidanceSnapshot(
@@ -52,7 +52,8 @@ object VelaGuidanceEngine {
                 buildPreparationInstruction(
                     currentInstruction = currentVisual?.primaryContent?.text,
                     nextInstruction = nextInstruction,
-                    nextStepDistanceMeters = nextStepDistance
+                    distanceToCurrentManeuverMeters = distanceToNext,
+                    distanceAfterCurrentManeuverMeters = nextStepDistance
                 ),
             currentRoadName = uiState.currentStepRoadName,
             distanceToNextManeuverMeters = distanceToNext,
@@ -66,19 +67,42 @@ object VelaGuidanceEngine {
     fun buildPreparationInstruction(
         currentInstruction: String?,
         nextInstruction: String?,
-        nextStepDistanceMeters: Double?
+        distanceToCurrentManeuverMeters: Double?,
+        distanceAfterCurrentManeuverMeters: Double?
     ): String? {
         if (nextInstruction.isNullOrBlank()) return null
-        val distance = nextStepDistanceMeters ?: return "จากนั้น $nextInstruction"
 
-        return when {
-            distance <= 150.0 ->
-                "หลังจากคำสั่งนี้ ให้เตรียม $nextInstruction"
-            distance <= 350.0 ->
-                "อีกไม่นานหลังจากนี้ $nextInstruction"
-            isStraightLike(currentInstruction) && distance <= 700.0 ->
-                "ตรงต่อไปก่อน แล้วเตรียม $nextInstruction"
-            else -> null
+        val currentDistance = distanceToCurrentManeuverMeters
+        val followingDistance = distanceAfterCurrentManeuverMeters
+
+        // Closely spaced maneuvers are the primary Vela Drive use case.
+        // We intentionally avoid claiming there is a traffic light/intersection unless
+        // the routing data explicitly provides such semantics.
+        if (currentDistance != null && currentDistance <= 180.0) {
+            return when {
+                followingDistance != null && followingDistance <= 120.0 ->
+                    "ทำคำสั่งนี้ แล้วเตรียม $nextInstruction ทันที"
+                followingDistance != null && followingDistance <= 300.0 ->
+                    "ทำคำสั่งนี้ก่อน จากนั้นเตรียม $nextInstruction"
+                else ->
+                    "ทำคำสั่งนี้ก่อน จากนั้น $nextInstruction"
+            }
+        }
+
+        if (isStraightLike(currentInstruction)) {
+            return when {
+                currentDistance != null && currentDistance <= 350.0 ->
+                    "ผ่านช่วงนี้ไปก่อน แล้วเตรียม $nextInstruction"
+                currentDistance != null && currentDistance <= 700.0 ->
+                    "ตรงต่อไปก่อน แล้วเตรียม $nextInstruction"
+                else -> null
+            }
+        }
+
+        return if (followingDistance != null && followingDistance <= 150.0) {
+            "หลังจากคำสั่งถัดไป ให้เตรียม $nextInstruction ต่อทันที"
+        } else {
+            null
         }
     }
 

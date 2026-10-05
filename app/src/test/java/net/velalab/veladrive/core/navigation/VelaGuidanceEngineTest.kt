@@ -6,44 +6,59 @@ import org.junit.Test
 
 class VelaGuidanceEngineTest {
     @Test
-    fun warnsAboutCloselySpacedNextManeuver() {
-        assertEquals(
-            "หลังจากคำสั่งนี้ ให้เตรียม เลี้ยวซ้าย",
-            VelaGuidanceEngine.buildPreparationInstruction(
-                currentInstruction = "เลี้ยวขวา",
-                nextInstruction = "เลี้ยวซ้าย",
-                nextStepDistanceMeters = 90.0
-            )
+    fun warnsAboutImmediateFollowingManeuver() {
+        val text = VelaGuidanceEngine.buildPreparationInstruction(
+            currentInstruction = "เลี้ยวซ้าย",
+            nextInstruction = "เลี้ยวขวา",
+            distanceToCurrentManeuverMeters = 80.0,
+            distanceAfterCurrentManeuverMeters = 90.0
         )
+
+        assertEquals("ทำคำสั่งนี้ แล้วเตรียม เลี้ยวขวา ทันที", text)
     }
 
     @Test
-    fun straightInstructionGetsEarlyPreparation() {
-        assertEquals(
-            "ตรงต่อไปก่อน แล้วเตรียม เลี้ยวขวา",
-            VelaGuidanceEngine.buildPreparationInstruction(
-                currentInstruction = "ตรงต่อไป",
-                nextInstruction = "เลี้ยวขวา",
-                nextStepDistanceMeters = 500.0
-            )
+    fun saysDoCurrentFirstWhenNextIsNear() {
+        val text = VelaGuidanceEngine.buildPreparationInstruction(
+            currentInstruction = "เลี้ยวซ้าย",
+            nextInstruction = "ชิดขวา",
+            distanceToCurrentManeuverMeters = 140.0,
+            distanceAfterCurrentManeuverMeters = 250.0
         )
+
+        assertEquals("ทำคำสั่งนี้ก่อน จากนั้นเตรียม ชิดขวา", text)
     }
 
     @Test
-    fun distantNextManeuverDoesNotClutterGuidance() {
-        assertNull(
-            VelaGuidanceEngine.buildPreparationInstruction(
-                currentInstruction = "เลี้ยวซ้าย",
-                nextInstruction = "เลี้ยวขวา",
-                nextStepDistanceMeters = 1200.0
-            )
+    fun straightSegmentPreparesForUpcomingTurn() {
+        val text = VelaGuidanceEngine.buildPreparationInstruction(
+            currentInstruction = "ตรงต่อไป",
+            nextInstruction = "เลี้ยวซ้าย",
+            distanceToCurrentManeuverMeters = 500.0,
+            distanceAfterCurrentManeuverMeters = 600.0
         )
+
+        assertEquals("ตรงต่อไปก่อน แล้วเตรียม เลี้ยวซ้าย", text)
     }
 
     @Test
-    fun mapsLaneDirectionToReadableArrow() {
-        assertEquals("←", VelaGuidanceEngine.directionSymbol("left"))
+    fun doesNotAddNoiseWhenManeuversAreFarApart() {
+        val text = VelaGuidanceEngine.buildPreparationInstruction(
+            currentInstruction = "เลี้ยวขวา",
+            nextInstruction = "เลี้ยวซ้าย",
+            distanceToCurrentManeuverMeters = 900.0,
+            distanceAfterCurrentManeuverMeters = 1200.0
+        )
+
+        assertNull(text)
+    }
+
+    @Test
+    fun mapsLaneDirectionsToCompactSymbols() {
         assertEquals("↑", VelaGuidanceEngine.directionSymbol("straight"))
+        assertEquals("←", VelaGuidanceEngine.directionSymbol("left"))
+        assertEquals("→", VelaGuidanceEngine.directionSymbol("right"))
         assertEquals("↗", VelaGuidanceEngine.directionSymbol("slight right"))
+        assertEquals("↩", VelaGuidanceEngine.directionSymbol("uturn"))
     }
 }
