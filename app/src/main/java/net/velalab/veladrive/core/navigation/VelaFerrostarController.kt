@@ -7,6 +7,8 @@ import com.stadiamaps.ferrostar.core.http.OkHttpClientProvider.Companion.toOkHtt
 import com.stadiamaps.ferrostar.core.location.AndroidLocationProvider
 import com.stadiamaps.ferrostar.core.location.NavigationLocationProvider
 import com.stadiamaps.ferrostar.core.location.SimulatedLocationProvider
+import com.stadiamaps.ferrostar.core.service.FerrostarForegroundServiceManager
+import com.stadiamaps.ferrostar.composeui.notification.DefaultForegroundNotificationBuilder
 import com.stadiamaps.ferrostar.core.withJsonOptions
 import java.time.Duration
 import java.time.Instant
@@ -40,6 +42,12 @@ class VelaFerrostarController(
             simulatedProvider = simulatedLocationProvider
         )
 
+    private val foregroundServiceManager =
+        FerrostarForegroundServiceManager(
+            context.applicationContext,
+            DefaultForegroundNotificationBuilder(context.applicationContext)
+        )
+
     private val httpClient =
         OkHttpClient.Builder()
             .callTimeout(Duration.ofSeconds(30))
@@ -62,6 +70,7 @@ class VelaFerrostarController(
             wellKnownRouteProvider = routeProvider,
             httpClient = httpClient,
             locationProvider = navigationLocationProvider,
+            foregroundServiceManager = foregroundServiceManager,
             navigationControllerConfig =
                 NavigationControllerConfig(
                     WaypointAdvanceMode.WaypointWithinRange(100.0),

@@ -3,6 +3,7 @@ package net.velalab.veladrive
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -72,6 +73,13 @@ class MainActivity : ComponentActivity() {
             } else {
                 locationError = "ไม่ได้รับสิทธิ์ตำแหน่ง จึงยังเริ่มนำทางไม่ได้"
             }
+        }
+
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            // Navigation is not blocked when notification permission is denied.
+            // Android still keeps the location foreground service visible in system UI.
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -283,6 +291,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startNavigation() {
+        requestNotificationPermissionIfNeeded()
         val origin = currentLocation ?: return
         val target = destination ?: return
 
@@ -301,6 +310,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startSimulation() {
+        requestNotificationPermissionIfNeeded()
         val origin = currentLocation ?: return
         val target = destination ?: return
 
@@ -330,6 +340,18 @@ class MainActivity : ComponentActivity() {
     private fun toggleSimulationMute() {
         thaiTts.toggleMuted()
         isSimulationMuted = thaiTts.isMuted
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun requestLocationPermission() {
