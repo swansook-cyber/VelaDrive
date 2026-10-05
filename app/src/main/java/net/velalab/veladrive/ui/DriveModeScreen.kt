@@ -264,7 +264,7 @@ private fun LanePanel(guidance: VelaGuidanceSnapshot) {
 
             Text(
                 text = guidance.lanes.joinToString("    ") { lane ->
-                    if (lane.isActive) "▰ \${lane.symbols}" else "▱ \${lane.symbols}"
+                    if (lane.isActive) "▰ ${lane.symbols}" else "▱ ${lane.symbols}"
                 },
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
@@ -272,7 +272,7 @@ private fun LanePanel(guidance: VelaGuidanceSnapshot) {
 
             if (preferred.isNotEmpty()) {
                 Text(
-                    "ใช้เลน \${preferred.joinToString(", ")} จากซ้าย",
+                    "ใช้เลน ${preferred.joinToString(", ")} จากซ้าย",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -321,6 +321,6 @@ private fun formatDistance(meters: Double): String {
     return if (meters >= 1000.0) {
         "%.1f กม.".format(meters / 1000.0)
     } else {
-        "\${meters.roundToInt()} ม."
+        "${meters.roundToInt()} ม."
     }
 }
