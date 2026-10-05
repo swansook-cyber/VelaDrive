@@ -88,6 +88,37 @@ class GoogleMapsShareResolverTest {
     }
 
     @Test
+    fun resolvesCoordinatesFromGoogleMapsHtmlCanonicalUrl() {
+        val resolver = GoogleMapsShareResolver()
+        val html = """<link rel="canonical" href="https://www.google.com/maps/place/Test/@7.880447,98.392250,17z">"""
+
+        val result = resolver.resolveFromGoogleMapsHtml(html)
+
+        requireNotNull(result)
+        assertEquals(7.880447, result.latitude, 0.000001)
+        assertEquals(98.392250, result.longitude, 0.000001)
+    }
+
+    @Test
+    fun resolvesCoordinatesFromGoogleMapsHtmlLatitudeLongitudeMetadata() {
+        val resolver = GoogleMapsShareResolver()
+        val html = """{"latitude":7.880447,"longitude":98.392250}"""
+
+        val result = resolver.resolveFromGoogleMapsHtml(html)
+
+        requireNotNull(result)
+        assertEquals(7.880447, result.latitude, 0.000001)
+        assertEquals(98.392250, result.longitude, 0.000001)
+    }
+
+    @Test
+    fun ignoresUnrelatedNumbersInGoogleMapsHtml() {
+        val resolver = GoogleMapsShareResolver()
+
+        assertNull(resolver.resolveFromGoogleMapsHtml("""width=1920 height=1080 version=12345"""))
+    }
+
+    @Test
     fun nonGoogleRedirectTargetIsRejected() {
         assertFalse(
             GoogleMapsShareResolver.isAllowedGoogleMapsDestinationUrl(
