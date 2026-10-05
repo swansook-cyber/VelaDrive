@@ -30,19 +30,21 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.activity:activity-compose:1.12.0")
+    implementation("androidx.activity:activity-compose:1.13.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
-    implementation(platform("androidx.compose:compose-bom:2026.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2026.02.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
-    // Navigation stack candidate validated during research.
-    // Enable after technical spike confirms all transitive versions together.
-    // implementation("com.stadiamaps.ferrostar:core:0.57.0")
-    // implementation("com.stadiamaps.ferrostar:ui-maplibre:0.57.0")
-    // implementation("com.stadiamaps.ferrostar:ui-compose:0.57.0")
+    // Technical Spike #1: navigation + MapLibre compatibility.
+    implementation("com.stadiamaps.ferrostar:core:0.57.0")
+    implementation("com.stadiamaps.ferrostar:ui-maplibre:0.57.0")
+    implementation("com.stadiamaps.ferrostar:ui-compose:0.57.0")
+
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:5.3.2"))
+    implementation("com.squareup.okhttp3:okhttp")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
