@@ -12,7 +12,7 @@ import org.maplibre.compose.expressions.dsl.const
 import org.maplibre.compose.layers.CircleLayer
 import org.maplibre.compose.layers.LineLayer
 import org.maplibre.compose.map.MaplibreMap
-import org.maplibre.compose.map.rememberMapState
+import org.maplibre.compose.camera.rememberCameraState
 import org.maplibre.compose.sources.GeoJsonData
 import org.maplibre.compose.sources.rememberGeoJsonSource
 import org.maplibre.compose.style.BaseStyle
@@ -35,9 +35,14 @@ fun RoutePreviewMap(
     }
     val camera = routeCamera(positions)
 
-    val mapState = rememberMapState(
+    val cameraState = rememberCameraState(camera)
+
+    MaplibreMap(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(420.dp),
         baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
-        cameraPosition = camera
+        cameraState = cameraState
     ) {
         val routeSource = rememberGeoJsonSource(
             GeoJsonData.Features(
@@ -101,13 +106,6 @@ fun RoutePreviewMap(
             strokeWidth = const(2.dp)
         )
     }
-
-    MaplibreMap(
-        state = mapState,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(420.dp)
-    )
 }
 
 private fun routeCamera(positions: List<Position>): CameraPosition {
