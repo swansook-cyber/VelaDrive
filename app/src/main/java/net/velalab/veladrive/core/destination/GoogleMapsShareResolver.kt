@@ -9,8 +9,8 @@ import okhttp3.Request
 
 sealed interface ShareResolution {
     data class Resolved(val destination: Destination) : ShareResolution
-    data object Unsupported : ShareResolution
-    data object CouldNotResolve : ShareResolution
+    data class Unsupported(val detail: String) : ShareResolution
+    data class CouldNotResolve(val detail: String) : ShareResolution
 }
 
 class GoogleMapsShareResolver(
@@ -22,7 +22,8 @@ class GoogleMapsShareResolver(
             return ShareResolution.Resolved(it)
         }
 
-        val shortUrl = extractSupportedGoogleShortUrl(sharedText) ?: return ShareResolution.Unsupported
+        val shortUrl = extractSupportedGoogleShortUrl(sharedText)
+            ?: return ShareResolution.Unsupported("payload=${sharedText.take(500)}")
 
         return withContext(Dispatchers.IO) {
             runCatching {
@@ -44,9 +45,20 @@ class GoogleMapsShareResolver(
 
                     resolveFromGoogleRedirectUrls(redirectUrls)
                         ?.let { ShareResolution.Resolved(it) }
-                        ?: ShareResolution.CouldNotResolve
+                        ?: ShareResolution.CouldNotResolve(
+                            buildString {
+                                append("payload=")
+                                append(sharedText.take(500))
+                                append("\nredirects=")
+                                append(redirectUrls.joinToString(" -> ").take(1200))
+                            }
+                        )
                 }
-            }.getOrDefault(ShareResolution.CouldNotResolve)
+            }.getOrElse { error ->
+                ShareResolution.CouldNotResolve(
+                    "payload=${sharedText.take(500)}\nerror=${error.javaClass.simpleName}: ${error.message.orEmpty().take(500)}"
+                )
+            }
         }
     }
 
