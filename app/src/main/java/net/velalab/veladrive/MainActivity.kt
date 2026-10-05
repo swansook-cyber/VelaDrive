@@ -137,7 +137,7 @@ class MainActivity : ComponentActivity() {
                     onStartSimulation = ::startSimulation,
                     onStopSimulation = ::stopSimulation,
                     onToggleMute = ::toggleSimulationMute,
-                    onOpenGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
+                    onBackToSearch = ::clearDestination
                 )
             }
         }
@@ -247,6 +247,16 @@ class MainActivity : ComponentActivity() {
         routePreview = null
         routeError = null
         ferrostarController.stopSimulation()
+        guidance = null
+        thaiTts.resetDeduplication()
+        simulationError = null
+    }
+
+    private fun clearDestination() {
+        ferrostarController.stopSimulation()
+        destination = null
+        routePreview = null
+        routeError = null
         guidance = null
         thaiTts.resetDeduplication()
         simulationError = null
