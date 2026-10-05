@@ -45,12 +45,15 @@ class GoogleMapsShareResolver(
 
                     resolveFromGoogleRedirectUrls(redirectUrls)
                         ?.let { ShareResolution.Resolved(it) }
+                        ?: resolveFromGoogleMapsHtml(response.body.string())
+                            ?.let { ShareResolution.Resolved(it) }
                         ?: ShareResolution.CouldNotResolve(
                             buildString {
                                 append("payload=")
                                 append(sharedText.take(500))
                                 append("\nredirects=")
                                 append(redirectUrls.joinToString(" -> ").take(1200))
+                                append("\nhtml=loaded-but-no-supported-coordinate-pattern")
                             }
                         )
                 }
@@ -69,9 +72,32 @@ class GoogleMapsShareResolver(
             .firstOrNull()
     }
 
+    internal fun resolveFromGoogleMapsHtml(html: String): Destination? {
+        htmlCoordinatePatterns.forEach { pattern ->
+            pattern.find(html)?.let { match ->
+                val lat = match.groupValues[1].toDoubleOrNull()
+                val lon = match.groupValues[2].toDoubleOrNull()
+                if (lat != null && lon != null && lat in -90.0..90.0 && lon in -180.0..180.0) {
+                    return Destination(
+                        latitude = lat,
+                        longitude = lon,
+                        source = DestinationSource.GOOGLE_MAPS_LINK
+                    )
+                }
+            }
+        }
+        return null
+    }
+
     companion object {
         private val urlRegex = Regex("""https?://[^\s]+""", RegexOption.IGNORE_CASE)
         private val supportedShortHosts = setOf("maps.app.goo.gl", "goo.gl")
+        private val htmlCoordinatePatterns = listOf(
+            Regex("""/@(-?\d{1,2}(?:\.\d+)?),(-?\d{1,3}(?:\.\d+)?)"""),
+            Regex("""[?&](?:center|ll)=(-?\d{1,2}(?:\.\d+)?)(?:%2C|,)(-?\d{1,3}(?:\.\d+)?)""", RegexOption.IGNORE_CASE),
+            Regex("""["']latitude["']\s*:\s*(-?\d{1,2}(?:\.\d+)?)\s*,\s*["']longitude["']\s*:\s*(-?\d{1,3}(?:\.\d+)?)""", RegexOption.IGNORE_CASE),
+            Regex("""!3d(-?\d{1,2}(?:\.\d+)?)!4d(-?\d{1,3}(?:\.\d+)?)""")
+        )
 
         fun extractSupportedGoogleShortUrl(text: String): String? {
             return urlRegex.findAll(text)
