@@ -13,6 +13,11 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "0.1.0"
+
+        val valhallaBaseUrl = providers.gradleProperty("VELA_VALHALLA_BASE_URL")
+            .orElse("https://valhalla1.openstreetmap.de")
+            .get()
+        buildConfigField("String", "VALHALLA_BASE_URL", "\"$valhallaBaseUrl\"")
     }
 
     buildFeatures {
@@ -43,6 +48,7 @@ dependencies {
     implementation("com.stadiamaps.ferrostar:ui-maplibre:0.57.0")
     implementation("com.stadiamaps.ferrostar:ui-compose:0.57.0")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
     implementation(platform("com.squareup.okhttp3:okhttp-bom:5.3.2"))
     implementation("com.squareup.okhttp3:okhttp")
 
