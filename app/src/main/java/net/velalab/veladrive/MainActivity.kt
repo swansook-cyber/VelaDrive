@@ -18,8 +18,11 @@ import net.velalab.veladrive.core.destination.GoogleMapsShareResolver
 import net.velalab.veladrive.core.destination.ShareResolution
 import net.velalab.veladrive.core.location.AndroidLocationController
 import net.velalab.veladrive.core.location.LocationSnapshot
+import com.stadiamaps.ferrostar.core.NavigationUiState
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.ValhallaRouteClient
+import net.velalab.veladrive.core.navigation.VelaFerrostarController
+import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 
@@ -27,6 +30,7 @@ class MainActivity : ComponentActivity() {
     private val shareResolver = GoogleMapsShareResolver()
     private lateinit var locationController: AndroidLocationController
     private val routeClient by lazy { ValhallaRouteClient(BuildConfig.VALHALLA_BASE_URL) }
+    private lateinit var ferrostarController: VelaFerrostarController
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -37,6 +41,10 @@ class MainActivity : ComponentActivity() {
     private var routePreview by mutableStateOf<RoutePreview?>(null)
     private var isLoadingRoute by mutableStateOf(false)
     private var routeError by mutableStateOf<String?>(null)
+    private var guidance by mutableStateOf<VelaGuidanceSnapshot?>(null)
+    private var isSimulationStarting by mutableStateOf(false)
+    private var simulationError by mutableStateOf<String?>(null)
+    private var isSimulationMuted by mutableStateOf(false)
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -54,7 +62,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         locationController = AndroidLocationController(this)
+        ferrostarController = VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL)
         locationPermissionGranted = hasLocationPermission()
+
+        lifecycleScope.launch {
+            ferrostarController.state.collect { state ->
+                val uiState = NavigationUiState.fromFerrostar(
+                    state,
+                    ferrostarController.isMuted,
+                    null
+                )
+                guidance = VelaGuidanceSnapshot.from(uiState)
+                isSimulationMuted = ferrostarController.isMuted
+            }
+        }
 
         consumeIntent(intent)
 
@@ -80,8 +101,15 @@ class MainActivity : ComponentActivity() {
                     routePreview = routePreview,
                     isLoadingRoute = isLoadingRoute,
                     routeError = routeError,
+                    guidance = guidance,
+                    isSimulationStarting = isSimulationStarting,
+                    simulationError = simulationError,
+                    isSimulationMuted = isSimulationMuted,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onCalculateRoute = ::calculateRoute,
+                    onStartSimulation = ::startSimulation,
+                    onStopSimulation = ::stopSimulation,
+                    onToggleMute = ::toggleSimulationMute,
                     onOpenGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
                 )
             }
@@ -90,6 +118,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        ferrostarController.startTts()
         locationPermissionGranted = hasLocationPermission()
         if (locationPermissionGranted) {
             startLocationUpdates()
@@ -99,6 +128,11 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         locationController.stop()
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        ferrostarController.shutdown()
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -121,6 +155,9 @@ class MainActivity : ComponentActivity() {
                     destination = result.destination
                     routePreview = null
                     routeError = null
+                    ferrostarController.stopSimulation()
+                    guidance = null
+                    simulationError = null
                     shareError = null
                 }
                 ShareResolution.Unsupported -> {
@@ -147,6 +184,34 @@ class MainActivity : ComponentActivity() {
                 .onFailure { routeError = it.message ?: "คำนวณเส้นทางไม่สำเร็จ" }
             isLoadingRoute = false
         }
+    }
+
+    private fun startSimulation() {
+        val origin = currentLocation ?: return
+        val target = destination ?: return
+
+        isSimulationStarting = true
+        simulationError = null
+
+        lifecycleScope.launch {
+            runCatching {
+                ferrostarController.startSimulation(origin, target)
+            }.onFailure {
+                simulationError = it.message ?: "เริ่มการจำลองนำทางไม่สำเร็จ"
+            }
+            isSimulationStarting = false
+        }
+    }
+
+    private fun stopSimulation() {
+        ferrostarController.stopSimulation()
+        guidance = null
+        simulationError = null
+    }
+
+    private fun toggleSimulationMute() {
+        ferrostarController.toggleMute()
+        isSimulationMuted = ferrostarController.isMuted
     }
 
     private fun requestLocationPermission() {
