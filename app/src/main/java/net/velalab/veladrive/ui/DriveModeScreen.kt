@@ -53,7 +53,9 @@ fun DriveModeScreen(
             route = routePreview,
             currentLocation = currentLocation,
             destination = destination,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            driveMode = true,
+            distanceToNextManeuverMeters = guidance.distanceToNextManeuverMeters
         )
 
         Column(

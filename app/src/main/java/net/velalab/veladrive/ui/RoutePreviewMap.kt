@@ -1,13 +1,16 @@
 package net.velalab.veladrive.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.log2
+import kotlin.time.Duration.Companion.milliseconds
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.expressions.dsl.const
 import org.maplibre.compose.layers.CircleLayer
@@ -33,14 +36,71 @@ fun RoutePreviewMap(
     destination: Destination,
     modifier: Modifier = Modifier
         .fillMaxWidth()
-        .height(420.dp)
+        .height(420.dp),
+    driveMode: Boolean = false,
+    distanceToNextManeuverMeters: Double? = null
 ) {
     val positions = route.points.map {
         Position(longitude = it.longitude, latitude = it.latitude)
     }
-    val camera = routeCamera(positions)
+    val camera =
+        if (driveMode) {
+            CameraPosition(
+                target = Position(
+                    longitude = currentLocation.longitude,
+                    latitude = currentLocation.latitude
+                ),
+                bearing = currentLocation.bearingDegrees?.toDouble() ?: 0.0,
+                tilt = DriveCameraPolicy.TILT_DEGREES,
+                zoom = DriveCameraPolicy.zoom(
+                    currentLocation.speedMetersPerSecond,
+                    distanceToNextManeuverMeters
+                ),
+                padding = PaddingValues(top = 230.dp, bottom = 80.dp)
+            )
+        } else {
+            routeCamera(positions)
+        }
 
     val cameraState = rememberCameraState(camera)
+
+    LaunchedEffect(
+        driveMode,
+        currentLocation.latitude,
+        currentLocation.longitude,
+        currentLocation.bearingDegrees,
+        currentLocation.speedMetersPerSecond,
+        distanceToNextManeuverMeters
+    ) {
+        if (driveMode) {
+            val bearing =
+                if (
+                    DriveCameraPolicy.shouldFollowBearing(currentLocation.speedMetersPerSecond) &&
+                    currentLocation.bearingDegrees != null
+                ) {
+                    currentLocation.bearingDegrees.toDouble()
+                } else {
+                    cameraState.position.bearing
+                }
+
+            cameraState.animateTo(
+                finalPosition = CameraPosition(
+                    target = Position(
+                        longitude = currentLocation.longitude,
+                        latitude = currentLocation.latitude
+                    ),
+                    bearing = bearing,
+                    tilt = DriveCameraPolicy.TILT_DEGREES,
+                    zoom = DriveCameraPolicy.zoom(
+                        currentLocation.speedMetersPerSecond,
+                        distanceToNextManeuverMeters
+                    ),
+                    padding = PaddingValues(top = 230.dp, bottom = 80.dp)
+                ),
+                duration = 450.milliseconds
+            )
+        }
+    }
 
     MaplibreMap(
         modifier = modifier,
