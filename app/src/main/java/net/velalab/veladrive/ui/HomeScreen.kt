@@ -51,10 +51,13 @@ fun HomeScreen(
     locationPermissionGranted: Boolean,
     isSearchingPois: Boolean,
     poiResults: List<PoiSearchResult>,
+    recentPlaces: List<PoiSearchResult>,
+    savedPlaces: List<PoiSearchResult>,
     poiError: String?,
     isLongdoConfigured: Boolean,
     onSearchPoi: (String) -> Unit,
     onSelectPoi: (PoiSearchResult) -> Unit,
+    onSavePoi: (PoiSearchResult) -> Unit,
     onRequestLocationPermission: () -> Unit,
     onGoogleSearch: () -> Unit
 ) {
@@ -141,20 +144,30 @@ fun HomeScreen(
                                 Surface(
                                     tonalElevation = 2.dp,
                                     shape = MaterialTheme.shapes.medium,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { onSelectPoi(poi) }
+                                    modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    Column(modifier = Modifier.padding(12.dp)) {
-                                        Text(
-                                            poi.name,
-                                            style = MaterialTheme.typography.titleMedium
-                                        )
-                                        poi.address?.let {
-                                            Text(it, style = MaterialTheme.typography.bodySmall)
+                                    Row(
+                                        modifier = Modifier.padding(12.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .clickable { onSelectPoi(poi) }
+                                        ) {
+                                            Text(
+                                                poi.name,
+                                                style = MaterialTheme.typography.titleMedium
+                                            )
+                                            poi.address?.let {
+                                                Text(it, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                            poi.distanceText?.let {
+                                                Text("ระยะประมาณ $it")
+                                            }
                                         }
-                                        poi.distanceText?.let {
-                                            Text("ระยะประมาณ $it")
+                                        OutlinedButton(onClick = { onSavePoi(poi) }) {
+                                            Text("บันทึก")
                                         }
                                     }
                                 }
@@ -192,16 +205,43 @@ fun HomeScreen(
                     .padding(12.dp)
                     .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text("Vela Drive", style = MaterialTheme.typography.titleMedium)
-                    Text(
-                        if (currentLocation != null) "GPS พร้อม" else "กำลังหาตำแหน่ง…",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+                    if (savedPlaces.isNotEmpty()) {
+                        Text("★ บันทึก", style = MaterialTheme.typography.labelLarge)
+                        savedPlaces.take(3).forEach { poi ->
+                            Text(
+                                poi.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onSelectPoi(poi) }
+                                    .padding(vertical = 4.dp)
+                            )
+                        }
+                    } else if (recentPlaces.isNotEmpty()) {
+                        Text("ล่าสุด", style = MaterialTheme.typography.labelLarge)
+                        recentPlaces.take(3).forEach { poi ->
+                            Text(
+                                poi.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onSelectPoi(poi) }
+                                    .padding(vertical = 4.dp)
+                            )
+                        }
+                    } else {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text("Vela Drive", style = MaterialTheme.typography.titleMedium)
+                            Text(
+                                if (currentLocation != null) "GPS พร้อม" else "กำลังหาตำแหน่ง…",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                    }
                 }
             }
         }
