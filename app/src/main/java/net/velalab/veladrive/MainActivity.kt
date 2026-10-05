@@ -32,6 +32,7 @@ import net.velalab.veladrive.core.navigation.VelaThaiTts
 import net.velalab.veladrive.core.poi.LongdoPoiClient
 import net.velalab.veladrive.core.poi.PoiSearchResult
 import net.velalab.veladrive.core.poi.VelaPlaceStore
+import net.velalab.veladrive.core.poi.VelaPoiSettingsStore
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 import org.maplibre.android.MapLibre
@@ -42,8 +43,8 @@ class MainActivity : ComponentActivity() {
     private val routeClient by lazy { ValhallaRouteClient(BuildConfig.VALHALLA_BASE_URL) }
     private lateinit var ferrostarController: VelaFerrostarController
     private lateinit var thaiTts: VelaThaiTts
-    private val longdoPoiClient by lazy { LongdoPoiClient(BuildConfig.LONGDO_MAP_API_KEY) }
     private val placeStore by lazy { VelaPlaceStore(this) }
+    private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -65,6 +66,7 @@ class MainActivity : ComponentActivity() {
     private var poiError by mutableStateOf<String?>(null)
     private var recentPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var savedPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
+    private var isLongdoConfigured by mutableStateOf(false)
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -94,6 +96,7 @@ class MainActivity : ComponentActivity() {
         thaiTts = VelaThaiTts(this)
         locationPermissionGranted = hasLocationPermission()
         refreshStoredPlaces()
+        refreshPoiSettings()
 
         lifecycleScope.launch {
             ferrostarController.state.collect { state ->
@@ -130,10 +133,11 @@ class MainActivity : ComponentActivity() {
                     recentPlaces = recentPlaces,
                     savedPlaces = savedPlaces,
                     poiError = poiError ?: shareError,
-                    isLongdoConfigured = longdoPoiClient.isConfigured(),
+                    isLongdoConfigured = isLongdoConfigured,
                     onSearchPoi = ::searchPoi,
                     onSelectPoi = ::selectPoi,
                     onSavePoi = ::savePoi,
+                    onSaveLongdoApiKey = ::saveLongdoApiKey,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
                 )
@@ -247,7 +251,7 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val localResults = placeStore.searchSaved(cleanKeyword)
             val remoteResult = withContext(Dispatchers.IO) {
-                longdoPoiClient.search(
+                LongdoPoiClient(activeLongdoApiKey()).search(
                     keyword = cleanKeyword,
                     latitude = location?.latitude,
                     longitude = location?.longitude
@@ -292,6 +296,21 @@ class MainActivity : ComponentActivity() {
         guidance = null
         thaiTts.resetDeduplication()
         simulationError = null
+    }
+
+    private fun activeLongdoApiKey(): String {
+        val runtime = poiSettingsStore.longdoApiKey()
+        return runtime.ifBlank { BuildConfig.LONGDO_MAP_API_KEY }
+    }
+
+    private fun refreshPoiSettings() {
+        isLongdoConfigured = activeLongdoApiKey().isNotBlank()
+    }
+
+    private fun saveLongdoApiKey(value: String) {
+        poiSettingsStore.saveLongdoApiKey(value)
+        refreshPoiSettings()
+        poiError = null
     }
 
     private fun savePoi(poi: PoiSearchResult) {
