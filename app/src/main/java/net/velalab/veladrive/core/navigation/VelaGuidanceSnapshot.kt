@@ -1,6 +1,7 @@
 package net.velalab.veladrive.core.navigation
 
 import com.stadiamaps.ferrostar.core.NavigationUiState
+import kotlin.math.roundToInt
 
 data class VelaLaneDisplay(
     val directions: List<String>,
@@ -14,9 +15,11 @@ data class VelaLaneDisplay(
 data class VelaGuidanceSnapshot(
     val currentInstruction: String?,
     val nextInstruction: String?,
+    val junctionInstruction: String?,
     val preparationInstruction: String?,
     val currentRoadName: String?,
     val distanceToNextManeuverMeters: Double?,
+    val preparationDistanceMeters: Int,
     val remainingStepCount: Int,
     val lanes: List<VelaLaneDisplay>,
     val isNavigating: Boolean,
@@ -26,7 +29,8 @@ data class VelaGuidanceSnapshot(
 object VelaGuidanceEngine {
     fun from(
         uiState: NavigationUiState,
-        routePreview: RoutePreview? = null
+        routePreview: RoutePreview? = null,
+        speedMetersPerSecond: Double? = null
     ): VelaGuidanceSnapshot {
         val remainingSteps = uiState.remainingSteps.orEmpty()
         val matched = matchCurrentManeuver(uiState, routePreview)
@@ -68,24 +72,62 @@ object VelaGuidanceEngine {
 
         val distanceToNext = uiState.progress?.distanceToNextManeuver
         val nextStepDistance = remainingSteps.drop(1).firstOrNull()?.distance
+        val preparationDistance = preparationDistanceMeters(speedMetersPerSecond)
 
         return VelaGuidanceSnapshot(
             currentInstruction = currentInstruction,
             nextInstruction = nextInstruction,
+            junctionInstruction =
+                buildJunctionInstruction(
+                    currentManeuver = matched,
+                    nextManeuver = nextMatched,
+                    distanceToCurrentManeuverMeters = distanceToNext,
+                    preparationDistanceMeters = preparationDistance.toDouble()
+                ),
             preparationInstruction =
                 buildPreparationInstruction(
                     currentInstruction = currentInstruction,
                     nextInstruction = nextInstruction,
                     distanceToCurrentManeuverMeters = distanceToNext,
-                    distanceAfterCurrentManeuverMeters = nextStepDistance
+                    distanceAfterCurrentManeuverMeters = nextStepDistance,
+                    preparationDistanceMeters = preparationDistance.toDouble()
                 ),
             currentRoadName = matched?.primaryStreetName ?: uiState.currentStepRoadName,
             distanceToNextManeuverMeters = distanceToNext,
+            preparationDistanceMeters = preparationDistance,
             remainingStepCount = remainingSteps.size,
             lanes = laneDisplays,
             isNavigating = uiState.isNavigating(),
             isRerouting = uiState.isCalculatingNewRoute == true
         )
+    }
+
+    internal fun preparationDistanceMeters(speedMetersPerSecond: Double?): Int {
+        val speed = speedMetersPerSecond?.coerceAtLeast(0.0) ?: 0.0
+        return (120.0 + speed * 18.0)
+            .coerceIn(220.0, 700.0)
+            .roundToInt()
+    }
+
+    internal fun buildJunctionInstruction(
+        currentManeuver: VelaRouteManeuver?,
+        nextManeuver: VelaRouteManeuver?,
+        distanceToCurrentManeuverMeters: Double?,
+        preparationDistanceMeters: Double
+    ): String? {
+        if (currentManeuver == null || nextManeuver == null) return null
+        if (currentManeuver.type !in setOf(7, 8, 22)) return null
+        if (!isTurnLike(nextManeuver.type)) return null
+
+        val distance = distanceToCurrentManeuverMeters ?: return null
+        if (distance > preparationDistanceMeters) return null
+
+        val next = thaiInstruction(nextManeuver)
+        return if (distance <= 180.0) {
+            "แยกนี้ตรงไป — แยกถัดไป $next"
+        } else {
+            "ยังไม่เลี้ยว — เตรียม $next ที่แยกถัดไป"
+        }
     }
 
     internal fun thaiInstruction(maneuver: VelaRouteManeuver): String {
@@ -148,7 +190,8 @@ object VelaGuidanceEngine {
         currentInstruction: String?,
         nextInstruction: String?,
         distanceToCurrentManeuverMeters: Double?,
-        distanceAfterCurrentManeuverMeters: Double?
+        distanceAfterCurrentManeuverMeters: Double?,
+        preparationDistanceMeters: Double = 350.0
     ): String? {
         if (nextInstruction.isNullOrBlank()) return null
 
@@ -168,9 +211,7 @@ object VelaGuidanceEngine {
 
         if (isStraightLike(currentInstruction)) {
             return when {
-                currentDistance != null && currentDistance <= 350.0 ->
-                    "ผ่านช่วงนี้ไปก่อน แล้วเตรียม $nextInstruction"
-                currentDistance != null && currentDistance <= 700.0 ->
+                currentDistance != null && currentDistance <= preparationDistanceMeters ->
                     "ตรงต่อไปก่อน แล้วเตรียม $nextInstruction"
                 else -> null
             }
@@ -182,6 +223,12 @@ object VelaGuidanceEngine {
             null
         }
     }
+
+    private fun isTurnLike(type: Int): Boolean =
+        type in setOf(
+            9, 10, 11, 12, 13, 14, 15, 16,
+            18, 19, 20, 21, 23, 24, 26, 27, 37, 38
+        )
 
     private fun isStraightLike(instruction: String?): Boolean {
         val value = instruction?.lowercase().orEmpty()
