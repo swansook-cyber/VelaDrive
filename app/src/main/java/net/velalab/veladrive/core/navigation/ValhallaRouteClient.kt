@@ -26,10 +26,13 @@ import org.conscrypt.Conscrypt
 
 class ValhallaRouteClient(
     baseUrl: String,
-    private val httpClient: OkHttpClient = defaultClient()
+    private val injectedHttpClient: OkHttpClient? = null
 ) {
     private val routeUrl = baseUrl.trimEnd('/') + "/route"
     private val json = Json { ignoreUnknownKeys = true }
+    private val httpClient: OkHttpClient by lazy {
+        injectedHttpClient ?: defaultClient()
+    }
 
     suspend fun route(
         origin: LocationSnapshot,
