@@ -52,8 +52,9 @@ object VelaGuidanceEngine {
                     ?.text
 
         val laneSource = matched?.lanes.orEmpty()
+        val hasUsableLaneGuidance = laneSource.any { it.isActive || it.isValid }
         val laneDisplays =
-            if (laneSource.isNotEmpty()) {
+            if (hasUsableLaneGuidance) {
                 laneSource.map { lane ->
                     VelaLaneDisplay(
                         directions = lane.directions.map { it.symbol },
