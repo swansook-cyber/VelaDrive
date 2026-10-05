@@ -1,7 +1,6 @@
 package net.velalab.veladrive.core.destination
 
 import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
 
 private val coordinateRegex = Regex(
     pattern = """(?<![0-9.])(-?\d{1,2}(?:\.\d+)?)\s*[, ]\s*(-?\d{1,3}(?:\.\d+)?)(?![0-9.])"""
@@ -24,7 +23,7 @@ class DestinationResolver {
 
         queryValueRegex.find(text)?.let { match ->
             val decoded = runCatching {
-                URLDecoder.decode(match.groupValues[1], StandardCharsets.UTF_8)
+                URLDecoder.decode(match.groupValues[1], "UTF-8")
             }.getOrDefault(match.groupValues[1])
 
             coordinateRegex.find(decoded)?.let { coords ->
