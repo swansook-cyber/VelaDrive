@@ -2,13 +2,11 @@ package net.velalab.veladrive.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -73,21 +71,21 @@ fun NavigationShellScreen(
                 }
 
                 Spacer(Modifier.height(24.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedButton(
-                        onClick = onOpenGoogleSearch,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("เปลี่ยนปลายทาง")
-                    }
+                OutlinedButton(
+                    onClick = onOpenGoogleSearch,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("เปลี่ยนปลายทาง")
+                }
 
-                    Button(
-                        onClick = {},
-                        enabled = locationPermissionGranted && currentLocation != null,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("พร้อมคำนวณเส้นทาง")
-                    }
+                Spacer(Modifier.height(12.dp))
+
+                Button(
+                    onClick = {},
+                    enabled = locationPermissionGranted && currentLocation != null,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("พร้อมคำนวณเส้นทาง")
                 }
 
                 Spacer(Modifier.height(12.dp))
