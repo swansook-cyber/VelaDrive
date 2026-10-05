@@ -28,7 +28,10 @@ import net.velalab.veladrive.core.navigation.RoutePreview
 fun RoutePreviewMap(
     route: RoutePreview,
     currentLocation: LocationSnapshot,
-    destination: Destination
+    destination: Destination,
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .height(420.dp)
 ) {
     val positions = route.points.map {
         Position(longitude = it.longitude, latitude = it.latitude)
@@ -38,9 +41,7 @@ fun RoutePreviewMap(
     val cameraState = rememberCameraState(camera)
 
     MaplibreMap(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(420.dp),
+        modifier = modifier,
         baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
         cameraState = cameraState
     ) {
