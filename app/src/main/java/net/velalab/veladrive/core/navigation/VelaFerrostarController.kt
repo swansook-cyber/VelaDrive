@@ -62,7 +62,8 @@ class VelaFerrostarController(
             .withJsonOptions(
                 mapOf(
                     "units" to "kilometers",
-                    "language" to "th-TH"
+                    "language" to "th-TH",
+                    "turn_lanes" to true
                 )
             )
 
