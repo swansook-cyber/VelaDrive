@@ -1,14 +1,14 @@
 package net.velalab.veladrive.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -16,12 +16,19 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
+import kotlin.math.roundToInt
+
+private val PreviewGreen = Color(0xFF2E7D32)
+private val PreviewDark = Color(0xEE202124)
 
 @Composable
 fun NavigationShellScreen(
@@ -41,7 +48,7 @@ fun NavigationShellScreen(
     onStartSimulation: () -> Unit,
     onStopSimulation: () -> Unit,
     onToggleMute: () -> Unit,
-    onOpenGoogleSearch: () -> Unit
+    onBackToSearch: () -> Unit
 ) {
     if (
         guidance?.isNavigating == true &&
@@ -63,208 +70,230 @@ fun NavigationShellScreen(
     }
 
     MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Column(
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (routePreview != null && currentLocation != null) {
+                RoutePreviewMap(
+                    route = routePreview,
+                    currentLocation = currentLocation,
+                    destination = destination,
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Surface(
+                    color = Color(0xFFF2F2F2),
+                    modifier = Modifier.fillMaxSize()
+                ) {}
+            }
+
+            Surface(
+                color = PreviewGreen,
+                contentColor = Color.White,
+                shadowElevation = 8.dp,
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Top
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
             ) {
-                Text("Vela Drive", style = MaterialTheme.typography.headlineLarge)
-                Text("Navigation Shell", style = MaterialTheme.typography.titleMedium)
-
-                Spacer(Modifier.height(24.dp))
-                Text("ปลายทาง", style = MaterialTheme.typography.labelLarge)
-                Text("${destination.latitude}, ${destination.longitude}")
-
-                Spacer(Modifier.height(20.dp))
-                Text("ตำแหน่งปัจจุบัน", style = MaterialTheme.typography.labelLarge)
-
-                when {
-                    !locationPermissionGranted -> {
-                        Text("ต้องอนุญาตตำแหน่งก่อนเริ่มนำทาง")
-                        Spacer(Modifier.height(12.dp))
-                        Button(
-                            onClick = onRequestLocationPermission,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("อนุญาต GPS")
-                        }
-                    }
-
-                    currentLocation != null -> {
-                        Text("${currentLocation.latitude}, ${currentLocation.longitude}")
-                        currentLocation.accuracyMeters?.let {
-                            Text("ความแม่นยำประมาณ ${it.toInt()} เมตร")
-                        }
-                    }
-
-                    else -> Text("กำลังรอสัญญาณ GPS…")
-                }
-
-                locationError?.let {
-                    Spacer(Modifier.height(12.dp))
-                    Text(it)
-                }
-
-                Spacer(Modifier.height(24.dp))
-                OutlinedButton(
-                    onClick = onOpenGoogleSearch,
-                    modifier = Modifier.fillMaxWidth()
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("เปลี่ยนปลายทาง")
-                }
-
-                Spacer(Modifier.height(12.dp))
-
-                Button(
-                    onClick = onCalculateRoute,
-                    enabled = locationPermissionGranted && currentLocation != null && !isLoadingRoute,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(if (routePreview == null) "คำนวณเส้นทาง" else "คำนวณใหม่")
-                }
-
-                if (isLoadingRoute) {
-                    Spacer(Modifier.height(16.dp))
-                    CircularProgressIndicator()
-                    Spacer(Modifier.height(8.dp))
-                    Text("กำลังคำนวณเส้นทาง…")
-                }
-
-                routeError?.let {
-                    Spacer(Modifier.height(12.dp))
-                    Text(it)
-                }
-
-                if (routePreview != null && currentLocation != null) {
-                    Spacer(Modifier.height(20.dp))
-                    val minutes = (routePreview.durationSeconds / 60.0).toInt()
-                    Text(
-                        "ระยะทาง %.1f กม. • ประมาณ %d นาที".format(
-                            routePreview.distanceKilometers,
-                            minutes
-                        ),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    RoutePreviewMap(
-                        route = routePreview,
-                        currentLocation = currentLocation,
-                        destination = destination
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Button(
-                        onClick = onStartSimulation,
-                        enabled = !isSimulationStarting && guidance?.isNavigating != true,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(if (isSimulationStarting) "กำลังเริ่มจำลอง…" else "ทดลองนำทางจำลอง")
+                    OutlinedButton(onClick = onBackToSearch) {
+                        Text("‹ กลับ")
                     }
-                }
-
-                if (isSimulationStarting) {
-                    Spacer(Modifier.height(12.dp))
-                    CircularProgressIndicator()
-                }
-
-                simulationError?.let {
-                    Spacer(Modifier.height(12.dp))
-                    Text(it)
-                }
-
-                guidance?.takeIf { it.isNavigating }?.let { g ->
-                    Spacer(Modifier.height(20.dp))
-                    Text("Vela Guidance", style = MaterialTheme.typography.titleLarge)
-
-                    g.currentInstruction?.let {
-                        Spacer(Modifier.height(8.dp))
-                        Text(it, style = MaterialTheme.typography.headlineSmall)
-                    }
-
-                    g.currentRoadName?.let {
-                        Text("ถนนปัจจุบัน: $it")
-                    }
-
-                    g.junctionInstruction?.let {
-                        Spacer(Modifier.height(12.dp))
-                        Surface(
-                            tonalElevation = 4.dp,
-                            shape = MaterialTheme.shapes.large,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.headlineSmall,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                        }
-                    }
-
-                    g.preparationInstruction?.let {
-                        Spacer(Modifier.height(10.dp))
+                    Spacer(Modifier.width(12.dp))
+                    Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            it,
-                            style = MaterialTheme.typography.titleMedium
+                            destination.label ?: "ปลายทาง",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
                         )
-                    }
-
-                    g.nextInstruction?.let {
-                        Spacer(Modifier.height(8.dp))
-                        Text("ถัดไป: $it", style = MaterialTheme.typography.titleMedium)
-                    }
-
-                    g.distanceToNextManeuverMeters?.let {
-                        Spacer(Modifier.height(4.dp))
                         Text(
-                            "อีกประมาณ ${it.toInt()} ม. • เตือนล่วงหน้า ${g.preparationDistanceMeters} ม.",
-                            style = MaterialTheme.typography.bodySmall
+                            "Vela Drive Route Preview",
+                            style = MaterialTheme.typography.bodyMedium
                         )
-                    }
-
-                    if (g.lanes.isNotEmpty()) {
-                        Spacer(Modifier.height(12.dp))
-                        Text("เลน", style = MaterialTheme.typography.labelLarge)
-                        Text(
-                            g.lanes.joinToString("   ") { lane ->
-                                if (lane.isActive) "[${lane.symbols}]" else lane.symbols
-                            },
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-
-                        val preferred = g.lanes.withIndex()
-                            .filter { it.value.isActive }
-                            .map { it.index + 1 }
-
-                        if (preferred.isNotEmpty()) {
-                            Text("แนะนำเลน ${preferred.joinToString(", ")} จากซ้าย")
-                        }
-                    }
-
-                    if (g.isRerouting) {
-                        Spacer(Modifier.height(8.dp))
-                        Text("กำลังคำนวณเส้นทางใหม่…")
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-                    OutlinedButton(
-                        onClick = onToggleMute,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(if (isSimulationMuted) "เปิดเสียงนำทาง" else "ปิดเสียงนำทาง")
-                    }
-
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedButton(
-                        onClick = onStopSimulation,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("หยุดการจำลอง")
                     }
                 }
             }
+
+            if (
+                routePreview == null ||
+                currentLocation == null ||
+                !locationPermissionGranted
+            ) {
+                Surface(
+                    tonalElevation = 10.dp,
+                    shape = MaterialTheme.shapes.extraLarge,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(20.dp)
+                        .fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        when {
+                            !locationPermissionGranted -> {
+                                Text(
+                                    "ต้องเปิด GPS ก่อนคำนวณเส้นทาง",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Button(
+                                    onClick = onRequestLocationPermission,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("อนุญาต GPS")
+                                }
+                            }
+
+                            currentLocation == null -> {
+                                CircularProgressIndicator()
+                                Text("กำลังรอสัญญาณ GPS…")
+                            }
+
+                            isLoadingRoute -> {
+                                CircularProgressIndicator()
+                                Text("กำลังคำนวณเส้นทาง…")
+                            }
+
+                            else -> {
+                                Text(
+                                    "พร้อมคำนวณเส้นทางไปยังปลายทาง",
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Button(
+                                    onClick = onCalculateRoute,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("คำนวณเส้นทาง")
+                                }
+                            }
+                        }
+
+                        locationError?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                        routeError?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error)
+                        }
+                    }
+                }
+            }
+
+            if (routePreview != null && currentLocation != null) {
+                RoutePreviewBottomCard(
+                    routePreview = routePreview,
+                    destination = destination,
+                    isSimulationStarting = isSimulationStarting,
+                    simulationError = simulationError,
+                    onCalculateRoute = onCalculateRoute,
+                    onStartSimulation = onStartSimulation,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun RoutePreviewBottomCard(
+    routePreview: RoutePreview,
+    destination: Destination,
+    isSimulationStarting: Boolean,
+    simulationError: String?,
+    onCalculateRoute: () -> Unit,
+    onStartSimulation: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val minutes = (routePreview.durationSeconds / 60.0).roundToInt()
+
+    Surface(
+        color = PreviewDark,
+        contentColor = Color.White,
+        shadowElevation = 12.dp,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(modifier = Modifier.padding(14.dp)) {
+            Text(
+                destination.label ?: "ปลายทางที่เลือก",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                PreviewStat(
+                    value = "%.1f".format(routePreview.distanceKilometers),
+                    label = "กม.",
+                    modifier = Modifier.weight(1f)
+                )
+                PreviewStat(
+                    value = minutes.toString(),
+                    label = "นาที",
+                    modifier = Modifier.weight(1f)
+                )
+                PreviewStat(
+                    value = routePreview.maneuvers.size.toString(),
+                    label = "คำสั่ง",
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Button(
+                onClick = onStartSimulation,
+                enabled = !isSimulationStarting,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    if (isSimulationStarting) {
+                        "กำลังเริ่ม…"
+                    } else {
+                        "ทดลองนำทาง"
+                    }
+                )
+            }
+
+            OutlinedButton(
+                onClick = onCalculateRoute,
+                enabled = !isSimulationStarting,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text("คำนวณเส้นทางใหม่")
+            }
+
+            simulationError?.let {
+                Text(
+                    it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PreviewStat(
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            value,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.ExtraBold
+        )
+        Text(label, style = MaterialTheme.typography.bodySmall)
     }
 }
