@@ -1,47 +1,47 @@
-# Krabi / Ao Nang Lane Coverage Audit
+# Thailand Lane Coverage Audit
 
-This audit exists because Vela Drive must not assume lane data is available at every Thai junction.
+Vela Drive does not assume that OSM turn-lane data is available everywhere. The audit tool measures real Valhalla lane coverage on ordinary driving routes.
 
-The test routes use public place coordinates around Krabi and Ao Nang and query Valhalla with turn_lanes=true.
+## City profiles
+
+Current profiles:
+
+- Krabi / Ao Nang
+- Hat Yai
+- Phuket
+- Bangkok
+
+Each profile contains four representative routes. They are for coverage sampling, not benchmark timing.
 
 ## Run on the Home Hub
 
-After Valhalla is healthy:
+Single city:
 
-    cd /path/to/VelaDrive
-    python3 tools/lane_audit.py \
-      --endpoint http://127.0.0.1:8002 \
-      --json-out reports/krabi-lanes.json \
-      --md-out reports/krabi-lanes.md
+    python3 tools/lane_audit.py       --endpoint http://127.0.0.1:8002       --city hatyai       --md-out reports/hatyai-lanes.md
 
-The four initial samples are:
+Compare large cities:
 
-- Ao Nang → Krabi Town
-- Ao Nang → Krabi Airport
-- Krabi Town → Krabi Airport
-- Noppharat Thara → Krabi Town
+    python3 tools/lane_audit.py       --endpoint http://127.0.0.1:8002       --city hatyai       --city phuket       --city bangkok       --json-out reports/major-cities-lanes.json       --md-out reports/major-cities-lanes.md
 
-These are deliberately ordinary driving routes rather than hand-picked intersections.
+All profiles including Krabi:
 
-## Decision rule
+    python3 tools/lane_audit.py       --endpoint http://127.0.0.1:8002       --all       --json-out reports/thailand-lanes.json       --md-out reports/thailand-lanes.md
 
-Vela Drive always keeps current maneuver + next maneuver as the primary guidance model.
-
-Lane guidance is shown only when Valhalla returns lane data. The audit classifies sampled coverage as:
+## Interpretation
 
 - strong: 60% or more of guidance-relevant maneuvers have lane data
 - useful: 30–59.9%
 - limited: 10–29.9%
 - sparse: below 10%
 
-Even a strong Krabi result does not imply nationwide Thailand coverage.
+Vela Drive always keeps current + next maneuver as the baseline. Lane guidance appears only when Valhalla returns reliable data.
 
-## Why this is separate from Ferrostar
+A sparse result in Krabi does not imply sparse coverage in Bangkok, Phuket, or Hat Yai. This audit exists specifically to avoid that incorrect conclusion.
 
-Valhalla's native response can expose per-maneuver lane bitmasks when turn_lanes=true. Vela Drive parses and normalizes that data itself so the UI is not dependent on a navigation SDK's banner/lane interpretation.
+## CI
 
-## CI sanity check
+The tool has an offline self-test:
 
     python3 tools/lane_audit.py --self-test
 
-This validates counting and classification without making a network call.
+This validates counting, classifications, and city profile registration without calling Valhalla.
