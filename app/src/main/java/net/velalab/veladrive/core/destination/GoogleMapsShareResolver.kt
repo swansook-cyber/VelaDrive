@@ -33,17 +33,28 @@ class GoogleMapsShareResolver(
                     .build()
 
                 httpClient.newCall(request).execute().use { response ->
-                    val finalUrl = response.request.url.toString()
-                    if (!isAllowedGoogleMapsDestinationUrl(finalUrl)) {
-                        return@use ShareResolution.CouldNotResolve
+                    val redirectUrls = buildList {
+                        add(response.request.url.toString())
+                        var prior = response.priorResponse
+                        while (prior != null) {
+                            add(prior.request.url.toString())
+                            prior = prior.priorResponse
+                        }
                     }
 
-                    localResolver.resolveLocally(finalUrl)
+                    resolveFromGoogleRedirectUrls(redirectUrls)
                         ?.let { ShareResolution.Resolved(it) }
                         ?: ShareResolution.CouldNotResolve
                 }
             }.getOrDefault(ShareResolution.CouldNotResolve)
         }
+    }
+
+    internal fun resolveFromGoogleRedirectUrls(urls: List<String>): Destination? {
+        return urls.asSequence()
+            .filter(::isAllowedGoogleMapsDestinationUrl)
+            .mapNotNull(localResolver::resolveLocally)
+            .firstOrNull()
     }
 
     companion object {
