@@ -52,7 +52,9 @@ class MainActivity : ComponentActivity() {
     private var isLoadingRoute by mutableStateOf(false)
     private var routeError by mutableStateOf<String?>(null)
     private var guidance by mutableStateOf<VelaGuidanceSnapshot?>(null)
+    private var isNavigationStarting by mutableStateOf(false)
     private var isSimulationStarting by mutableStateOf(false)
+    private var navigationError by mutableStateOf<String?>(null)
     private var simulationError by mutableStateOf<String?>(null)
     private var isSimulationMuted by mutableStateOf(false)
     private var poiResults by mutableStateOf<List<PoiSearchResult>>(emptyList())
@@ -129,13 +131,16 @@ class MainActivity : ComponentActivity() {
                     isLoadingRoute = isLoadingRoute,
                     routeError = routeError,
                     guidance = guidance,
+                    isNavigationStarting = isNavigationStarting,
                     isSimulationStarting = isSimulationStarting,
+                    navigationError = navigationError,
                     simulationError = simulationError,
                     isSimulationMuted = isSimulationMuted,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onCalculateRoute = ::calculateRoute,
+                    onStartNavigation = ::startNavigation,
                     onStartSimulation = ::startSimulation,
-                    onStopSimulation = ::stopSimulation,
+                    onStopNavigation = ::stopNavigation,
                     onToggleMute = ::toggleSimulationMute,
                     onBackToSearch = ::clearDestination
                 )
@@ -183,7 +188,7 @@ class MainActivity : ComponentActivity() {
                     destination = result.destination
                     routePreview = null
                     routeError = null
-                    ferrostarController.stopSimulation()
+                    ferrostarController.stopNavigation()
                     guidance = null
                     thaiTts.resetDeduplication()
                     simulationError = null
@@ -246,14 +251,14 @@ class MainActivity : ComponentActivity() {
         poiError = null
         routePreview = null
         routeError = null
-        ferrostarController.stopSimulation()
+        ferrostarController.stopNavigation()
         guidance = null
         thaiTts.resetDeduplication()
         simulationError = null
     }
 
     private fun clearDestination() {
-        ferrostarController.stopSimulation()
+        ferrostarController.stopNavigation()
         destination = null
         routePreview = null
         routeError = null
@@ -277,6 +282,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun startNavigation() {
+        val origin = currentLocation ?: return
+        val target = destination ?: return
+
+        isNavigationStarting = true
+        navigationError = null
+        simulationError = null
+
+        lifecycleScope.launch {
+            runCatching {
+                ferrostarController.startLiveNavigation(origin, target)
+            }.onFailure {
+                navigationError = it.message ?: "เริ่มนำทางด้วย GPS ไม่สำเร็จ"
+            }
+            isNavigationStarting = false
+        }
+    }
+
     private fun startSimulation() {
         val origin = currentLocation ?: return
         val target = destination ?: return
@@ -294,11 +317,14 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun stopSimulation() {
-        ferrostarController.stopSimulation()
+    private fun stopNavigation() {
+        ferrostarController.stopNavigation()
         guidance = null
         thaiTts.resetDeduplication()
+        navigationError = null
         simulationError = null
+        isNavigationStarting = false
+        isSimulationStarting = false
     }
 
     private fun toggleSimulationMute() {
