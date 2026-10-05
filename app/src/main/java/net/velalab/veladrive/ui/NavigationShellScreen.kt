@@ -169,9 +169,36 @@ fun NavigationShellScreen(
                         Text("ถนนปัจจุบัน: $it")
                     }
 
+                    g.preparationInstruction?.let {
+                        Spacer(Modifier.height(10.dp))
+                        Text(
+                            it,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+
                     g.nextInstruction?.let {
                         Spacer(Modifier.height(8.dp))
                         Text("ถัดไป: $it", style = MaterialTheme.typography.titleMedium)
+                    }
+
+                    if (g.lanes.isNotEmpty()) {
+                        Spacer(Modifier.height(12.dp))
+                        Text("เลน", style = MaterialTheme.typography.labelLarge)
+                        Text(
+                            g.lanes.joinToString("   ") { lane ->
+                                if (lane.isActive) "[${lane.symbols}]" else lane.symbols
+                            },
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+
+                        val preferred = g.lanes.withIndex()
+                            .filter { it.value.isActive }
+                            .map { it.index + 1 }
+
+                        if (preferred.isNotEmpty()) {
+                            Text("แนะนำเลน ${preferred.joinToString(", ")} จากซ้าย")
+                        }
                     }
 
                     if (g.isRerouting) {
