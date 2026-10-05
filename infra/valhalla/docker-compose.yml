@@ -1,0 +1,17 @@
+services:
+  valhalla:
+    image: ghcr.io/valhalla/valhalla-scripted:latest
+    container_name: veladrive-valhalla
+    restart: unless-stopped
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./data:/custom_files
+    environment:
+      tile_urls: https://download.geofabrik.de/asia/thailand-latest.osm.pbf
+      server_threads: "1"
+      build_elevation: "False"
+      build_admins: "True"
+      build_time_zones: "True"
+      build_tar: "True"
+      use_tiles_ignore_pbf: "True"
