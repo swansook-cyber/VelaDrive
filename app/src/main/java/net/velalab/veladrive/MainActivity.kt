@@ -27,6 +27,7 @@ import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.core.navigation.VelaThaiTts
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
+import org.maplibre.android.MapLibre
 
 class MainActivity : ComponentActivity() {
     private val shareResolver = GoogleMapsShareResolver()
@@ -64,6 +65,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapLibre.getInstance(this)
         locationController = AndroidLocationController(this)
         ferrostarController = VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL)
         thaiTts = VelaThaiTts(this)
