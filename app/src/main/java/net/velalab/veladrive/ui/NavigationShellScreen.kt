@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.navigation.RoutePreview
+import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 
 @Composable
 fun NavigationShellScreen(
@@ -29,15 +32,24 @@ fun NavigationShellScreen(
     routePreview: RoutePreview?,
     isLoadingRoute: Boolean,
     routeError: String?,
+    guidance: VelaGuidanceSnapshot?,
+    isSimulationStarting: Boolean,
+    simulationError: String?,
+    isSimulationMuted: Boolean,
     onRequestLocationPermission: () -> Unit,
     onCalculateRoute: () -> Unit,
+    onStartSimulation: () -> Unit,
+    onStopSimulation: () -> Unit,
+    onToggleMute: () -> Unit,
     onOpenGoogleSearch: () -> Unit
 ) {
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(
-                modifier = Modifier.padding(24.dp),
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Top
             ) {
                 Text("Vela Drive", style = MaterialTheme.typography.headlineLarge)
                 Text("Navigation Shell", style = MaterialTheme.typography.titleMedium)
@@ -122,6 +134,66 @@ fun NavigationShellScreen(
                         currentLocation = currentLocation,
                         destination = destination
                     )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Button(
+                        onClick = onStartSimulation,
+                        enabled = !isSimulationStarting && guidance?.isNavigating != true,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (isSimulationStarting) "กำลังเริ่มจำลอง…" else "ทดลองนำทางจำลอง")
+                    }
+                }
+
+                if (isSimulationStarting) {
+                    Spacer(Modifier.height(12.dp))
+                    CircularProgressIndicator()
+                }
+
+                simulationError?.let {
+                    Spacer(Modifier.height(12.dp))
+                    Text(it)
+                }
+
+                guidance?.takeIf { it.isNavigating }?.let { g ->
+                    Spacer(Modifier.height(20.dp))
+                    Text("Vela Guidance", style = MaterialTheme.typography.titleLarge)
+
+                    g.currentInstruction?.let {
+                        Spacer(Modifier.height(8.dp))
+                        Text(it, style = MaterialTheme.typography.headlineSmall)
+                    }
+
+                    g.currentRoadName?.let {
+                        Text("ถนนปัจจุบัน: $it")
+                    }
+
+                    g.nextInstruction?.let {
+                        Spacer(Modifier.height(8.dp))
+                        Text("ถัดไป: $it", style = MaterialTheme.typography.titleMedium)
+                    }
+
+                    if (g.isRerouting) {
+                        Spacer(Modifier.height(8.dp))
+                        Text("กำลังคำนวณเส้นทางใหม่…")
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+                    OutlinedButton(
+                        onClick = onToggleMute,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (isSimulationMuted) "เปิดเสียงนำทาง" else "ปิดเสียงนำทาง")
+                    }
+
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedButton(
+                        onClick = onStopSimulation,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("หยุดการจำลอง")
+                    }
                 }
             }
         }
