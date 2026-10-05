@@ -201,7 +201,19 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             when (val result = shareResolver.resolve(text)) {
                 is ShareResolution.Resolved -> {
-                    destination = result.destination
+                    val resolved = result.destination
+                    placeStore.addRecent(
+                        PoiSearchResult(
+                            id = "shared:${resolved.latitude},${resolved.longitude}",
+                            name = resolved.label ?: "จุดหมายจาก Google Maps",
+                            latitude = resolved.latitude,
+                            longitude = resolved.longitude,
+                            address = null,
+                            distanceText = null
+                        )
+                    )
+                    refreshStoredPlaces()
+                    destination = resolved
                     routePreview = null
                     routeError = null
                     ferrostarController.stopNavigation()
