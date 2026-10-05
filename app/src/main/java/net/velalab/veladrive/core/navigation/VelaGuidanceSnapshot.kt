@@ -191,7 +191,7 @@ object VelaGuidanceEngine {
         nextInstruction: String?,
         distanceToCurrentManeuverMeters: Double?,
         distanceAfterCurrentManeuverMeters: Double?,
-        preparationDistanceMeters: Double = 350.0
+        preparationDistanceMeters: Double = 700.0
     ): String? {
         if (nextInstruction.isNullOrBlank()) return null
 
