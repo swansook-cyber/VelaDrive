@@ -17,9 +17,11 @@ import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
 import okhttp3.OkHttpClient
 import uniffi.ferrostar.CourseFiltering
+import uniffi.ferrostar.CourseOverGround
 import uniffi.ferrostar.GeographicCoordinate
 import uniffi.ferrostar.NavigationControllerConfig
 import uniffi.ferrostar.RouteDeviationTracking
+import uniffi.ferrostar.Speed
 import uniffi.ferrostar.UserLocation
 import uniffi.ferrostar.Waypoint
 import uniffi.ferrostar.WaypointAdvanceMode
@@ -113,10 +115,14 @@ class VelaFerrostarController(
         val initialLocation =
             UserLocation(
                 GeographicCoordinate(origin.latitude, origin.longitude),
-                origin.speedMetersPerSecond?.toDouble() ?: 0.0,
-                origin.bearingDegrees?.toDouble(),
+                origin.accuracyMeters?.toDouble() ?: Double.MAX_VALUE,
+                origin.bearingDegrees?.let {
+                    CourseOverGround(it.toUInt().toUShort(), null)
+                },
                 Instant.now(),
-                origin.accuracyMeters?.toDouble()
+                origin.speedMetersPerSecond?.let {
+                    Speed(it.toDouble(), null)
+                }
             )
 
         val routes =
