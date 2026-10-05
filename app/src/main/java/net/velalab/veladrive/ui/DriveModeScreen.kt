@@ -17,12 +17,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import kotlin.math.roundToInt
+
+private val VelaGuidanceGreen = Color(0xFF2E7D32)
+private val VelaGuidanceGreenDark = Color(0xFF1B5E20)
+private val VelaPanel = Color(0xEEFFFFFF)
+private val VelaDarkPanel = Color(0xEE202124)
 
 @Composable
 fun DriveModeScreen(
@@ -34,6 +41,13 @@ fun DriveModeScreen(
     onToggleMute: () -> Unit,
     onStopNavigation: () -> Unit
 ) {
+    val speedKmh =
+        currentLocation.speedMetersPerSecond
+            ?.times(3.6f)
+            ?.roundToInt()
+            ?: 0
+    val remainingMinutes = (routePreview.durationSeconds / 60.0).roundToInt()
+
     Box(modifier = Modifier.fillMaxSize()) {
         RoutePreviewMap(
             route = routePreview,
@@ -43,153 +57,263 @@ fun DriveModeScreen(
         )
 
         Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.align(Alignment.TopCenter),
+            verticalArrangement = Arrangement.spacedBy(0.dp)
         ) {
-            Surface(
-                tonalElevation = 8.dp,
-                shape = MaterialTheme.shapes.extraLarge,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    guidance.distanceToNextManeuverMeters?.let {
-                        Text(
-                            text = formatDistance(it),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
+            ManeuverBanner(guidance)
 
-                    Text(
-                        text = guidance.currentInstruction ?: "ตรงต่อไป",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-                    guidance.currentRoadName?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
-            }
-
-            guidance.junctionInstruction?.let {
+            guidance.junctionInstruction?.let { junction ->
                 Surface(
-                    tonalElevation = 10.dp,
-                    shape = MaterialTheme.shapes.large,
+                    color = VelaGuidanceGreenDark,
+                    contentColor = Color.White,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = it,
-                        style = MaterialTheme.typography.headlineSmall,
-                        modifier = Modifier.padding(14.dp)
+                        text = junction,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                     )
                 }
             }
 
-            guidance.nextInstruction?.let {
+            guidance.nextInstruction?.let { next ->
                 Surface(
-                    tonalElevation = 5.dp,
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier.fillMaxWidth()
+                    color = VelaPanel,
+                    contentColor = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
                 ) {
-                    Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
-                        Text("จากนั้น", style = MaterialTheme.typography.labelLarge)
-                        Text(it, style = MaterialTheme.typography.titleLarge)
+                    Row(
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "ถัดไป",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.width(12.dp))
+                        Text(
+                            text = maneuverArrow(next),
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Text(
+                            text = next,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
 
             if (guidance.lanes.isNotEmpty()) {
-                Surface(
-                    tonalElevation = 6.dp,
-                    shape = MaterialTheme.shapes.large,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text("เลือกเลน", style = MaterialTheme.typography.labelLarge)
-                        Text(
-                            guidance.lanes.joinToString("   ") { lane ->
-                                if (lane.isActive) "[${lane.symbols}]" else lane.symbols
-                            },
-                            style = MaterialTheme.typography.headlineMedium
-                        )
-
-                        val preferred = guidance.lanes.withIndex()
-                            .filter { it.value.isActive }
-                            .map { it.index + 1 }
-
-                        if (preferred.isNotEmpty()) {
-                            Text(
-                                "แนะนำเลน ${preferred.joinToString(", ")} จากซ้าย",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                }
+                LanePanel(guidance)
             }
 
             if (guidance.isRerouting) {
                 Surface(
-                    tonalElevation = 8.dp,
-                    shape = MaterialTheme.shapes.large,
+                    color = Color(0xFFF9A825),
+                    contentColor = Color.Black,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         "กำลังคำนวณเส้นทางใหม่…",
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(12.dp)
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                     )
                 }
             }
         }
 
         Surface(
-            tonalElevation = 10.dp,
-            shape = MaterialTheme.shapes.extraLarge,
+            color = VelaDarkPanel,
+            contentColor = Color.White,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(12.dp)
                 .fillMaxWidth()
         ) {
-            Row(
-                modifier = Modifier.padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    val speedKmh =
-                        currentLocation.speedMetersPerSecond
-                            ?.times(3.6f)
-                            ?.roundToInt()
-                            ?: 0
+            Column {
+                guidance.preparationInstruction?.let { preparation ->
                     Text(
-                        "${speedKmh} กม./ชม.",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
-                    val minutes = (routePreview.durationSeconds / 60.0).roundToInt()
-                    Text(
-                        "%.1f กม. • ประมาณ %d นาที".format(
-                            routePreview.distanceKilometers,
-                            minutes
-                        ),
-                        style = MaterialTheme.typography.bodyMedium
+                        text = preparation,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
                     )
                 }
 
-                OutlinedButton(onClick = onToggleMute) {
-                    Text(if (isMuted) "เปิดเสียง" else "ปิดเสียง")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    DriveStat(
+                        value = speedKmh.toString(),
+                        label = "กม./ชม.",
+                        modifier = Modifier.weight(0.9f)
+                    )
+                    DriveStat(
+                        value = "%.1f".format(routePreview.distanceKilometers),
+                        label = "กม. เหลือ",
+                        modifier = Modifier.weight(0.9f)
+                    )
+                    DriveStat(
+                        value = remainingMinutes.toString(),
+                        label = "นาที",
+                        modifier = Modifier.weight(0.8f)
+                    )
+
+                    OutlinedButton(onClick = onToggleMute) {
+                        Text(if (isMuted) "เสียง" else "ปิดเสียง")
+                    }
+
+                    Button(onClick = onStopNavigation) {
+                        Text("จบ")
+                    }
                 }
 
-                Spacer(Modifier.width(8.dp))
-
-                Button(onClick = onStopNavigation) {
-                    Text("จบ")
+                guidance.currentRoadName?.let { road ->
+                    Surface(
+                        color = Color(0xFF111214),
+                        contentColor = Color.White,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = road,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ManeuverBanner(guidance: VelaGuidanceSnapshot) {
+    val instruction = guidance.currentInstruction ?: "ตรงต่อไป"
+
+    Surface(
+        color = VelaGuidanceGreen,
+        contentColor = Color.White,
+        shadowElevation = 8.dp,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.width(92.dp)
+            ) {
+                guidance.distanceToNextManeuverMeters?.let { distance ->
+                    Text(
+                        text = formatDistance(distance),
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
+                Text(
+                    text = maneuverArrow(instruction),
+                    style = MaterialTheme.typography.displaySmall,
+                    fontWeight = FontWeight.Black
+                )
+            }
+
+            Spacer(Modifier.width(10.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = instruction,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                guidance.currentRoadName?.let { road ->
+                    Text(
+                        text = road,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LanePanel(guidance: VelaGuidanceSnapshot) {
+    Surface(
+        color = VelaDarkPanel,
+        contentColor = Color.White,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp)
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp)) {
+            val preferred = guidance.lanes.withIndex()
+                .filter { it.value.isActive }
+                .map { it.index + 1 }
+
+            Text(
+                text = guidance.lanes.joinToString("    ") { lane ->
+                    if (lane.isActive) "▰ \${lane.symbols}" else "▱ \${lane.symbols}"
+                },
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+
+            if (preferred.isNotEmpty()) {
+                Text(
+                    "ใช้เลน \${preferred.joinToString(", ")} จากซ้าย",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DriveStat(
+    value: String,
+    label: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.ExtraBold
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall
+        )
+    }
+}
+
+private fun maneuverArrow(instruction: String): String {
+    val text = instruction.lowercase()
+    return when {
+        "กลับรถ" in text -> "↶"
+        "หักศอก" in text && "ขวา" in text -> "↘"
+        "หักศอก" in text && "ซ้าย" in text -> "↙"
+        "เบี่ยงขวา" in text || "ชิดขวา" in text || "ออกทางขวา" in text -> "↗"
+        "เบี่ยงซ้าย" in text || "ชิดซ้าย" in text || "ออกทางซ้าย" in text -> "↖"
+        "เลี้ยวขวา" in text || "ขวา" in text -> "↱"
+        "เลี้ยวซ้าย" in text || "ซ้าย" in text -> "↰"
+        "วงเวียน" in text -> "↻"
+        else -> "↑"
     }
 }
 
@@ -197,6 +321,6 @@ private fun formatDistance(meters: Double): String {
     return if (meters >= 1000.0) {
         "%.1f กม.".format(meters / 1000.0)
     } else {
-        "${meters.roundToInt()} ม."
+        "\${meters.roundToInt()} ม."
     }
 }
