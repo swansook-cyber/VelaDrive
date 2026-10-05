@@ -76,7 +76,11 @@ class MainActivity : ComponentActivity() {
                     thaiTts.isMuted,
                     null
                 )
-                val nextGuidance = VelaGuidanceEngine.from(uiState, routePreview)
+                val nextGuidance = VelaGuidanceEngine.from(
+                    uiState = uiState,
+                    routePreview = routePreview,
+                    speedMetersPerSecond = currentLocation?.speedMetersPerSecond?.toDouble()
+                )
                 guidance = nextGuidance
                 thaiTts.speakGuidance(nextGuidance)
                 isSimulationMuted = thaiTts.isMuted

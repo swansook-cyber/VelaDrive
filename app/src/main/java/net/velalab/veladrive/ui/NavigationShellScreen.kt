@@ -169,6 +169,21 @@ fun NavigationShellScreen(
                         Text("ถนนปัจจุบัน: $it")
                     }
 
+                    g.junctionInstruction?.let {
+                        Spacer(Modifier.height(12.dp))
+                        Surface(
+                            tonalElevation = 4.dp,
+                            shape = MaterialTheme.shapes.large,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.headlineSmall,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
+                    }
+
                     g.preparationInstruction?.let {
                         Spacer(Modifier.height(10.dp))
                         Text(
@@ -180,6 +195,14 @@ fun NavigationShellScreen(
                     g.nextInstruction?.let {
                         Spacer(Modifier.height(8.dp))
                         Text("ถัดไป: $it", style = MaterialTheme.typography.titleMedium)
+                    }
+
+                    g.distanceToNextManeuverMeters?.let {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            "อีกประมาณ ${it.toInt()} ม. • เตือนล่วงหน้า ${g.preparationDistanceMeters} ม.",
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
 
                     if (g.lanes.isNotEmpty()) {
