@@ -18,12 +18,15 @@ import net.velalab.veladrive.core.destination.GoogleMapsShareResolver
 import net.velalab.veladrive.core.destination.ShareResolution
 import net.velalab.veladrive.core.location.AndroidLocationController
 import net.velalab.veladrive.core.location.LocationSnapshot
+import net.velalab.veladrive.core.navigation.RoutePreview
+import net.velalab.veladrive.core.navigation.ValhallaRouteClient
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 
 class MainActivity : ComponentActivity() {
     private val shareResolver = GoogleMapsShareResolver()
     private lateinit var locationController: AndroidLocationController
+    private val routeClient by lazy { ValhallaRouteClient(BuildConfig.VALHALLA_BASE_URL) }
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -31,6 +34,9 @@ class MainActivity : ComponentActivity() {
     private var currentLocation by mutableStateOf<LocationSnapshot?>(null)
     private var locationPermissionGranted by mutableStateOf(false)
     private var locationError by mutableStateOf<String?>(null)
+    private var routePreview by mutableStateOf<RoutePreview?>(null)
+    private var isLoadingRoute by mutableStateOf(false)
+    private var routeError by mutableStateOf<String?>(null)
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -71,7 +77,11 @@ class MainActivity : ComponentActivity() {
                     currentLocation = currentLocation,
                     locationPermissionGranted = locationPermissionGranted,
                     locationError = locationError,
+                    routePreview = routePreview,
+                    isLoadingRoute = isLoadingRoute,
+                    routeError = routeError,
                     onRequestLocationPermission = ::requestLocationPermission,
+                    onCalculateRoute = ::calculateRoute,
                     onOpenGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
                 )
             }
@@ -109,6 +119,8 @@ class MainActivity : ComponentActivity() {
             when (val result = shareResolver.resolve(text)) {
                 is ShareResolution.Resolved -> {
                     destination = result.destination
+                    routePreview = null
+                    routeError = null
                     shareError = null
                 }
                 ShareResolution.Unsupported -> {
@@ -119,6 +131,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
             isResolvingShare = false
+        }
+    }
+
+    private fun calculateRoute() {
+        val origin = currentLocation ?: return
+        val target = destination ?: return
+
+        isLoadingRoute = true
+        routeError = null
+
+        lifecycleScope.launch {
+            routeClient.route(origin, target)
+                .onSuccess { routePreview = it }
+                .onFailure { routeError = it.message ?: "คำนวณเส้นทางไม่สำเร็จ" }
+            isLoadingRoute = false
         }
     }
 
