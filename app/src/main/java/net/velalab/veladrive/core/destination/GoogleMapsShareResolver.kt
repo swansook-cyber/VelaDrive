@@ -3,6 +3,7 @@ package net.velalab.veladrive.core.destination
 import java.time.Duration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -54,9 +55,10 @@ class GoogleMapsShareResolver(
                 .map { it.value.trimEnd('.', ',', ')', ']', '}', '>', '"', '\'') }
                 .firstOrNull { raw ->
                     runCatching {
-                        val host = okhttp3.HttpUrl.get(raw).host.lowercase()
+                        val url = raw.toHttpUrlOrNull() ?: return@firstOrNull false
+                        val host = url.host.lowercase()
                         host in supportedShortHosts &&
-                            (host != "goo.gl" || okhttp3.HttpUrl.get(raw).encodedPath.startsWith("/maps"))
+                            (host != "goo.gl" || url.encodedPath.startsWith("/maps"))
                     }.getOrDefault(false)
                 }
         }
