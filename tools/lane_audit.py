@@ -187,7 +187,8 @@ def lane_summary(response: dict[str, Any]) -> dict[str, Any]:
     ]
 
     denominator = len(relevant)
-    coverage = (len(lane_maneuvers) / denominator * 100.0) if denominator else 0.0
+    raw_coverage = (len(lane_maneuvers) / denominator * 100.0) if denominator else 0.0
+    usable_coverage = (len(valid_maneuvers) / denominator * 100.0) if denominator else 0.0
 
     return {
         "maneuvers_total": len(maneuvers),
@@ -195,7 +196,8 @@ def lane_summary(response: dict[str, Any]) -> dict[str, Any]:
         "maneuvers_with_lanes": len(lane_maneuvers),
         "maneuvers_with_active_lane": len(active_maneuvers),
         "maneuvers_with_valid_or_active_lane": len(valid_maneuvers),
-        "lane_coverage_percent": round(coverage, 1),
+        "lane_coverage_percent": round(raw_coverage, 1),
+        "usable_lane_coverage_percent": round(usable_coverage, 1),
         "examples": [
             {
                 "instruction": maneuver.get("instruction"),
@@ -224,7 +226,8 @@ def run_profile(
 ) -> dict[str, Any]:
     profile = AUDIT_PROFILES[profile_name]
     results = []
-    numerator = 0
+    raw_numerator = 0
+    usable_numerator = 0
     denominator = 0
 
     for route in profile["routes"]:
@@ -238,20 +241,23 @@ def run_profile(
             summary = lane_summary(response)
             item["ok"] = True
             item.update(summary)
-            numerator += summary["maneuvers_with_lanes"]
+            raw_numerator += summary["maneuvers_with_lanes"]
+            usable_numerator += summary["maneuvers_with_valid_or_active_lane"]
             denominator += summary["maneuvers_guidance_relevant"]
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, KeyError) as exc:
             item["ok"] = False
             item["error"] = str(exc)
         results.append(item)
 
-    overall = (numerator / denominator * 100.0) if denominator else 0.0
+    raw_overall = (raw_numerator / denominator * 100.0) if denominator else 0.0
+    usable_overall = (usable_numerator / denominator * 100.0) if denominator else 0.0
     return {
         "profile": profile_name,
         "endpoint": endpoint,
         "area": profile["area"],
-        "overall_lane_coverage_percent": round(overall, 1),
-        "verdict": verdict(overall),
+        "overall_lane_coverage_percent": round(raw_overall, 1),
+        "usable_lane_coverage_percent": round(usable_overall, 1),
+        "verdict": verdict(usable_overall),
         "routes": results,
     }
 
@@ -274,13 +280,21 @@ def run_profiles(
         for item in report["routes"]
         if item.get("ok")
     )
-    overall = (total_lanes / total_relevant * 100.0) if total_relevant else 0.0
+    total_usable = sum(
+        item["maneuvers_with_valid_or_active_lane"]
+        for report in reports
+        for item in report["routes"]
+        if item.get("ok")
+    )
+    raw_overall = (total_lanes / total_relevant * 100.0) if total_relevant else 0.0
+    usable_overall = (total_usable / total_relevant * 100.0) if total_relevant else 0.0
 
     return {
         "endpoint": endpoint,
         "profiles": reports,
-        "overall_lane_coverage_percent": round(overall, 1),
-        "verdict": verdict(overall),
+        "overall_lane_coverage_percent": round(raw_overall, 1),
+        "usable_lane_coverage_percent": round(usable_overall, 1),
+        "verdict": verdict(usable_overall),
     }
 
 
@@ -290,8 +304,9 @@ def markdown(report: dict[str, Any]) -> str:
         "# Vela Drive Thailand Lane Coverage Audit",
         "",
         f"- Endpoint: {report['endpoint']}",
-        f"- Combined coverage: **{report.get('overall_lane_coverage_percent', 0.0)}%**",
-        f"- Combined verdict: **{report.get('verdict', 'sparse')}**",
+        f"- Raw lane coverage: **{report.get('overall_lane_coverage_percent', 0.0)}%**",
+        f"- Usable lane guidance: **{report.get('usable_lane_coverage_percent', 0.0)}%**",
+        f"- Verdict (based on usable guidance): **{report.get('verdict', 'sparse')}**",
         "",
     ]
 
@@ -299,23 +314,25 @@ def markdown(report: dict[str, Any]) -> str:
         lines += [
             f"## {profile['area']}",
             "",
-            f"- Coverage: **{profile['overall_lane_coverage_percent']}%**",
+            f"- Raw lane coverage: **{profile['overall_lane_coverage_percent']}%**",
+            f"- Usable lane guidance: **{profile['usable_lane_coverage_percent']}%**",
             f"- Verdict: **{profile['verdict']}**",
             "",
-            "| Route | Relevant | Lanes | Coverage | Active |",
-            "| --- | ---: | ---: | ---: | ---: |",
+            "| Route | Relevant | Raw lanes | Raw % | Usable | Usable % |",
+            "| --- | ---: | ---: | ---: | ---: | ---: |",
         ]
         for item in profile["routes"]:
             if not item.get("ok"):
                 lines.append(f"| {item['route']} | error | error | error | error |")
                 continue
             lines.append(
-                "| {route} | {rel} | {lanes} | {coverage}% | {active} |".format(
+                "| {route} | {rel} | {lanes} | {coverage}% | {usable} | {usable_pct}% |".format(
                     route=item["route"],
                     rel=item["maneuvers_guidance_relevant"],
                     lanes=item["maneuvers_with_lanes"],
                     coverage=item["lane_coverage_percent"],
-                    active=item["maneuvers_with_active_lane"],
+                    usable=item["maneuvers_with_valid_or_active_lane"],
+                    usable_pct=item["usable_lane_coverage_percent"],
                 )
             )
         lines.append("")
@@ -359,6 +376,7 @@ def self_test() -> None:
     assert result["maneuvers_with_lanes"] == 1
     assert result["maneuvers_with_active_lane"] == 1
     assert result["lane_coverage_percent"] == 50.0
+    assert result["usable_lane_coverage_percent"] == 50.0
     assert verdict(50.0) == "useful"
     assert set(AUDIT_PROFILES) == {"krabi", "hatyai", "phuket", "bangkok"}
 
