@@ -1,5 +1,6 @@
 package net.velalab.veladrive.ui
 
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +47,8 @@ fun NavigationShellScreen(
     locationPermissionGranted: Boolean,
     locationError: String?,
     routePreview: RoutePreview?,
+    routeAlternatives: List<RoutePreview>,
+    selectedRouteIndex: Int,
     isLoadingRoute: Boolean,
     routeError: String?,
     routeOptions: RouteOptions,
@@ -56,6 +60,7 @@ fun NavigationShellScreen(
     isSimulationMuted: Boolean,
     onRequestLocationPermission: () -> Unit,
     onCalculateRoute: () -> Unit,
+    onSelectRoute: (Int) -> Unit,
     onRouteOptionsChanged: (RouteOptions) -> Unit,
     onStartNavigation: () -> Unit,
     onStartSimulation: () -> Unit,
@@ -87,6 +92,8 @@ fun NavigationShellScreen(
             if (routePreview != null && currentLocation != null) {
                 RoutePreviewMap(
                     route = routePreview,
+                    alternativeRoutes = routeAlternatives,
+                    selectedRouteIndex = selectedRouteIndex,
                     currentLocation = currentLocation,
                     destination = destination,
                     modifier = Modifier.fillMaxSize()
@@ -197,6 +204,8 @@ fun NavigationShellScreen(
             if (routePreview != null && currentLocation != null) {
                 RoutePreviewBottomCard(
                     routePreview = routePreview,
+                    routeAlternatives = routeAlternatives,
+                    selectedRouteIndex = selectedRouteIndex,
                     destination = destination,
                     isNavigationStarting = isNavigationStarting,
                     isSimulationStarting = isSimulationStarting,
@@ -204,6 +213,7 @@ fun NavigationShellScreen(
                     simulationError = simulationError,
                     routeOptions = routeOptions,
                     onCalculateRoute = onCalculateRoute,
+                    onSelectRoute = onSelectRoute,
                     onRouteOptionsChanged = onRouteOptionsChanged,
                     onStartNavigation = onStartNavigation,
                     onStartSimulation = onStartSimulation,
@@ -217,6 +227,8 @@ fun NavigationShellScreen(
 @Composable
 private fun RoutePreviewBottomCard(
     routePreview: RoutePreview,
+    routeAlternatives: List<RoutePreview>,
+    selectedRouteIndex: Int,
     destination: Destination,
     isNavigationStarting: Boolean,
     isSimulationStarting: Boolean,
@@ -224,6 +236,7 @@ private fun RoutePreviewBottomCard(
     simulationError: String?,
     routeOptions: RouteOptions,
     onCalculateRoute: () -> Unit,
+    onSelectRoute: (Int) -> Unit,
     onRouteOptionsChanged: (RouteOptions) -> Unit,
     onStartNavigation: () -> Unit,
     onStartSimulation: () -> Unit,
@@ -266,6 +279,35 @@ private fun RoutePreviewBottomCard(
                     label = "คำสั่ง",
                     modifier = Modifier.weight(1f)
                 )
+            }
+
+            if (routeAlternatives.size > 1) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(bottom = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    routeAlternatives.forEachIndexed { index, option ->
+                        val optionMinutes = (option.durationSeconds / 60.0).roundToInt()
+                        val label =
+                            if (index == 0) {
+                                "แนะนำ"
+                            } else {
+                                "ทางเลือก $index"
+                            }
+                        if (index == selectedRouteIndex) {
+                            Button(onClick = { onSelectRoute(index) }) {
+                                Text("$label • $optionMinutes นาที")
+                            }
+                        } else {
+                            OutlinedButton(onClick = { onSelectRoute(index) }) {
+                                Text("$label • $optionMinutes นาที")
+                            }
+                        }
+                    }
+                }
             }
 
             Button(
