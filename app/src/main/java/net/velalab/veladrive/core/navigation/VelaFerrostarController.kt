@@ -40,7 +40,8 @@ import uniffi.ferrostar.stepAdvanceDistanceToEndOfStep
 
 class VelaFerrostarController(
     context: Context,
-    valhallaBaseUrl: String
+    valhallaBaseUrl: String,
+    routeOptions: RouteOptions = RouteOptions()
 ) {
     private val simulatedLocationProvider = SimulatedLocationProvider(warpFactor = 8u)
 
@@ -67,7 +68,11 @@ class VelaFerrostarController(
                 mapOf(
                     "units" to "kilometers",
                     "language" to "en-US",
-                    "turn_lanes" to true
+                    "turn_lanes" to true,
+                    "costing_options" to
+                        mapOf(
+                            "auto" to routeOptions.valhallaAutoOptions()
+                        )
                 )
             )
 
