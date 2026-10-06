@@ -54,6 +54,46 @@ class ValhallaRouteClientTest {
     }
 
     @Test
+    fun parsesPrimaryAndAlternateRoutes() {
+        val primaryShape = encodePolyline6(
+            listOf(
+                RoutePoint(8.086300, 98.906300),
+                RoutePoint(8.059000, 98.916700)
+            )
+        )
+        val alternateShape = encodePolyline6(
+            listOf(
+                RoutePoint(8.086300, 98.906300),
+                RoutePoint(8.070000, 98.930000),
+                RoutePoint(8.059000, 98.916700)
+            )
+        )
+        val payload = """
+            {
+              "trip": {
+                "summary": {"length": 4.2, "time": 540.0},
+                "legs": [{"shape": "$primaryShape"}]
+              },
+              "alternates": [
+                {
+                  "trip": {
+                    "summary": {"length": 4.8, "time": 600.0},
+                    "legs": [{"shape": "$alternateShape"}]
+                  }
+                }
+              ]
+            }
+        """.trimIndent()
+
+        val routes = ValhallaRouteClient("https://example.com").parseRoutes(payload)
+
+        assertEquals(2, routes.size)
+        assertEquals(4.2, routes[0].distanceKilometers, 0.0001)
+        assertEquals(4.8, routes[1].distanceKilometers, 0.0001)
+        assertEquals(3, routes[1].points.size)
+    }
+
+    @Test
     fun parsesValhallaTurnLanes() {
         val points = listOf(
             RoutePoint(8.086300, 98.906300),

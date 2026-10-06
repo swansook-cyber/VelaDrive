@@ -64,6 +64,8 @@ class MainActivity : ComponentActivity() {
     private var locationPermissionGranted by mutableStateOf(false)
     private var locationError by mutableStateOf<String?>(null)
     private var routePreview by mutableStateOf<RoutePreview?>(null)
+    private var routeAlternatives by mutableStateOf<List<RoutePreview>>(emptyList())
+    private var selectedRouteIndex by mutableStateOf(0)
     private var isLoadingRoute by mutableStateOf(false)
     private var routeError by mutableStateOf<String?>(null)
     private var routeOptions by mutableStateOf(RouteOptions())
@@ -139,6 +141,8 @@ class MainActivity : ComponentActivity() {
                     locationPermissionGranted = locationPermissionGranted,
                     locationError = locationError,
                     routePreview = routePreview,
+                    routeAlternatives = routeAlternatives,
+                    selectedRouteIndex = selectedRouteIndex,
                     isLoadingRoute = isLoadingRoute,
                     routeError = routeError,
                     routeOptions = routeOptions,
@@ -150,6 +154,7 @@ class MainActivity : ComponentActivity() {
                     isSimulationMuted = isSimulationMuted,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onCalculateRoute = ::calculateRoute,
+                    onSelectRoute = ::selectRoute,
                     onRouteOptionsChanged = ::applyRouteOptions,
                     onStartNavigation = ::startNavigation,
                     onStartSimulation = ::startSimulation,
@@ -217,6 +222,8 @@ class MainActivity : ComponentActivity() {
                     refreshStoredPlaces()
                     destination = resolved
                     routePreview = null
+                    routeAlternatives = emptyList()
+                    selectedRouteIndex = 0
                     routeError = null
                     ferrostarController?.stopNavigation()
                     guidance = null
@@ -306,6 +313,8 @@ class MainActivity : ComponentActivity() {
         poiResults = emptyList()
         poiError = null
         routePreview = null
+        routeAlternatives = emptyList()
+        selectedRouteIndex = 0
         routeError = null
         ferrostarController?.stopNavigation()
         guidance = null
@@ -332,6 +341,8 @@ class MainActivity : ComponentActivity() {
         ferrostarController?.stopNavigation()
         destination = null
         routePreview = null
+        routeAlternatives = emptyList()
+        selectedRouteIndex = 0
         routeError = null
         guidance = null
         thaiTts?.resetDeduplication()
@@ -345,6 +356,8 @@ class MainActivity : ComponentActivity() {
                 origin?.let { location -> "GPS ยังไม่พร้อมใช้งาน: ${location.diagnosticsText()}" }
                     ?: "กำลังรอพิกัด GPS ใหม่ กรุณารอสักครู่แล้วลองอีกครั้ง"
             routePreview = null
+            routeAlternatives = emptyList()
+            selectedRouteIndex = 0
             return
         }
         val target = destination ?: return
@@ -353,11 +366,33 @@ class MainActivity : ComponentActivity() {
         routeError = null
 
         lifecycleScope.launch {
-            routeClient.route(origin, target, routeOptions)
-                .onSuccess { routePreview = it }
-                .onFailure { routeError = it.message ?: "คำนวณเส้นทางไม่สำเร็จ" }
+            routeClient.routes(origin, target, routeOptions)
+                .onSuccess { routes ->
+                    routeAlternatives = routes
+                    selectedRouteIndex = 0
+                    routePreview = routes.firstOrNull()
+                    if (routes.isEmpty()) {
+                        routeError = "ไม่พบเส้นทางที่ใช้งานได้"
+                    }
+                }
+                .onFailure {
+                    routeAlternatives = emptyList()
+                    selectedRouteIndex = 0
+                    routePreview = null
+                    routeError = it.message ?: "คำนวณเส้นทางไม่สำเร็จ"
+                }
             isLoadingRoute = false
         }
+    }
+
+    private fun selectRoute(index: Int) {
+        val selected = routeAlternatives.getOrNull(index) ?: return
+        selectedRouteIndex = index
+        routePreview = selected
+        ferrostarController?.stopNavigation()
+        guidance = null
+        navigationError = null
+        simulationError = null
     }
 
     private fun applyRouteOptions(options: RouteOptions) {
@@ -397,7 +432,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             runCatching {
-                controller.startLiveNavigation(origin, target)
+                controller.startLiveNavigation(origin, target, selectedRouteIndex)
             }.onFailure {
                 navigationError = it.message ?: "เริ่มนำทางด้วย GPS ไม่สำเร็จ"
             }
@@ -426,7 +461,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             runCatching {
-                controller.startSimulation(origin, target)
+                controller.startSimulation(origin, target, selectedRouteIndex)
             }.onFailure {
                 simulationError = it.message ?: "เริ่มการจำลองนำทางไม่สำเร็จ"
             }

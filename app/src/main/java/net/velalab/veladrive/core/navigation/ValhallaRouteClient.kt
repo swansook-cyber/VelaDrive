@@ -10,6 +10,7 @@ import javax.net.ssl.X509TrustManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.double
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonArray
@@ -38,8 +39,18 @@ class ValhallaRouteClient(
         origin: LocationSnapshot,
         destination: Destination,
         options: RouteOptions = RouteOptions()
-    ): Result<RoutePreview> = withContext(Dispatchers.IO) {
+    ): Result<RoutePreview> =
+        routes(origin, destination, options, alternateCount = 0)
+            .mapCatching { it.firstOrNull() ?: error("Valhalla returned no route") }
+
+    suspend fun routes(
+        origin: LocationSnapshot,
+        destination: Destination,
+        options: RouteOptions = RouteOptions(),
+        alternateCount: Int = 2
+    ): Result<List<RoutePreview>> = withContext(Dispatchers.IO) {
         runCatching {
+            val requestedAlternates = alternateCount.coerceIn(0, 2)
             val body = """
                 {
                   "locations": [
@@ -55,6 +66,7 @@ class ValhallaRouteClient(
                       "use_tolls": ${if (options.avoidTolls) 0.0 else 0.5}
                     }
                   },
+                  "alternates": $requestedAlternates,
                   "units": "kilometers",
                   "language": "en-US",
                   "turn_lanes": true,
@@ -75,7 +87,7 @@ class ValhallaRouteClient(
                 check(response.isSuccessful) {
                     "Valhalla HTTP ${response.code}: ${responseBody.take(200)}"
                 }
-                parseRoute(responseBody)
+                parseRoutes(responseBody)
             }
         }.recoverCatching { error ->
             val chain = generateSequence(error as Throwable?) { it.cause }
@@ -87,9 +99,27 @@ class ValhallaRouteClient(
         }
     }
 
-    internal fun parseRoute(payload: String): RoutePreview {
+    internal fun parseRoutes(payload: String): List<RoutePreview> {
         val root = json.parseToJsonElement(payload).jsonObject
-        val trip = root["trip"]?.jsonObject ?: error("Missing trip")
+        val primaryTrip = root["trip"]?.jsonObject ?: error("Missing trip")
+        val trips = buildList {
+            add(primaryTrip)
+            root["alternates"]?.jsonArray.orEmpty().forEach { alternateElement ->
+                val alternateObject = alternateElement.jsonObject
+                val alternateTrip =
+                    alternateObject["trip"]?.jsonObject
+                        ?: alternateObject.takeIf { it["summary"] != null && it["legs"] != null }
+                if (alternateTrip != null) add(alternateTrip)
+            }
+        }
+
+        return trips.map(::parseTrip)
+    }
+
+    internal fun parseRoute(payload: String): RoutePreview =
+        parseRoutes(payload).first()
+
+    private fun parseTrip(trip: JsonObject): RoutePreview {
         val summary = trip["summary"]?.jsonObject ?: error("Missing trip summary")
 
         val distanceKm = summary["length"]?.jsonPrimitive?.double

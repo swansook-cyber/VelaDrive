@@ -36,6 +36,8 @@ import net.velalab.veladrive.core.navigation.RoutePreview
 @Composable
 fun RoutePreviewMap(
     route: RoutePreview,
+    alternativeRoutes: List<RoutePreview> = emptyList(),
+    selectedRouteIndex: Int = 0,
     currentLocation: LocationSnapshot,
     destination: Destination,
     modifier: Modifier = Modifier
@@ -47,6 +49,16 @@ fun RoutePreviewMap(
     val positions = route.points.map {
         Position(longitude = it.longitude, latitude = it.latitude)
     }
+    val previewCameraPositions =
+        if (!driveMode && alternativeRoutes.isNotEmpty()) {
+            alternativeRoutes.flatMap { alternate ->
+                alternate.points.map {
+                    Position(longitude = it.longitude, latitude = it.latitude)
+                }
+            }.ifEmpty { positions }
+        } else {
+            positions
+        }
     val camera =
         if (driveMode) {
             CameraPosition(
@@ -63,7 +75,7 @@ fun RoutePreviewMap(
                 padding = PaddingValues(top = 230.dp, bottom = 80.dp)
             )
         } else {
-            routeCamera(positions)
+            routeCamera(previewCameraPositions)
         }
 
     val cameraState = rememberCameraState(camera)
@@ -111,6 +123,31 @@ fun RoutePreviewMap(
         baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
         cameraState = cameraState
     ) {
+        if (!driveMode && alternativeRoutes.size > 1) {
+            alternativeRoutes.forEachIndexed { index, alternate ->
+                if (index != selectedRouteIndex && alternate.points.size >= 2) {
+                    val alternateSource = rememberGeoJsonSource(
+                        GeoJsonData.Features(
+                            Feature(
+                                geometry = LineString(
+                                    alternate.points.map {
+                                        Position(longitude = it.longitude, latitude = it.latitude)
+                                    }
+                                ),
+                                properties = null
+                            )
+                        )
+                    )
+                    LineLayer(
+                        id = "vela-route-alt-$index",
+                        source = alternateSource,
+                        color = const(Color(0xFF777777)),
+                        width = const(5.dp)
+                    )
+                }
+            }
+        }
+
         val routeSource = rememberGeoJsonSource(
             GeoJsonData.Features(
                 Feature(
@@ -121,9 +158,9 @@ fun RoutePreviewMap(
         )
 
         LineLayer(
-            id = "vela-route",
+            id = "vela-route-selected",
             source = routeSource,
-            color = const(Color(0xFFD000D7)),
+            color = const(Color(0xFFE000C7)),
             width = const(7.dp)
         )
 
