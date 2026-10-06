@@ -340,9 +340,9 @@ class MainActivity : ComponentActivity() {
 
     private fun calculateRoute() {
         val origin = currentLocation
-        if (origin == null || !origin.isFreshForRouting()) {
+        if (origin == null || !origin.isReadyForRouting()) {
             routeError =
-                origin?.let { location -> "GPS ยังไม่พร้อม: ${location.diagnosticsText()}" }
+                origin?.let { location -> "GPS ยังไม่พร้อมใช้งาน: ${location.diagnosticsText()}" }
                     ?: "กำลังรอพิกัด GPS ใหม่ กรุณารอสักครู่แล้วลองอีกครั้ง"
             routePreview = null
             return
@@ -363,10 +363,10 @@ class MainActivity : ComponentActivity() {
     private fun startNavigation() {
         requestNotificationPermissionIfNeeded()
         val origin = currentLocation
-        if (origin == null || !origin.isFreshForRouting()) {
+        if (origin == null || !origin.isReadyForRouting()) {
             navigationError =
-                origin?.let { location -> "GPS ยังไม่พร้อมสำหรับนำทาง: ${location.diagnosticsText()}" }
-                    ?: "GPS ยังไม่พร้อมสำหรับนำทาง กรุณารอพิกัดใหม่ก่อน"
+                origin?.let { location -> "GPS ยังไม่พร้อมใช้งานสำหรับนำทาง: ${location.diagnosticsText()}" }
+                    ?: "GPS ยังไม่พร้อมใช้งานสำหรับนำทาง กรุณารอพิกัดใหม่ก่อน"
             return
         }
         val target = destination ?: return
@@ -393,10 +393,10 @@ class MainActivity : ComponentActivity() {
     private fun startSimulation() {
         requestNotificationPermissionIfNeeded()
         val origin = currentLocation
-        if (origin == null || !origin.isFreshForRouting()) {
+        if (origin == null || !origin.isReadyForRouting()) {
             simulationError =
-                origin?.let { location -> "GPS ยังไม่พร้อมสำหรับจำลอง: ${location.diagnosticsText()}" }
-                    ?: "GPS ยังไม่พร้อมสำหรับตั้งจุดเริ่มจำลอง กรุณารอพิกัดใหม่ก่อน"
+                origin?.let { location -> "GPS ยังไม่พร้อมใช้งานสำหรับจำลอง: ${location.diagnosticsText()}" }
+                    ?: "GPS ยังไม่พร้อมใช้งานสำหรับตั้งจุดเริ่มจำลอง กรุณารอพิกัดใหม่ก่อน"
             return
         }
         val target = destination ?: return
@@ -519,7 +519,7 @@ class MainActivity : ComponentActivity() {
             onLocation = {
                 currentLocation = it
                 locationError =
-                    if (it.isFreshForRouting()) {
+                    if (it.isReadyForRouting()) {
                         null
                     } else {
                         "กำลังรอ GPS ที่แม่นยำขึ้น…"
