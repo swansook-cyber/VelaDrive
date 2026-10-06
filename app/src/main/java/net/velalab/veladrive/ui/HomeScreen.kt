@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -138,6 +139,26 @@ fun HomeScreen(
                                     onClick = { showLongdoSettings = true }
                                 ) {
                                     Text("ตั้งค่า POI")
+                                }
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                                .horizontalScroll(rememberScrollState()),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            HOME_POI_SHORTCUTS.forEach { shortcut ->
+                                OutlinedButton(
+                                    onClick = {
+                                        query = shortcut.query
+                                        onSearchPoi(shortcut.query)
+                                    },
+                                    enabled = !isSearchingPois
+                                ) {
+                                    Text(shortcut.label)
                                 }
                             }
                         }
@@ -435,6 +456,20 @@ private fun LocationSnapshot.toHomeCameraPosition(): CameraPosition =
         target = Position(longitude = longitude, latitude = latitude),
         zoom = HOME_LOCATION_ZOOM
     )
+
+private data class HomePoiShortcut(
+    val label: String,
+    val query: String
+)
+
+private val HOME_POI_SHORTCUTS = listOf(
+    HomePoiShortcut(label = "⛽ ปั๊ม", query = "ปั๊ม"),
+    HomePoiShortcut(label = "🏥 โรงพยาบาล", query = "โรงพยาบาล"),
+    HomePoiShortcut(label = "☪ ฮาลาล", query = "ฮาลาล"),
+    HomePoiShortcut(label = "🕌 มัสยิด", query = "มัสยิด"),
+    HomePoiShortcut(label = "🏪 7-Eleven", query = "7-eleven"),
+    HomePoiShortcut(label = "🏧 ATM", query = "atm")
+)
 
 private const val HOME_LOCATION_ZOOM = 15.0
 private const val HOME_CAMERA_ANIMATION_MILLIS = 450
