@@ -54,7 +54,7 @@ class AndroidLocationController(context: Context) {
 
         providers
             .mapNotNull { provider -> locationManager.getLastKnownLocation(provider) }
-            .filter(Location::isFreshLastKnownFix)
+            .filter { it.isFreshLastKnownFix() }
             .maxByOrNull { it.time }
             ?.let { onLocation(it.toSnapshot()) }
 
