@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
                     onSavePoi = ::savePoi,
                     onSaveLongdoApiKey = ::saveLongdoApiKey,
                     onRequestLocationPermission = ::requestLocationPermission,
-                    onGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
+                    onGoogleSearch = { query -> GoogleMapsLauncher.openSearch(this, query) }
                 )
             } else {
                 NavigationShellScreen(

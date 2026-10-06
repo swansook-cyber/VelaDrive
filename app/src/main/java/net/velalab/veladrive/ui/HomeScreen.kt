@@ -71,7 +71,7 @@ fun HomeScreen(
     onSavePoi: (PoiSearchResult) -> Unit,
     onSaveLongdoApiKey: (String) -> Unit,
     onRequestLocationPermission: () -> Unit,
-    onGoogleSearch: () -> Unit
+    onGoogleSearch: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
     var showLongdoSettings by remember { mutableStateOf(false) }
@@ -246,7 +246,7 @@ fun HomeScreen(
 
                             if (!isSearchingPois && poiResults.isEmpty() && query.isNotBlank()) {
                                 OutlinedButton(
-                                    onClick = onGoogleSearch,
+                                    onClick = { onGoogleSearch(query) },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Text("หาไม่เจอ? ค้นหาเพิ่มเติมใน Google Maps")

@@ -228,21 +228,32 @@ internal object VelaPoiSearch {
     private fun matchScore(poi: PoiSearchResult, query: String): Int? {
         val name = normalizePoiText(poi.name)
         val aliases = poi.alternateNames.map(::normalizePoiText)
+        val metadataTerms =
+            listOfNotNull(
+                poi.sourceTags["brand"],
+                poi.sourceTags["operator"]
+            ).map(::normalizePoiText)
+        val queryTerms = equivalentSearchTerms(query)
 
-        // Strongest signal: the user typed the actual place name.
-        if (name == query) return 0
-        if (aliases.any { it == query }) return 1
-        if (name.startsWith(query)) return 2
-        if (aliases.any { it.startsWith(query) }) return 3
-        if (name.contains(query)) return 4
-        if (aliases.any { it.contains(query) }) return 5
+        // Strongest signal: the user typed the actual place/brand name.
+        // Brand equivalents (for example 7-Eleven / 7 Eleven / 7-11 / เซเว่น)
+        // are expanded here, never through a generic category alias.
+        if (queryTerms.any { name == it }) return 0
+        if (aliases.any { alias -> queryTerms.any { alias == it } }) return 1
+        if (metadataTerms.any { term -> queryTerms.any { term == it } }) return 2
+        if (queryTerms.any { name.startsWith(it) }) return 3
+        if (aliases.any { alias -> queryTerms.any { alias.startsWith(it) } }) return 4
+        if (metadataTerms.any { term -> queryTerms.any { term.startsWith(it) } }) return 5
+        if (queryTerms.any { name.contains(it) }) return 6
+        if (aliases.any { alias -> queryTerms.any { alias.contains(it) } }) return 7
+        if (metadataTerms.any { term -> queryTerms.any { term.contains(it) } }) return 8
 
         // Generic searches such as "ปั๊ม", "โรงพยาบาล", "มัสยิด", "halal"
         // should resolve through the Vela category vocabulary and then rank by distance.
         val categoryTerms = poi.category?.searchTerms.orEmpty()
-        if (categoryTerms.any { it == query }) return 6
-        if (categoryTerms.any { it.startsWith(query) || query.startsWith(it) }) return 7
-        if (categoryTerms.any { it.contains(query) || query.contains(it) }) return 8
+        if (categoryTerms.any { it == query }) return 9
+        if (categoryTerms.any { it.startsWith(query) || query.startsWith(it) }) return 10
+        if (categoryTerms.any { it.contains(query) || query.contains(it) }) return 11
 
         // Address/area is useful, but should never outrank a place-name or category match.
         val supportingText =
@@ -251,7 +262,7 @@ internal object VelaPoiSearch {
                 poi.province,
                 poi.district
             ).map(::normalizePoiText)
-        return if (supportingText.any { it.contains(query) }) 9 else null
+        return if (supportingText.any { it.contains(query) }) 12 else null
     }
 
     private val PoiCategory.searchTerms: List<String>
@@ -273,7 +284,7 @@ internal object VelaPoiSearch {
         PoiCategory.AIRPORT to listOf("สนามบิน", "airport"),
         PoiCategory.BUS_TERMINAL to listOf("บขส", "สถานีขนส่ง", "bus terminal"),
         PoiCategory.TOURISM to listOf("ที่เที่ยว", "สถานที่ท่องเที่ยว", "tourism", "attraction"),
-        PoiCategory.CONVENIENCE_STORE to listOf("ร้านสะดวกซื้อ", "7-eleven", "7 eleven", "เซเว่น"),
+        PoiCategory.CONVENIENCE_STORE to listOf("ร้านสะดวกซื้อ", "convenience store"),
         PoiCategory.AUTO_SERVICE to listOf("อู่", "ศูนย์บริการรถ", "บริการรถยนต์", "auto service", "car service"),
         PoiCategory.TIRE_SERVICE to listOf("ยาง", "ร้านยาง", "tire", "tyre"),
         PoiCategory.BANK to listOf("ธนาคาร", "bank"),
@@ -283,6 +294,14 @@ internal object VelaPoiSearch {
         PoiCategory.FERRY to listOf("เฟอร์รี่", "เรือเฟอร์รี่", "ferry"),
         PoiCategory.MOSQUE to listOf("มัสยิด", "สุเหร่า", "mosque", "masjid"),
         PoiCategory.GOVERNMENT to listOf("ราชการ", "หน่วยงานราชการ", "government")
+    )
+
+    private fun equivalentSearchTerms(query: String): List<String> =
+        BRAND_EQUIVALENTS.firstOrNull { query in it } ?: listOf(query)
+
+    private val BRAND_EQUIVALENTS = listOf(
+        listOf("7-eleven", "7 eleven", "7-11", "711", "เซเว่น")
+            .map(::normalizePoiText)
     )
 
     private fun distanceMeters(

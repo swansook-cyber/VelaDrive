@@ -36,6 +36,8 @@ CLASSIFICATION_TAG_KEYS = (
     "diet:halal",
     "halal",
     "cuisine",
+    "brand",
+    "operator",
 )
 NAME_TAG_KEYS = ("name:th", "name", "name:en", "alt_name", "short_name")
 
