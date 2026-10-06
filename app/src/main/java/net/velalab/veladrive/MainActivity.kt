@@ -39,6 +39,10 @@ import net.velalab.veladrive.core.poi.PoiSearchMerger
 import net.velalab.veladrive.core.poi.PoiSource
 import net.velalab.veladrive.core.poi.VelaPlaceStore
 import net.velalab.veladrive.core.poi.VelaPoiSettingsStore
+import net.velalab.veladrive.core.safety.ActiveSafetyAlert
+import net.velalab.veladrive.core.safety.AssetSafetyAlertRepository
+import net.velalab.veladrive.core.safety.SafetyAlert
+import net.velalab.veladrive.core.safety.SafetyAlertEngine
 import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
 import org.maplibre.android.MapLibre
@@ -56,6 +60,7 @@ class MainActivity : ComponentActivity() {
     }
     private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
     private val routeOptionsStore by lazy { RouteOptionsStore(this) }
+    private val safetyAlertRepository by lazy { AssetSafetyAlertRepository(this) }
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -80,6 +85,8 @@ class MainActivity : ComponentActivity() {
     private var poiError by mutableStateOf<String?>(null)
     private var recentPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var savedPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
+    private var safetyAlerts: List<SafetyAlert> = emptyList()
+    private var activeSafetyAlert by mutableStateOf<ActiveSafetyAlert?>(null)
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -108,6 +115,7 @@ class MainActivity : ComponentActivity() {
         locationPermissionGranted = hasLocationPermission()
         refreshStoredPlaces()
         routeOptions = routeOptionsStore.load()
+        safetyAlerts = safetyAlertRepository.load()
 
         consumeIntent(intent)
 
@@ -152,6 +160,7 @@ class MainActivity : ComponentActivity() {
                     navigationError = navigationError,
                     simulationError = simulationError,
                     isSimulationMuted = isSimulationMuted,
+                    activeSafetyAlert = activeSafetyAlert,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onCalculateRoute = ::calculateRoute,
                     onSelectRoute = ::selectRoute,
@@ -572,6 +581,7 @@ class MainActivity : ComponentActivity() {
         locationController.start(
             onLocation = {
                 currentLocation = it
+                activeSafetyAlert = SafetyAlertEngine.nearestRelevant(it, safetyAlerts)
                 locationError =
                     if (it.isReadyForRouting()) {
                         it.accuracyMeters
