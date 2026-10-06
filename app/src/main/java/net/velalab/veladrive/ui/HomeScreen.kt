@@ -272,6 +272,15 @@ fun HomeScreen(
                             )
                         }
                     }
+
+                    Text(
+                        currentLocation?.let { location ->
+                            "GPS: ${location.diagnosticsText()} • ${"%.5f".format(location.latitude)}, ${"%.5f".format(location.longitude)}"
+                        } ?: "GPS: ยังไม่มีพิกัด",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 6.dp)
+                    )
                 }
             }
             if (showLongdoSettings) {
