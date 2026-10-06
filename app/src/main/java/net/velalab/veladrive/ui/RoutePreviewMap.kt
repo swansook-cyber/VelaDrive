@@ -49,6 +49,16 @@ fun RoutePreviewMap(
     val positions = route.points.map {
         Position(longitude = it.longitude, latitude = it.latitude)
     }
+    val previewCameraPositions =
+        if (!driveMode && alternativeRoutes.isNotEmpty()) {
+            alternativeRoutes.flatMap { alternate ->
+                alternate.points.map {
+                    Position(longitude = it.longitude, latitude = it.latitude)
+                }
+            }.ifEmpty { positions }
+        } else {
+            positions
+        }
     val camera =
         if (driveMode) {
             CameraPosition(
@@ -65,7 +75,7 @@ fun RoutePreviewMap(
                 padding = PaddingValues(top = 230.dp, bottom = 80.dp)
             )
         } else {
-            routeCamera(positions)
+            routeCamera(previewCameraPositions)
         }
 
     val cameraState = rememberCameraState(camera)
