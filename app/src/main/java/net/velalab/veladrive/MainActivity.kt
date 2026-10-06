@@ -337,7 +337,9 @@ class MainActivity : ComponentActivity() {
     private fun calculateRoute() {
         val origin = currentLocation
         if (origin == null || !origin.isFreshForRouting()) {
-            routeError = "กำลังรอพิกัด GPS ใหม่ กรุณารอสักครู่แล้วลองอีกครั้ง"
+            routeError =
+                origin?.let { location -> "GPS ยังไม่พร้อม: ${location.diagnosticsText()}" }
+                    ?: "กำลังรอพิกัด GPS ใหม่ กรุณารอสักครู่แล้วลองอีกครั้ง"
             routePreview = null
             return
         }
@@ -358,7 +360,9 @@ class MainActivity : ComponentActivity() {
         requestNotificationPermissionIfNeeded()
         val origin = currentLocation
         if (origin == null || !origin.isFreshForRouting()) {
-            navigationError = "GPS ยังไม่พร้อมสำหรับนำทาง กรุณารอพิกัดใหม่ก่อน"
+            navigationError =
+                origin?.let { location -> "GPS ยังไม่พร้อมสำหรับนำทาง: ${location.diagnosticsText()}" }
+                    ?: "GPS ยังไม่พร้อมสำหรับนำทาง กรุณารอพิกัดใหม่ก่อน"
             return
         }
         val target = destination ?: return
@@ -386,7 +390,9 @@ class MainActivity : ComponentActivity() {
         requestNotificationPermissionIfNeeded()
         val origin = currentLocation
         if (origin == null || !origin.isFreshForRouting()) {
-            simulationError = "GPS ยังไม่พร้อมสำหรับตั้งจุดเริ่มจำลอง กรุณารอพิกัดใหม่ก่อน"
+            simulationError =
+                origin?.let { location -> "GPS ยังไม่พร้อมสำหรับจำลอง: ${location.diagnosticsText()}" }
+                    ?: "GPS ยังไม่พร้อมสำหรับตั้งจุดเริ่มจำลอง กรุณารอพิกัดใหม่ก่อน"
             return
         }
         val target = destination ?: return
