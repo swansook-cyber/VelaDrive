@@ -112,8 +112,8 @@ internal object VelaPoiDatasetParser {
         datasetUpdatedAt: String?
     ): PoiSearchResult {
         val source = enumValueOf<PoiSource>(item.requiredText("source"))
-        require(source == PoiSource.VELA_CURATED) {
-            "Vela POI assets may only contain VELA_CURATED records"
+        require(source == PoiSource.VELA_CURATED || source == PoiSource.OPENSTREETMAP) {
+            "Vela POI assets may only contain VELA_CURATED or OPENSTREETMAP records"
         }
         val latitude = item.requiredDouble("latitude")
         val longitude = item.requiredDouble("longitude")
@@ -139,6 +139,7 @@ internal object VelaPoiDatasetParser {
             source = source,
             sourceReference = item.optionalText("sourceReference"),
             sourceUrl = item.optionalText("sourceUrl"),
+            sourceTags = item.optionalTextMap("sourceTags"),
             verified = item["verified"]?.jsonPrimitive?.booleanOrNull ?: false,
             updatedAt = item.optionalText("updatedAt") ?: datasetUpdatedAt,
             datasetVersion = item.optionalText("datasetVersion") ?: datasetVersion
@@ -164,6 +165,16 @@ internal object VelaPoiDatasetParser {
     private fun JsonObject.optionalTextList(key: String): List<String> =
         (this[key] as? JsonArray)
             ?.mapNotNull { it.jsonPrimitive.contentOrNull?.trim()?.takeIf(String::isNotEmpty) }
+            .orEmpty()
+
+    private fun JsonObject.optionalTextMap(key: String): Map<String, String> =
+        (this[key] as? JsonObject)
+            ?.mapNotNull { (mapKey, value) ->
+                value.jsonPrimitive.contentOrNull?.trim()?.takeIf(String::isNotEmpty)?.let {
+                    mapKey to it
+                }
+            }
+            ?.toMap()
             .orEmpty()
 
     private const val SUPPORTED_SCHEMA_VERSION = 1

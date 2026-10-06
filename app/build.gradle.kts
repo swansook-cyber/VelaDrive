@@ -3,6 +3,23 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+val krabiPilotDataset =
+    rootProject.file("tools/osm_poi_importer/generated/krabi/vela_pois_krabi.json")
+val krabiPilotAssetsDirectory =
+    layout.buildDirectory.dir("generated/krabiPilotAssets").get().asFile
+val prepareKrabiPilotAsset by tasks.registering(Sync::class) {
+    group = "build"
+    description = "Copies the review-only Krabi OSM dataset into the pilot variant."
+    from(krabiPilotDataset)
+    into(krabiPilotAssetsDirectory)
+    rename { "vela_pois_krabi_pilot.json" }
+    doFirst {
+        require(krabiPilotDataset.isFile) {
+            "Generate the Krabi OSM pilot dataset before building :app:assemblePilot"
+        }
+    }
+}
+
 android {
     namespace = "net.velalab.veladrive"
     compileSdk = 37
@@ -23,6 +40,29 @@ android {
             .orElse("")
             .get()
         buildConfigField("String", "LONGDO_MAP_API_KEY", "\"$longdoMapApiKey\"")
+        buildConfigField("String", "VELA_POI_ASSET_NAME", "\"vela_pois.json\"")
+        buildConfigField("boolean", "KRABI_OSM_PILOT", "false")
+        buildConfigField("String", "POI_DATASET_LABEL", "\"\"")
+    }
+
+    buildTypes {
+        create("pilot") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".pilot"
+            versionNameSuffix = "-krabi-osm-pilot"
+            matchingFallbacks += listOf("debug")
+            buildConfigField(
+                "String",
+                "VELA_POI_ASSET_NAME",
+                "\"vela_pois_krabi_pilot.json\""
+            )
+            buildConfigField("boolean", "KRABI_OSM_PILOT", "true")
+            buildConfigField("String", "POI_DATASET_LABEL", "\"Krabi OSM Pilot\"")
+        }
+    }
+
+    sourceSets {
+        getByName("pilot").assets.directories.add(krabiPilotAssetsDirectory.absolutePath)
     }
 
     buildFeatures {
@@ -34,6 +74,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
+    }
+}
+
+tasks.configureEach {
+    if (name != "prepareKrabiPilotAsset" && name.contains("Pilot")) {
+        dependsOn(prepareKrabiPilotAsset)
     }
 }
 

@@ -64,6 +64,7 @@ fun HomeScreen(
     savedPlaces: List<PoiSearchResult>,
     poiError: String?,
     isLongdoConfigured: Boolean,
+    poiDatasetLabel: String?,
     onSearchPoi: (String) -> Unit,
     onSelectPoi: (PoiSearchResult) -> Unit,
     onSavePoi: (PoiSearchResult) -> Unit,
@@ -94,6 +95,14 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(10.dp)) {
+                        poiDatasetLabel?.let { label ->
+                            Text(
+                                label,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                        }
                         OutlinedTextField(
                             value = query,
                             onValueChange = { query = it },

@@ -1,0 +1,42 @@
+{
+  "attribution": "© OpenStreetMap contributors",
+  "boundarySha256": "94f8d92bab679af9f43981ea4c3e92d0c2570e8a79670703ba415bc1a18e2e07",
+  "categoryCounts": {
+    "AIRPORT": 2,
+    "ATM": 24,
+    "AUTO_SERVICE": 4,
+    "BANK": 38,
+    "BUS_TERMINAL": 6,
+    "CONVENIENCE_STORE": 168,
+    "EV_CHARGER": 1,
+    "FERRY": 30,
+    "FUEL": 92,
+    "GOVERNMENT": 51,
+    "HALAL_RESTAURANT": 12,
+    "HOSPITAL": 19,
+    "HOTEL": 965,
+    "MARKET": 17,
+    "MOSQUE": 18,
+    "PIER": 18,
+    "POLICE": 20,
+    "RESTAURANT": 1047,
+    "SHOPPING": 9,
+    "TIRE_SERVICE": 2,
+    "TOURISM": 159
+  },
+  "datasetVersion": "osm-krabi-2026-10-06-v2-5289fdd79a6b",
+  "deduplicatedCount": 18,
+  "inputElements": 3574,
+  "inputSha256": "5289fdd79a6b2ad8151fdd9ce1d79d4507f46cef2832166ef6728e9f2fcf9356",
+  "license": "Open Data Commons Open Database License (ODbL) 1.0",
+  "licenseUrl": "https://www.openstreetmap.org/copyright",
+  "outputFile": "vela_pois_krabi.json",
+  "outputPois": 2702,
+  "outputSha256": "54bc325383563c8a276fc604c846c9fdc2706fea4622e42cf51d6e5de344a9a8",
+  "rejectedCount": 701,
+  "rejectionReasons": {
+    "blank_name": 701
+  },
+  "skippedUnmappedCount": 153,
+  "sourceDataTimestamp": "2026-10-06T08:48:39Z"
+}
