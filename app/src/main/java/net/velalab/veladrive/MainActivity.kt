@@ -527,9 +527,13 @@ class MainActivity : ComponentActivity() {
                 currentLocation = it
                 locationError =
                     if (it.isReadyForRouting()) {
-                        null
+                        it.accuracyMeters
+                            ?.takeIf { accuracyMeters -> accuracyMeters > 250f }
+                            ?.let { accuracyMeters ->
+                                "GPS ความแม่นยำต่ำ ±" + accuracyMeters.toInt() + "m แต่ยังนำทางได้"
+                            }
                     } else {
-                        "กำลังรอ GPS ที่แม่นยำขึ้น…"
+                        "พิกัด GPS ไม่ถูกต้อง กรุณารอสัญญาณใหม่"
                     }
             },
             onProviderUnavailable = {
