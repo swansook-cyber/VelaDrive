@@ -1,0 +1,275 @@
+package net.velalab.veladrive.core.poi
+
+import android.content.Context
+import java.util.Locale
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.doubleOrNull
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+
+interface VelaPoiRepository {
+    fun search(
+        keyword: String,
+        latitude: Double?,
+        longitude: Double?,
+        limit: Int = 20
+    ): Result<List<PoiSearchResult>>
+}
+
+class AssetVelaPoiRepository(
+    context: Context,
+    private val assetName: String = DEFAULT_ASSET_NAME
+) : VelaPoiRepository {
+    private val appContext = context.applicationContext
+    private val dataset by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+        runCatching {
+            appContext.assets.open(assetName).bufferedReader().use { reader ->
+                VelaPoiDatasetParser.parse(reader.readText())
+            }
+        }
+    }
+
+    override fun search(
+        keyword: String,
+        latitude: Double?,
+        longitude: Double?,
+        limit: Int
+    ): Result<List<PoiSearchResult>> =
+        dataset.map { loaded ->
+            VelaPoiSearch.search(
+                pois = loaded.pois,
+                keyword = keyword,
+                latitude = latitude,
+                longitude = longitude,
+                limit = limit
+            )
+        }
+
+    private companion object {
+        const val DEFAULT_ASSET_NAME = "vela_pois.json"
+    }
+}
+
+internal class InMemoryVelaPoiRepository(
+    private val pois: List<PoiSearchResult>
+) : VelaPoiRepository {
+    override fun search(
+        keyword: String,
+        latitude: Double?,
+        longitude: Double?,
+        limit: Int
+    ): Result<List<PoiSearchResult>> =
+        Result.success(VelaPoiSearch.search(pois, keyword, latitude, longitude, limit))
+}
+
+internal data class VelaPoiDataset(
+    val schemaVersion: Int,
+    val datasetVersion: String,
+    val updatedAt: String?,
+    val pois: List<PoiSearchResult>
+)
+
+internal object VelaPoiDatasetParser {
+    private val json = Json { ignoreUnknownKeys = true }
+
+    fun parse(raw: String): VelaPoiDataset {
+        val root = json.parseToJsonElement(raw).jsonObject
+        val schemaVersion = root.requiredInt("schemaVersion")
+        require(schemaVersion == SUPPORTED_SCHEMA_VERSION) {
+            "Unsupported Vela POI schema version: $schemaVersion"
+        }
+        val datasetVersion = root.requiredText("datasetVersion")
+        val datasetUpdatedAt = root.optionalText("updatedAt")
+        val pois = root["pois"]?.jsonArray ?: JsonArray(emptyList())
+
+        return VelaPoiDataset(
+            schemaVersion = schemaVersion,
+            datasetVersion = datasetVersion,
+            updatedAt = datasetUpdatedAt,
+            pois = pois.map { element ->
+                parsePoi(
+                    item = element.jsonObject,
+                    datasetVersion = datasetVersion,
+                    datasetUpdatedAt = datasetUpdatedAt
+                )
+            }
+        )
+    }
+
+    private fun parsePoi(
+        item: JsonObject,
+        datasetVersion: String,
+        datasetUpdatedAt: String?
+    ): PoiSearchResult {
+        val source = enumValueOf<PoiSource>(item.requiredText("source"))
+        require(source == PoiSource.VELA_CURATED) {
+            "Vela POI assets may only contain VELA_CURATED records"
+        }
+        val latitude = item.requiredDouble("latitude")
+        val longitude = item.requiredDouble("longitude")
+        require(latitude.isFinite() && latitude in -90.0..90.0) {
+            "Invalid Vela POI latitude"
+        }
+        require(longitude.isFinite() && longitude in -180.0..180.0) {
+            "Invalid Vela POI longitude"
+        }
+
+        return PoiSearchResult(
+            id = item.requiredText("id"),
+            name = item.requiredText("name"),
+            latitude = latitude,
+            longitude = longitude,
+            address = item.optionalText("address"),
+            distanceText = null,
+            alternateNames = item.optionalTextList("alternateNames"),
+            category = enumValueOf<PoiCategory>(item.requiredText("category")),
+            phone = item.optionalText("phone"),
+            province = item.optionalText("province"),
+            district = item.optionalText("district"),
+            source = source,
+            sourceReference = item.optionalText("sourceReference"),
+            sourceUrl = item.optionalText("sourceUrl"),
+            verified = item["verified"]?.jsonPrimitive?.booleanOrNull ?: false,
+            updatedAt = item.optionalText("updatedAt") ?: datasetUpdatedAt,
+            datasetVersion = item.optionalText("datasetVersion") ?: datasetVersion
+        )
+    }
+
+    private fun JsonObject.requiredText(key: String): String =
+        optionalText(key) ?: error("Missing Vela POI field: $key")
+
+    private fun JsonObject.optionalText(key: String): String? =
+        this[key]
+            ?.jsonPrimitive
+            ?.contentOrNull
+            ?.trim()
+            ?.takeIf(String::isNotEmpty)
+
+    private fun JsonObject.requiredInt(key: String): Int =
+        this[key]?.jsonPrimitive?.intOrNull ?: error("Missing Vela POI field: $key")
+
+    private fun JsonObject.requiredDouble(key: String): Double =
+        this[key]?.jsonPrimitive?.doubleOrNull ?: error("Missing Vela POI field: $key")
+
+    private fun JsonObject.optionalTextList(key: String): List<String> =
+        (this[key] as? JsonArray)
+            ?.mapNotNull { it.jsonPrimitive.contentOrNull?.trim()?.takeIf(String::isNotEmpty) }
+            .orEmpty()
+
+    private const val SUPPORTED_SCHEMA_VERSION = 1
+}
+
+internal object VelaPoiSearch {
+    fun search(
+        pois: List<PoiSearchResult>,
+        keyword: String,
+        latitude: Double?,
+        longitude: Double?,
+        limit: Int
+    ): List<PoiSearchResult> {
+        val query = normalizePoiText(keyword)
+        if (query.isEmpty() || limit <= 0) return emptyList()
+
+        val hasOrigin =
+            latitude != null && longitude != null &&
+                latitude.isFinite() && longitude.isFinite() &&
+                latitude in -90.0..90.0 && longitude in -180.0..180.0
+
+        return pois.asSequence()
+            .mapNotNull { poi ->
+                val score = matchScore(poi, query) ?: return@mapNotNull null
+                val distance =
+                    if (hasOrigin) {
+                        distanceMeters(latitude, longitude, poi.latitude, poi.longitude)
+                    } else {
+                        Double.POSITIVE_INFINITY
+                    }
+                RankedPoi(poi, score, distance)
+            }
+            .sortedWith(
+                compareBy<RankedPoi> { it.matchScore }
+                    .thenBy { it.distanceMeters }
+                    .thenBy { normalizePoiText(it.poi.name) }
+                    .thenBy { it.poi.id.orEmpty() }
+            )
+            .take(limit)
+            .map { ranked ->
+                if (ranked.distanceMeters.isFinite()) {
+                    ranked.poi.copy(distanceText = formatDistance(ranked.distanceMeters))
+                } else {
+                    ranked.poi
+                }
+            }
+            .toList()
+    }
+
+    private fun matchScore(poi: PoiSearchResult, query: String): Int? {
+        val name = normalizePoiText(poi.name)
+        if (name == query) return 0
+        if (name.startsWith(query)) return 1
+
+        val aliases = poi.alternateNames.map(::normalizePoiText)
+        if (aliases.any { it == query }) return 2
+        if (name.contains(query)) return 3
+        if (aliases.any { it.startsWith(query) }) return 4
+        if (aliases.any { it.contains(query) }) return 5
+
+        val supportingText =
+            listOfNotNull(
+                poi.address,
+                poi.province,
+                poi.district,
+                poi.category?.name?.replace('_', ' '),
+                poi.category?.displayName
+            ).map(::normalizePoiText)
+        return if (supportingText.any { it.contains(query) }) 6 else null
+    }
+
+    private fun distanceMeters(
+        fromLatitude: Double,
+        fromLongitude: Double,
+        toLatitude: Double,
+        toLongitude: Double
+    ): Double {
+        val lat1 = Math.toRadians(fromLatitude)
+        val lat2 = Math.toRadians(toLatitude)
+        val deltaLat = Math.toRadians(toLatitude - fromLatitude)
+        val deltaLon = Math.toRadians(toLongitude - fromLongitude)
+        val a =
+            sin(deltaLat / 2) * sin(deltaLat / 2) +
+                cos(lat1) * cos(lat2) * sin(deltaLon / 2) * sin(deltaLon / 2)
+        return EARTH_RADIUS_METERS * 2 * atan2(sqrt(a), sqrt(1 - a))
+    }
+
+    private fun formatDistance(meters: Double): String =
+        if (meters < 1_000.0) {
+            "${meters.toInt()} ม."
+        } else {
+            String.format(Locale.ROOT, "%.1f กม.", meters / 1_000.0)
+        }
+
+    private data class RankedPoi(
+        val poi: PoiSearchResult,
+        val matchScore: Int,
+        val distanceMeters: Double
+    )
+
+    private const val EARTH_RADIUS_METERS = 6_371_000.0
+}
+
+internal fun normalizePoiText(value: String): String =
+    value.trim()
+        .replace(WHITESPACE_REGEX, " ")
+        .lowercase(Locale.ROOT)
+
+private val WHITESPACE_REGEX = Regex("\\s+")

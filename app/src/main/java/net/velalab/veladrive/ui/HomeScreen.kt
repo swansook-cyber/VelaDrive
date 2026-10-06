@@ -178,6 +178,11 @@ fun HomeScreen(
                                                 poi.name,
                                                 style = MaterialTheme.typography.titleMedium
                                             )
+                                            Text(
+                                                poi.sourceAndCategoryLabel(),
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
                                             poi.address?.let {
                                                 Text(it, style = MaterialTheme.typography.bodySmall)
                                             }
@@ -415,3 +420,8 @@ private fun LocationSnapshot.toHomeCameraPosition(): CameraPosition =
 
 private const val HOME_LOCATION_ZOOM = 15.0
 private const val HOME_CAMERA_ANIMATION_MILLIS = 450
+
+private fun PoiSearchResult.sourceAndCategoryLabel(): String =
+    listOfNotNull(source.displayName, category?.displayName)
+        .distinct()
+        .joinToString(" • ")

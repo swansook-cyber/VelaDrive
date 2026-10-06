@@ -82,7 +82,9 @@ class LongdoPoiClient(
             latitude = lat,
             longitude = lon,
             address = item["address"]?.jsonPrimitive?.content?.takeIf { it.isNotBlank() },
-            distanceText = item["distance"]?.jsonPrimitive?.content?.takeIf { it.isNotBlank() }
+            distanceText = item["distance"]?.jsonPrimitive?.content?.takeIf { it.isNotBlank() },
+            source = PoiSource.LONGDO,
+            sourceReference = item["id"]?.jsonPrimitive?.content
         )
     }
 

@@ -30,8 +30,11 @@ import net.velalab.veladrive.core.navigation.VelaFerrostarController
 import net.velalab.veladrive.core.navigation.VelaGuidanceEngine
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.core.navigation.VelaThaiTts
+import net.velalab.veladrive.core.poi.AssetVelaPoiRepository
 import net.velalab.veladrive.core.poi.LongdoPoiClient
 import net.velalab.veladrive.core.poi.PoiSearchResult
+import net.velalab.veladrive.core.poi.PoiSearchMerger
+import net.velalab.veladrive.core.poi.PoiSource
 import net.velalab.veladrive.core.poi.VelaPlaceStore
 import net.velalab.veladrive.core.poi.VelaPoiSettingsStore
 import net.velalab.veladrive.ui.HomeScreen
@@ -46,6 +49,7 @@ class MainActivity : ComponentActivity() {
     private var thaiTts: VelaThaiTts? = null
     private var navigationStateJob: Job? = null
     private val placeStore by lazy { VelaPlaceStore(this) }
+    private val velaPoiRepository by lazy { AssetVelaPoiRepository(this) }
     private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
 
     private var destination by mutableStateOf<Destination?>(null)
@@ -199,7 +203,8 @@ class MainActivity : ComponentActivity() {
                             latitude = resolved.latitude,
                             longitude = resolved.longitude,
                             address = null,
-                            distanceText = null
+                            distanceText = null,
+                            source = PoiSource.GOOGLE_MAPS
                         )
                     )
                     refreshStoredPlaces()
@@ -235,30 +240,40 @@ class MainActivity : ComponentActivity() {
         val location = currentLocation
 
         lifecycleScope.launch {
-            val localResults = placeStore.searchSaved(cleanKeyword)
-            val remoteResult = withContext(Dispatchers.IO) {
-                LongdoPoiClient(activeLongdoApiKey()).search(
+            val outcome = withContext(Dispatchers.IO) {
+                val savedResults = placeStore.searchSaved(cleanKeyword)
+                val velaResults = velaPoiRepository.search(
                     keyword = cleanKeyword,
                     latitude = location?.latitude,
                     longitude = location?.longitude
                 )
+                val longdoResults =
+                    LongdoPoiClient(activeLongdoApiKey()).search(
+                        keyword = cleanKeyword,
+                        latitude = location?.latitude,
+                        longitude = location?.longitude
+                    )
+                PoiSearchMerger.merge(
+                    savedResults = savedResults,
+                    velaResults = velaResults,
+                    longdoResults = longdoResults
+                )
             }
 
-            remoteResult
-                .onSuccess { remote ->
-                    poiResults = mergePoiResults(localResults, remote)
-                    if (poiResults.isEmpty()) {
-                        poiError = "ไม่พบสถานที่ใน Vela POI"
-                    }
-                }
-                .onFailure {
-                    poiResults = localResults
-                    poiError =
-                        if (localResults.isEmpty()) {
-                            it.message ?: "ค้นหาสถานที่ไม่สำเร็จ"
-                        } else {
-                            "Longdo ใช้งานไม่ได้ชั่วคราว แสดงสถานที่ที่บันทึกไว้"
-                        }
+            poiResults = outcome.results
+            poiError =
+                when {
+                    outcome.results.isEmpty() &&
+                        outcome.velaFailure != null &&
+                        outcome.longdoFailure != null ->
+                        "ค้นหาสถานที่ไม่สำเร็จทั้งฐานข้อมูล Vela และ Longdo"
+                    outcome.results.isEmpty() ->
+                        "ไม่พบสถานที่ใน Vela POI หรือ Longdo"
+                    outcome.velaFailure != null ->
+                        "ฐานข้อมูล Vela POI ใช้งานไม่ได้ชั่วคราว แสดงผลลัพธ์ที่เหลือ"
+                    outcome.longdoFailure != null ->
+                        "Longdo ใช้งานไม่ได้ชั่วคราว แสดงผลลัพธ์ในเครื่องที่พบ"
+                    else -> null
                 }
 
             isSearchingPois = false
@@ -307,21 +322,6 @@ class MainActivity : ComponentActivity() {
     private fun refreshStoredPlaces() {
         recentPlaces = placeStore.recentPlaces().map { it.toPoiSearchResult() }
         savedPlaces = placeStore.savedPlaces().map { it.toPoiSearchResult() }
-    }
-
-    private fun mergePoiResults(
-        local: List<PoiSearchResult>,
-        remote: List<PoiSearchResult>
-    ): List<PoiSearchResult> {
-        val merged = mutableListOf<PoiSearchResult>()
-        (local + remote).forEach { candidate ->
-            val duplicate = merged.any {
-                kotlin.math.abs(it.latitude - candidate.latitude) < 0.00001 &&
-                    kotlin.math.abs(it.longitude - candidate.longitude) < 0.00001
-            }
-            if (!duplicate) merged += candidate
-        }
-        return merged
     }
 
     private fun clearDestination() {
