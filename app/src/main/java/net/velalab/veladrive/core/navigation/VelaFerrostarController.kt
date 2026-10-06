@@ -10,12 +10,20 @@ import com.stadiamaps.ferrostar.core.location.SimulatedLocationProvider
 import com.stadiamaps.ferrostar.core.service.FerrostarForegroundServiceManager
 import com.stadiamaps.ferrostar.composeui.notification.DefaultForegroundNotificationBuilder
 import com.stadiamaps.ferrostar.core.withJsonOptions
+import java.security.KeyStore
+import java.security.SecureRandom
 import java.time.Duration
 import java.time.Instant
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 import kotlinx.coroutines.flow.StateFlow
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
+import org.conscrypt.Conscrypt
 import uniffi.ferrostar.CourseFiltering
 import uniffi.ferrostar.CourseOverGround
 import uniffi.ferrostar.GeographicCoordinate
@@ -49,9 +57,7 @@ class VelaFerrostarController(
         )
 
     private val httpClient =
-        OkHttpClient.Builder()
-            .callTimeout(Duration.ofSeconds(30))
-            .build()
+        compatibleHttpClient()
             .toOkHttpClientProvider()
 
     private val routeProvider =
@@ -114,6 +120,37 @@ class VelaFerrostarController(
         core.startNavigation(route)
     }
 
+    private fun compatibleHttpClient(): OkHttpClient {
+        val provider = Conscrypt.newProvider()
+        val trustManagerFactory =
+            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
+        trustManagerFactory.init(null as KeyStore?)
+        val trustManager =
+            trustManagerFactory.trustManagers
+                .filterIsInstance<X509TrustManager>()
+                .single()
+
+        val sslContext = SSLContext.getInstance("TLS", provider)
+        sslContext.init(
+            null,
+            arrayOf<TrustManager>(trustManager),
+            SecureRandom()
+        )
+
+        return OkHttpClient.Builder()
+            .sslSocketFactory(sslContext.socketFactory, trustManager)
+            .connectionSpecs(
+                listOf(
+                    ConnectionSpec.MODERN_TLS,
+                    ConnectionSpec.COMPATIBLE_TLS
+                )
+            )
+            .connectTimeout(Duration.ofSeconds(10))
+            .readTimeout(Duration.ofSeconds(20))
+            .callTimeout(Duration.ofSeconds(30))
+            .build()
+    }
+
     private suspend fun fetchRoute(
         origin: LocationSnapshot,
         destination: Destination
@@ -121,7 +158,10 @@ class VelaFerrostarController(
         val initialLocation =
             UserLocation(
                 GeographicCoordinate(origin.latitude, origin.longitude),
-                origin.accuracyMeters?.toDouble() ?: Double.MAX_VALUE,
+                origin.accuracyMeters
+                    ?.toDouble()
+                    ?.takeIf { it.isFinite() && it >= 0.0 }
+                    ?: DEFAULT_UNKNOWN_ACCURACY_METERS,
                 origin.bearingDegrees?.let {
                     CourseOverGround(it.toUInt().toUShort(), null)
                 },
@@ -148,5 +188,9 @@ class VelaFerrostarController(
 
         check(routes.isNotEmpty()) { "Ferrostar did not return a route" }
         return routes.first()
+    }
+
+    private companion object {
+        const val DEFAULT_UNKNOWN_ACCURACY_METERS = 50.0
     }
 }
