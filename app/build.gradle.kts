@@ -50,7 +50,14 @@ dependencies {
 
     // Technical Spike #1: navigation + MapLibre compatibility.
     implementation("com.stadiamaps.ferrostar:core:0.57.0")
-    implementation("com.stadiamaps.ferrostar:ui-maplibre:0.57.0")
+    implementation("com.stadiamaps.ferrostar:ui-maplibre:0.57.0") {
+        // maplibre-compose 0.13.0 defaults to MapLibre Native's Vulkan runtime.
+        // Several older/OEM Android Vulkan drivers crash as soon as the first
+        // map surface is created. Keep the same MapLibre version and API while
+        // selecting its supported OpenGL renderer for broad device stability.
+        exclude(group = "org.maplibre.gl", module = "android-sdk")
+    }
+    implementation("org.maplibre.gl:android-sdk-opengl:13.0.2")
     implementation("com.stadiamaps.ferrostar:ui-compose:0.57.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
