@@ -25,11 +25,8 @@ data class LocationSnapshot(
         }
     }
 
-    fun isFreshForRouting(): Boolean {
-        val age = ageMillis()
-        val accuracyOk = accuracyMeters == null || accuracyMeters <= MAX_ROUTING_ACCURACY_METERS
-        return age <= MAX_ROUTING_AGE_MILLIS && accuracyOk
-    }
+    fun isReadyForRouting(): Boolean =
+        accuracyMeters == null || accuracyMeters <= MAX_ROUTING_ACCURACY_METERS
 
     fun diagnosticsText(): String {
         val ageSeconds = ageMillis() / 1000L
@@ -39,7 +36,6 @@ data class LocationSnapshot(
     }
 
     companion object {
-        const val MAX_ROUTING_AGE_MILLIS = 45 * 1000L
         const val MAX_ROUTING_ACCURACY_METERS = 250f
     }
 }
