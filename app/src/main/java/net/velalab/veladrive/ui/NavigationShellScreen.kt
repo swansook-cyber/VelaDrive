@@ -9,13 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
+import net.velalab.veladrive.core.navigation.RouteOptions
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import kotlin.math.roundToInt
@@ -39,6 +47,7 @@ fun NavigationShellScreen(
     routePreview: RoutePreview?,
     isLoadingRoute: Boolean,
     routeError: String?,
+    routeOptions: RouteOptions,
     guidance: VelaGuidanceSnapshot?,
     isNavigationStarting: Boolean,
     isSimulationStarting: Boolean,
@@ -47,6 +56,7 @@ fun NavigationShellScreen(
     isSimulationMuted: Boolean,
     onRequestLocationPermission: () -> Unit,
     onCalculateRoute: () -> Unit,
+    onRouteOptionsChanged: (RouteOptions) -> Unit,
     onStartNavigation: () -> Unit,
     onStartSimulation: () -> Unit,
     onStopNavigation: () -> Unit,
@@ -192,7 +202,9 @@ fun NavigationShellScreen(
                     isSimulationStarting = isSimulationStarting,
                     navigationError = navigationError,
                     simulationError = simulationError,
+                    routeOptions = routeOptions,
                     onCalculateRoute = onCalculateRoute,
+                    onRouteOptionsChanged = onRouteOptionsChanged,
                     onStartNavigation = onStartNavigation,
                     onStartSimulation = onStartSimulation,
                     modifier = Modifier.align(Alignment.BottomCenter)
@@ -210,12 +222,15 @@ private fun RoutePreviewBottomCard(
     isSimulationStarting: Boolean,
     navigationError: String?,
     simulationError: String?,
+    routeOptions: RouteOptions,
     onCalculateRoute: () -> Unit,
+    onRouteOptionsChanged: (RouteOptions) -> Unit,
     onStartNavigation: () -> Unit,
     onStartSimulation: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val minutes = (routePreview.durationSeconds / 60.0).roundToInt()
+    var showRouteOptions by remember { mutableStateOf(false) }
 
     Surface(
         color = PreviewDark,
@@ -284,6 +299,16 @@ private fun RoutePreviewBottomCard(
             }
 
             OutlinedButton(
+                onClick = { showRouteOptions = true },
+                enabled = !isNavigationStarting && !isSimulationStarting,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
+                Text("ตัวเลือกเส้นทาง • " + routeOptions.summaryLabel())
+            }
+
+            OutlinedButton(
                 onClick = onCalculateRoute,
                 enabled = !isNavigationStarting && !isSimulationStarting,
                 modifier = Modifier
@@ -309,6 +334,84 @@ private fun RoutePreviewBottomCard(
                 )
             }
         }
+    }
+
+    if (showRouteOptions) {
+        RouteOptionsDialog(
+            current = routeOptions,
+            onDismiss = { showRouteOptions = false },
+            onApply = {
+                showRouteOptions = false
+                onRouteOptionsChanged(it)
+            }
+        )
+    }
+}
+
+@Composable
+private fun RouteOptionsDialog(
+    current: RouteOptions,
+    onDismiss: () -> Unit,
+    onApply: (RouteOptions) -> Unit
+) {
+    var draft by remember(current) { mutableStateOf(current) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("ตัวเลือกเส้นทาง") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                RouteOptionSwitch(
+                    label = "หลีกเลี่ยงถนนลูกรัง",
+                    checked = draft.avoidUnpaved,
+                    onCheckedChange = { draft = draft.copy(avoidUnpaved = it) }
+                )
+                RouteOptionSwitch(
+                    label = "หลีกเลี่ยงเรือเฟอร์รี่",
+                    checked = draft.avoidFerry,
+                    onCheckedChange = { draft = draft.copy(avoidFerry = it) }
+                )
+                RouteOptionSwitch(
+                    label = "หลีกเลี่ยงทางด่วน",
+                    checked = draft.avoidHighways,
+                    onCheckedChange = { draft = draft.copy(avoidHighways = it) }
+                )
+                RouteOptionSwitch(
+                    label = "หลีกเลี่ยงทางเสียเงิน",
+                    checked = draft.avoidTolls,
+                    onCheckedChange = { draft = draft.copy(avoidTolls = it) }
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onApply(draft) }) {
+                Text("ใช้และคำนวณใหม่")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("ยกเลิก")
+            }
+        }
+    )
+}
+
+@Composable
+private fun RouteOptionSwitch(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(label, modifier = Modifier.weight(1f))
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
     }
 }
 
