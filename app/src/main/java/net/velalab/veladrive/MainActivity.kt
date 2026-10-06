@@ -49,7 +49,9 @@ class MainActivity : ComponentActivity() {
     private var thaiTts: VelaThaiTts? = null
     private var navigationStateJob: Job? = null
     private val placeStore by lazy { VelaPlaceStore(this) }
-    private val velaPoiRepository by lazy { AssetVelaPoiRepository(this) }
+    private val velaPoiRepository by lazy {
+        AssetVelaPoiRepository(this, BuildConfig.VELA_POI_ASSET_NAME)
+    }
     private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
 
     private var destination by mutableStateOf<Destination?>(null)
@@ -120,6 +122,8 @@ class MainActivity : ComponentActivity() {
                     savedPlaces = savedPlaces,
                     poiError = poiError ?: shareError,
                     isLongdoConfigured = isLongdoConfigured,
+                    poiDatasetLabel =
+                        BuildConfig.POI_DATASET_LABEL.takeIf { it.isNotBlank() },
                     onSearchPoi = ::searchPoi,
                     onSelectPoi = ::selectPoi,
                     onSavePoi = ::savePoi,

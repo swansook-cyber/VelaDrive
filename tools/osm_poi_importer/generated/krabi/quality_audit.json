@@ -1,0 +1,4448 @@
+{
+  "categoriesByDistrict": {
+    "districts": {
+      "Ao Nang": {
+        "HOTEL": 1
+      },
+      "Klong Dao": {
+        "HOTEL": 1
+      },
+      "Klong Tom": {
+        "HOTEL": 1
+      },
+      "Ko Lanta": {
+        "CONVENIENCE_STORE": 1,
+        "HALAL_RESTAURANT": 1,
+        "HOTEL": 128,
+        "RESTAURANT": 17
+      },
+      "Krabi": {
+        "HOTEL": 2
+      },
+      "Mueang": {
+        "RESTAURANT": 1
+      },
+      "Mueang Krabi": {
+        "CONVENIENCE_STORE": 2,
+        "FERRY": 1,
+        "HOSPITAL": 1,
+        "HOTEL": 7
+      },
+      "Mueang Krabi District": {
+        "RESTAURANT": 1
+      },
+      "Mueang Krabi District,": {
+        "RESTAURANT": 1
+      },
+      "Sala Dan": {
+        "HOTEL": 1
+      },
+      "คลองท่อม": {
+        "RESTAURANT": 1
+      },
+      "อำเภอเกาะลันตา": {
+        "FERRY": 1
+      },
+      "อำเภอเมือง": {
+        "GOVERNMENT": 1
+      },
+      "อำเภอเมืองกระบี่": {
+        "FERRY": 1
+      },
+      "อ่าวลึก": {
+        "RESTAURANT": 1
+      },
+      "เกาะลันตา": {
+        "HOSPITAL": 1,
+        "HOTEL": 10,
+        "RESTAURANT": 1,
+        "TOURISM": 1
+      },
+      "เขาพนม": {
+        "RESTAURANT": 2
+      },
+      "เมือง": {
+        "HOSPITAL": 1,
+        "RESTAURANT": 1
+      },
+      "เมืองกระบี่": {
+        "CONVENIENCE_STORE": 1,
+        "FERRY": 6,
+        "GOVERNMENT": 3,
+        "HALAL_RESTAURANT": 1,
+        "HOSPITAL": 3,
+        "HOTEL": 17,
+        "MARKET": 1,
+        "POLICE": 3,
+        "RESTAURANT": 5,
+        "TOURISM": 1
+      },
+      "เหนือคลอง": {
+        "AIRPORT": 1,
+        "HALAL_RESTAURANT": 1,
+        "PIER": 1
+      }
+    },
+    "recordsWithDistrict": 233
+  },
+  "coordinateClusters": [
+    {
+      "clusterCount": 129,
+      "examples": [
+        [
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/3678511051"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Cosmic",
+            "sourceReference": "node/4823052423"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Hello India",
+            "sourceReference": "node/2034506338"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Pirates House",
+            "sourceReference": "node/7036207031"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Tom Yam Restaurant",
+            "sourceReference": "node/4492159298"
+          }
+        ],
+        [
+          {
+            "category": "RESTAURANT",
+            "name": "CHEZ-BEE",
+            "sourceReference": "node/6354197087"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Gu burrirum restaurant",
+            "sourceReference": "node/7105920886"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Krua Lung Sang",
+            "sourceReference": "node/6518159594"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Krua-Lung-Sang",
+            "sourceReference": "node/6354197088"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Lantana Bar & Restaurant",
+            "sourceReference": "node/6057909185"
+          }
+        ],
+        [
+          {
+            "category": "BANK",
+            "name": "ธนาคารออมสิน",
+            "sourceReference": "node/3676113255"
+          },
+          {
+            "category": "HALAL_RESTAURANT",
+            "name": "Makanan",
+            "sourceReference": "node/7126113989"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Baan Pulaoon",
+            "sourceReference": "node/4464449475"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Guesthouse No1",
+            "sourceReference": "node/6021567879"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Hussin",
+            "sourceReference": "node/3678511054"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Marine House",
+            "sourceReference": "node/7929499068"
+          },
+          {
+            "category": "HOTEL",
+            "name": "October House",
+            "sourceReference": "node/4530148040"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Paradise Bungalow",
+            "sourceReference": "node/3678511070"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Panmanee Hotel",
+            "sourceReference": "node/4432459200"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Chill Lay Bar & Restaurant",
+            "sourceReference": "node/5877110785"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Huapaan Restaurant 2 Thai Duc",
+            "sourceReference": "node/11559616769"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "ร้านอาหาร",
+            "sourceReference": "node/6403318885"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "J.T. House",
+            "sourceReference": "node/4672027793"
+          },
+          {
+            "category": "HOTEL",
+            "name": "October Hostel & Resto",
+            "sourceReference": "node/4235006789"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "CoCo Bella",
+            "sourceReference": "node/6533236987"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "October Resto",
+            "sourceReference": "node/7052420762"
+          }
+        ],
+        [
+          {
+            "category": "RESTAURANT",
+            "name": "acqua",
+            "sourceReference": "node/7036164576"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Chef Kag",
+            "sourceReference": "node/11807153969"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Efe Mediterranean cuisine",
+            "sourceReference": "node/4782419523"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "PoPuLar Thai Food",
+            "sourceReference": "node/4749068611"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Chompoo Hostel",
+            "sourceReference": "node/7092804285"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Dormsin",
+            "sourceReference": "node/5418201036"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ploy Dorms",
+            "sourceReference": "node/4294354397"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Cosmic Restaurant",
+            "sourceReference": "node/5398459722"
+          }
+        ],
+        [
+          {
+            "category": "ATM",
+            "name": "กรุงศรี",
+            "sourceReference": "node/10704321589"
+          },
+          {
+            "category": "ATM",
+            "name": "ธนาคารกรุงเทพ",
+            "sourceReference": "node/10704295043"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "way/1348633861"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Blanco central hostel",
+            "sourceReference": "node/11268662769"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Kinnaree House",
+            "sourceReference": "node/3678511058"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Orange Tree GuestHouse",
+            "sourceReference": "node/5550591923"
+          }
+        ]
+      ],
+      "largestClusterSize": 5,
+      "pairCount": 180,
+      "recordsInClusters": 298,
+      "thresholdMeters": 10
+    },
+    {
+      "clusterCount": 305,
+      "examples": [
+        [
+          {
+            "category": "BANK",
+            "name": "Kungsri",
+            "sourceReference": "node/10728216888"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/574386999"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/3678511050"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/3678511051"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Baan Khun Guest House",
+            "sourceReference": "node/4755788425"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ban Thai Guesthouse",
+            "sourceReference": "node/3681710523"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Kinaree",
+            "sourceReference": "node/7036230533"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Kinnaree House",
+            "sourceReference": "node/632192160"
+          },
+          {
+            "category": "HOTEL",
+            "name": "October Guesthouse",
+            "sourceReference": "node/3681710831"
+          },
+          {
+            "category": "HOTEL",
+            "name": "P2 Wood Loft",
+            "sourceReference": "node/7071692785"
+          }
+        ],
+        [
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/10722816941"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/1149254186"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Anita Resort",
+            "sourceReference": "node/632192138"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Blanco central hostel",
+            "sourceReference": "node/11268662769"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Coco Bella Resort",
+            "sourceReference": "node/5507803521"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Grand PP Arcade",
+            "sourceReference": "node/3678511053"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Harmony House",
+            "sourceReference": "node/6041760992"
+          },
+          {
+            "category": "HOTEL",
+            "name": "J.T. House",
+            "sourceReference": "node/4672027793"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Jong Guesthouse",
+            "sourceReference": "node/632192159"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Kinnaree House",
+            "sourceReference": "node/3678511058"
+          }
+        ],
+        [
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/3678511085"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/3678511049"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "PP Supermarket",
+            "sourceReference": "node/3678511067"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Hussin",
+            "sourceReference": "node/3678511054"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ivory",
+            "sourceReference": "node/3678511055"
+          },
+          {
+            "category": "HOTEL",
+            "name": "JJ Guesthouse",
+            "sourceReference": "node/632192158"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Marine House",
+            "sourceReference": "node/7929499068"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Marine House Hostel",
+            "sourceReference": "node/4512601790"
+          },
+          {
+            "category": "HOTEL",
+            "name": "October House",
+            "sourceReference": "node/4530148040"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Onsai Place",
+            "sourceReference": "node/3678511063"
+          }
+        ],
+        [
+          {
+            "category": "BANK",
+            "name": "Siam Commercial Bank",
+            "sourceReference": "node/4620615195"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "24h shop",
+            "sourceReference": "node/7133787985"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/4424560789"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Phi Phi Harbor View",
+            "sourceReference": "node/13666135561"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Phi phi hotel",
+            "sourceReference": "node/12482320703"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Phi phi hotel",
+            "sourceReference": "node/4550703795"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Phi Phi Inn",
+            "sourceReference": "node/5279558340"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Burguer King",
+            "sourceReference": "node/13666135566"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Campus Suite",
+            "sourceReference": "node/6723147785"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Le Grand Bleu",
+            "sourceReference": "node/4323333389"
+          }
+        ],
+        [
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Minimart",
+            "sourceReference": "node/10724827929"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Store",
+            "sourceReference": "node/6041760991"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Flower Bungalows",
+            "sourceReference": "node/1219065780"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ibiza House",
+            "sourceReference": "node/4747070907"
+          },
+          {
+            "category": "HOTEL",
+            "name": "New Wave Bungalows",
+            "sourceReference": "node/632192143"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Pak Khlong Sea Side",
+            "sourceReference": "node/5274768922"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Pak Klong",
+            "sourceReference": "way/364073514"
+          },
+          {
+            "category": "HOTEL",
+            "name": "RC guest house",
+            "sourceReference": "node/4535123694"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Saches Guest House",
+            "sourceReference": "node/3419574707"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Amena",
+            "sourceReference": "node/4326439789"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Baan Korakod",
+            "sourceReference": "node/3343733362"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Baan Mook Anda",
+            "sourceReference": "node/4014964673"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Journey",
+            "sourceReference": "node/4826588622"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Peacock Hostel",
+            "sourceReference": "node/4611181489"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Seahorse Homestay",
+            "sourceReference": "node/4782872224"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Sincere Guest House",
+            "sourceReference": "way/1015059959"
+          },
+          {
+            "category": "HOTEL",
+            "name": "The Dive House",
+            "sourceReference": "way/407872673"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Wishing Well",
+            "sourceReference": "node/4129237705"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Catfish",
+            "sourceReference": "node/4631403589"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Catfish book shop and restaurant",
+            "sourceReference": "node/4782419722"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Aonang Inn",
+            "sourceReference": "way/275620190"
+          },
+          {
+            "category": "HOTEL",
+            "name": "J. Mansion",
+            "sourceReference": "way/275620196"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Jinda Guesthouse",
+            "sourceReference": "way/275620189"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Mini Boxtel",
+            "sourceReference": "node/3676282167"
+          },
+          {
+            "category": "HOTEL",
+            "name": "P. K. Mansion",
+            "sourceReference": "way/275620195"
+          },
+          {
+            "category": "HOTEL",
+            "name": "P.K. Mansion",
+            "sourceReference": "way/275620193"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Sea World",
+            "sourceReference": "way/275934195"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Top View",
+            "sourceReference": "way/275620194"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Lion & Shark",
+            "sourceReference": "node/4730134090"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Tandoori Night's",
+            "sourceReference": "node/4809651024"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Dalum Beach House",
+            "sourceReference": "node/4620581566"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Deedee Beach House",
+            "sourceReference": "node/4620581577"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Film Guesthouse",
+            "sourceReference": "node/4620581578"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Green House",
+            "sourceReference": "node/4183703345"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Hangover Hostel",
+            "sourceReference": "node/4620581559"
+          },
+          {
+            "category": "HOTEL",
+            "name": "The Beacha Club",
+            "sourceReference": "way/334840999"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Voyagers Hostel",
+            "sourceReference": "node/12407913101"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Black Sheep Resto and Cafe",
+            "sourceReference": "node/6507632303"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Rom & Dow",
+            "sourceReference": "node/4620581581"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "The Millie & Tia Sunflower",
+            "sourceReference": "node/4620581549"
+          }
+        ],
+        [
+          {
+            "category": "ATM",
+            "name": "กรุงศรี",
+            "sourceReference": "node/10704321589"
+          },
+          {
+            "category": "ATM",
+            "name": "ธนาคารกรุงเทพ",
+            "sourceReference": "node/10704295043"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "way/1348633861"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Sino Siam Hotel ชิโนสยามโฮเทล",
+            "sourceReference": "node/12484338919"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Coffee Club",
+            "sourceReference": "node/12484338924"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Masala Delight",
+            "sourceReference": "node/5702410322"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Royal Clay Oven",
+            "sourceReference": "node/10704289048"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Sagawat Thai",
+            "sourceReference": "node/12484338974"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Top Ten",
+            "sourceReference": "node/5340970921"
+          }
+        ],
+        [
+          {
+            "category": "BANK",
+            "name": "ซีไอเอ็มบี ไทย",
+            "sourceReference": "node/3678616711"
+          },
+          {
+            "category": "HOSPITAL",
+            "name": "Aonang Medical Clinic",
+            "sourceReference": "node/5511500221"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Amorn Mansion",
+            "sourceReference": "node/3676282136"
+          },
+          {
+            "category": "HOTEL",
+            "name": "White Sand Krabi Resort",
+            "sourceReference": "node/3678616720"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Café 8.98",
+            "sourceReference": "node/4115706597"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Dr. Cat Cafe",
+            "sourceReference": "node/6198781187"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Jose Restaurant & Guesthouse",
+            "sourceReference": "node/5219203521"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Subway",
+            "sourceReference": "node/633661369"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "The Coffee Club",
+            "sourceReference": "node/7202850585"
+          }
+        ]
+      ],
+      "largestClusterSize": 38,
+      "pairCount": 1022,
+      "recordsInClusters": 1003,
+      "thresholdMeters": 25
+    },
+    {
+      "clusterCount": 333,
+      "examples": [
+        [
+          {
+            "category": "BANK",
+            "name": "Kungsri",
+            "sourceReference": "node/10728216888"
+          },
+          {
+            "category": "BANK",
+            "name": "Siam Commercial Bank",
+            "sourceReference": "node/4620615195"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "24h shop",
+            "sourceReference": "node/7133787985"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Elephant Phi Phi",
+            "sourceReference": "node/4327073029"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/3678511085"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/4424560789"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/574386999"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/10722816941"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/1149254186"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Fresh Mart",
+            "sourceReference": "node/3678511049"
+          }
+        ],
+        [
+          {
+            "category": "BANK",
+            "name": "ซีไอเอ็มบี ไทย",
+            "sourceReference": "node/3678616711"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารกรุงเทพ",
+            "sourceReference": "node/634522306"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/13713920301"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/3676282467"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/5511458726"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/633029471"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/634486013"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Nok Minimart",
+            "sourceReference": "node/634590538"
+          },
+          {
+            "category": "FERRY",
+            "name": "Ao Nang Beach Pier",
+            "sourceReference": "node/340347055"
+          },
+          {
+            "category": "HOSPITAL",
+            "name": "Aonang Medical Clinic",
+            "sourceReference": "node/5511500221"
+          }
+        ],
+        [
+          {
+            "category": "BANK",
+            "name": "SCB",
+            "sourceReference": "node/634522304"
+          },
+          {
+            "category": "BANK",
+            "name": "กรุงศรี",
+            "sourceReference": "node/3676113259"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารกรุงไทย",
+            "sourceReference": "node/633029478"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารออมสิน",
+            "sourceReference": "node/3676113255"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/11414114669"
+          },
+          {
+            "category": "HALAL_RESTAURANT",
+            "name": "Aree BaBa",
+            "sourceReference": "node/6021568937"
+          },
+          {
+            "category": "HALAL_RESTAURANT",
+            "name": "Khawfhang Restaurant",
+            "sourceReference": "node/6021568690"
+          },
+          {
+            "category": "HALAL_RESTAURANT",
+            "name": "Makanan",
+            "sourceReference": "node/7126113989"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ao Nang Eco Inn",
+            "sourceReference": "node/3676113240"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Aonang Garden Home",
+            "sourceReference": "way/1231040484"
+          }
+        ],
+        [
+          {
+            "category": "ATM",
+            "name": "กรุงศรี",
+            "sourceReference": "node/2647610184"
+          },
+          {
+            "category": "ATM",
+            "name": "กรุงศรี",
+            "sourceReference": "node/4634663440"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารกรุงเทพ",
+            "sourceReference": "node/2647297904"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารกรุงไทย",
+            "sourceReference": "node/2829153063"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารกสิกรไทย",
+            "sourceReference": "node/2829153060"
+          },
+          {
+            "category": "BANK",
+            "name": "ธนาคารไทยพาณิชย์",
+            "sourceReference": "node/2829153067"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/1613129550"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/2647297876"
+          },
+          {
+            "category": "FERRY",
+            "name": "ท่าเรือเจ้าฟ้า",
+            "sourceReference": "node/10136622867"
+          },
+          {
+            "category": "GOVERNMENT",
+            "name": "ด่านศุลกากรกระบี่",
+            "sourceReference": "node/3432458993"
+          }
+        ],
+        [
+          {
+            "category": "ATM",
+            "name": "Krungsri",
+            "sourceReference": "node/9435784488"
+          },
+          {
+            "category": "ATM",
+            "name": "ธนาคารกรุงเทพ",
+            "sourceReference": "node/9435787062"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/4463907176"
+          },
+          {
+            "category": "HALAL_RESTAURANT",
+            "name": "Plant-erion Vegie Restaurant",
+            "sourceReference": "node/5638649721"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Anna's House",
+            "sourceReference": "node/6726521353"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ao Nang Backpacker",
+            "sourceReference": "node/4463907173"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Aonang Knockout hostel",
+            "sourceReference": "node/11826586469"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Aonang Sea Valley Resort",
+            "sourceReference": "way/1029532184"
+          },
+          {
+            "category": "HOTEL",
+            "name": "De Loft",
+            "sourceReference": "node/9916458317"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Full Moon House & Resort",
+            "sourceReference": "node/3657647775"
+          }
+        ],
+        [
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "node/653976135"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Fruit Tree Lodge",
+            "sourceReference": "node/4512075129"
+          },
+          {
+            "category": "HOTEL",
+            "name": "lanta long beach hostel",
+            "sourceReference": "node/6681521800"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Ok Chawkoh Bungalow",
+            "sourceReference": "node/5179409318"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Bajen",
+            "sourceReference": "node/2476521818"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Chrua Chef",
+            "sourceReference": "node/6029209286"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Fruit tree coffee shop",
+            "sourceReference": "node/4512075132"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Galaxy",
+            "sourceReference": "node/2481205562"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Hidden Tree",
+            "sourceReference": "node/13640607001"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Jai Dee Noodle Soup",
+            "sourceReference": "node/5613189626"
+          }
+        ],
+        [
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "Add Mini Mart",
+            "sourceReference": "node/4325313089"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Amara Hotel",
+            "sourceReference": "node/12533314162"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Arboreal Resort",
+            "sourceReference": "node/2084104247"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Coco's Guest House",
+            "sourceReference": "node/5880305041"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Garden Bungalow",
+            "sourceReference": "node/574387138"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Garden Inn",
+            "sourceReference": "node/12533314160"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Golden Hill",
+            "sourceReference": "node/4620581574"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Harmony House",
+            "sourceReference": "node/12533314161"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Luxe Guesthouse",
+            "sourceReference": "node/4817822924"
+          },
+          {
+            "category": "HOTEL",
+            "name": "P.P. Garden Home",
+            "sourceReference": "node/2084102670"
+          }
+        ],
+        [
+          {
+            "category": "FERRY",
+            "name": "อ่าวไร่เลย์ (ตะวันตก)",
+            "sourceReference": "node/7528655385"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Railay Village Resort & Spa",
+            "sourceReference": "relation/18543712"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "1 Stop Take Away",
+            "sourceReference": "node/4183776259"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Armena Halal Thai Food",
+            "sourceReference": "node/4727680989"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Choop Coffee Break",
+            "sourceReference": "node/4782773121"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Coco 2004 Restaurant",
+            "sourceReference": "node/5353699521"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Coffee Station",
+            "sourceReference": "node/5276639623"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Flame Tree Restaurant",
+            "sourceReference": "node/4724070393"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Govinda's at the Beach",
+            "sourceReference": "node/10716433663"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Jen Bar",
+            "sourceReference": "node/4032642990"
+          }
+        ],
+        [
+          {
+            "category": "ATM",
+            "name": "กรุงศรี",
+            "sourceReference": "node/10704321589"
+          },
+          {
+            "category": "ATM",
+            "name": "ธนาคารกรุงเทพ",
+            "sourceReference": "node/10704295043"
+          },
+          {
+            "category": "CONVENIENCE_STORE",
+            "name": "7-Eleven",
+            "sourceReference": "way/1348633861"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Check Inn (closed 2022)",
+            "sourceReference": "node/1609874501"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Pailin Hotel",
+            "sourceReference": "node/10703909549"
+          },
+          {
+            "category": "HOTEL",
+            "name": "Sino Siam Hotel ชิโนสยามโฮเทล",
+            "sourceReference": "node/12484338919"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "C E Lab",
+            "sourceReference": "node/4535567293"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Coffee Club",
+            "sourceReference": "node/12484338924"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Le Cafe Terrasse",
+            "sourceReference": "node/10704518197"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Masala Delight",
+            "sourceReference": "node/5702410322"
+          }
+        ],
+        [
+          {
+            "category": "HOTEL",
+            "name": "Mango House",
+            "sourceReference": "node/2625010973"
+          },
+          {
+            "category": "HOTEL",
+            "name": "The Old Times",
+            "sourceReference": "node/4214697689"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Apsara",
+            "sourceReference": "node/10896803074"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Big tree",
+            "sourceReference": "node/6359938485"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Fresh Restaurant",
+            "sourceReference": "node/2625010972"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Grandma's house",
+            "sourceReference": "node/7220579685"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Lantas Cafe",
+            "sourceReference": "node/12657828401"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Malee Malee",
+            "sourceReference": "node/4769401330"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Mama & Papa Fruit Shake",
+            "sourceReference": "node/13347725101"
+          },
+          {
+            "category": "RESTAURANT",
+            "name": "Mango House",
+            "sourceReference": "node/4794969547"
+          }
+        ]
+      ],
+      "largestClusterSize": 185,
+      "pairCount": 3441,
+      "recordsInClusters": 1702,
+      "thresholdMeters": 50
+    }
+  ],
+  "datasetVersion": "osm-krabi-2026-10-06-v2-5289fdd79a6b",
+  "deduplicationThresholdEstimates": [
+    {
+      "affectedClusters": 18,
+      "estimatedMergedRecords": 18,
+      "examples": [
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/654396429",
+            "node/13258955727"
+          ]
+        },
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/4677793989",
+            "way/993212763"
+          ]
+        },
+        {
+          "name": "ธนาคารกรุงไทย",
+          "records": [
+            "node/2829153063",
+            "node/4634672824"
+          ]
+        },
+        {
+          "name": "Pine Bungalow",
+          "records": [
+            "node/1611327431",
+            "node/1611327437"
+          ]
+        },
+        {
+          "name": "Hometel",
+          "records": [
+            "node/1613129542",
+            "node/5365966621"
+          ]
+        },
+        {
+          "name": "Le Rendez Vous",
+          "records": [
+            "node/2266560304",
+            "node/2266563965"
+          ]
+        },
+        {
+          "name": "The New Andaman Bay Bungalow",
+          "records": [
+            "node/4216447290",
+            "way/1196993694"
+          ]
+        },
+        {
+          "name": "Capuchin",
+          "records": [
+            "node/4246076700",
+            "node/6021664294"
+          ]
+        },
+        {
+          "name": "Nokmuay",
+          "records": [
+            "node/4546446098",
+            "node/4586883398"
+          ]
+        },
+        {
+          "name": "Cosmic Restaurant",
+          "records": [
+            "node/5398459722",
+            "node/5474525621"
+          ]
+        },
+        {
+          "name": "Escape Café",
+          "records": [
+            "node/6408428085",
+            "way/762672099"
+          ]
+        },
+        {
+          "name": "lanta long beach hostel",
+          "records": [
+            "node/6681521800",
+            "way/731231358"
+          ]
+        },
+        {
+          "name": "Rim Khao Resort",
+          "records": [
+            "node/10581645776",
+            "way/1135153903"
+          ]
+        },
+        {
+          "name": "Andaman Bay house",
+          "records": [
+            "node/11158215847",
+            "way/1203839542"
+          ]
+        },
+        {
+          "name": "Andaman Bay Bungalow",
+          "records": [
+            "node/11158229693",
+            "way/1203839181"
+          ]
+        },
+        {
+          "name": "Holiday Style Ao Nang Beach Resort",
+          "records": [
+            "node/11766148467",
+            "node/11909703769"
+          ]
+        },
+        {
+          "name": "lanta danghouse",
+          "records": [
+            "node/13288599454",
+            "node/13293677408"
+          ]
+        },
+        {
+          "name": "Blue Tara Resort",
+          "records": [
+            "relation/19751413",
+            "way/659548076"
+          ]
+        }
+      ],
+      "nearDuplicatePairCount": 18,
+      "thresholdMeters": 10
+    },
+    {
+      "affectedClusters": 26,
+      "estimatedMergedRecords": 30,
+      "examples": [
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/654396429",
+            "node/13258955727"
+          ]
+        },
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/4677793989",
+            "way/993212763"
+          ]
+        },
+        {
+          "name": "ธนาคารกรุงไทย",
+          "records": [
+            "node/2829153063",
+            "node/4634672824"
+          ]
+        },
+        {
+          "name": "Pine Bungalow",
+          "records": [
+            "node/1611327431",
+            "node/1611327437"
+          ]
+        },
+        {
+          "name": "Hometel",
+          "records": [
+            "node/1613129542",
+            "node/5365966621"
+          ]
+        },
+        {
+          "name": "Le Rendez Vous",
+          "records": [
+            "node/2266560304",
+            "node/2266563965"
+          ]
+        },
+        {
+          "name": "The New Andaman Bay Bungalow",
+          "records": [
+            "node/4216447290",
+            "way/1196993694"
+          ]
+        },
+        {
+          "name": "Capuchin",
+          "records": [
+            "node/4246076700",
+            "node/6021664294"
+          ]
+        },
+        {
+          "name": "Nokmuay",
+          "records": [
+            "node/4546446098",
+            "node/4586883398"
+          ]
+        },
+        {
+          "name": "Himalaya",
+          "records": [
+            "node/4620581555",
+            "node/6420482194"
+          ]
+        },
+        {
+          "name": "Baan Pakgasri Hideaway",
+          "records": [
+            "node/4792651822",
+            "node/4822155821"
+          ]
+        },
+        {
+          "name": "Cosmic Restaurant",
+          "records": [
+            "node/5398459722",
+            "node/5474525621"
+          ]
+        },
+        {
+          "name": "บ้านสวนเขาครามรีสอร์ท",
+          "records": [
+            "node/5983168548",
+            "way/614633794"
+          ]
+        },
+        {
+          "name": "P.P. Wang Ta Fu",
+          "records": [
+            "node/6021701052",
+            "node/6120058426"
+          ]
+        },
+        {
+          "name": "Escape Café",
+          "records": [
+            "node/6408428085",
+            "way/762672099"
+          ]
+        },
+        {
+          "name": "Ni Restaurant",
+          "records": [
+            "node/6474314885",
+            "node/7354735985"
+          ]
+        },
+        {
+          "name": "lanta long beach hostel",
+          "records": [
+            "node/6681521800",
+            "way/731231358"
+          ]
+        },
+        {
+          "name": "Rim Khao Resort",
+          "records": [
+            "node/10581645776",
+            "way/1135153903"
+          ]
+        },
+        {
+          "name": "Andaman Bay house",
+          "records": [
+            "node/11158215847",
+            "way/1203839542"
+          ]
+        },
+        {
+          "name": "Andaman Bay Bungalow",
+          "records": [
+            "node/11158229693",
+            "way/1203839181"
+          ]
+        }
+      ],
+      "nearDuplicatePairCount": 33,
+      "thresholdMeters": 25
+    },
+    {
+      "affectedClusters": 41,
+      "estimatedMergedRecords": 50,
+      "examples": [
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/654396429",
+            "node/13258955727"
+          ]
+        },
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/4677793989",
+            "way/993212763"
+          ]
+        },
+        {
+          "name": "7-Eleven",
+          "records": [
+            "node/12564665101",
+            "node/13683701802"
+          ]
+        },
+        {
+          "name": "ธนาคารกรุงไทย",
+          "records": [
+            "node/2829153063",
+            "node/4634672824"
+          ]
+        },
+        {
+          "name": "Dream Team Beach Resort",
+          "records": [
+            "node/703054806",
+            "node/4131897437"
+          ]
+        },
+        {
+          "name": "Mango House",
+          "records": [
+            "node/2625010973",
+            "node/4794969547"
+          ]
+        },
+        {
+          "name": "Kroua Lanta",
+          "records": [
+            "node/772568279",
+            "node/7006486985"
+          ]
+        },
+        {
+          "name": "Pine Bungalow",
+          "records": [
+            "node/1611327431",
+            "node/1611327437"
+          ]
+        },
+        {
+          "name": "Hometel",
+          "records": [
+            "node/1613129542",
+            "node/5365966621"
+          ]
+        },
+        {
+          "name": "Le Rendez Vous",
+          "records": [
+            "node/2266560304",
+            "node/2266563965"
+          ]
+        },
+        {
+          "name": "Koh Pu Valley",
+          "records": [
+            "node/2607733443",
+            "node/7150512180"
+          ]
+        },
+        {
+          "name": "Hut Supermarket",
+          "records": [
+            "node/2713721037",
+            "node/5061951090"
+          ]
+        },
+        {
+          "name": "Black Canyon Coffee",
+          "records": [
+            "node/7041769587",
+            "node/10308584502"
+          ]
+        },
+        {
+          "name": "Phi Phi Nice Beach Resort",
+          "records": [
+            "node/3678511062",
+            "node/13666094304"
+          ]
+        },
+        {
+          "name": "The New Andaman Bay Bungalow",
+          "records": [
+            "node/4216447290",
+            "way/1196993694"
+          ]
+        },
+        {
+          "name": "Capuchin",
+          "records": [
+            "node/4246076700",
+            "node/6021664294"
+          ]
+        },
+        {
+          "name": "Nokmuay",
+          "records": [
+            "node/4546446098",
+            "node/4586883398"
+          ]
+        },
+        {
+          "name": "Phi phi hotel",
+          "records": [
+            "node/4550703795",
+            "node/12399497401",
+            "node/12482320703"
+          ]
+        },
+        {
+          "name": "Himalaya",
+          "records": [
+            "node/4620581555",
+            "node/6420482194"
+          ]
+        },
+        {
+          "name": "Mama Dang",
+          "records": [
+            "node/4768914024",
+            "node/6485911385"
+          ]
+        }
+      ],
+      "nearDuplicatePairCount": 57,
+      "thresholdMeters": 50
+    }
+  ],
+  "duplicateLookingNames": {
+    "definition": "NFKC + case-fold + punctuation/whitespace normalization",
+    "examples": [
+      {
+        "categories": [
+          "CONVENIENCE_STORE",
+          "SHOPPING"
+        ],
+        "count": 99,
+        "names": [
+          "7 Eleven",
+          "7 eleven",
+          "7-Eleven",
+          "7-eleven"
+        ],
+        "normalizedName": "7 eleven",
+        "sourceReferences": [
+          "node/11563504569",
+          "node/7224410885",
+          "node/10127787238",
+          "node/10181714226",
+          "node/10216903243",
+          "node/11360073176",
+          "node/11414114669",
+          "node/11424004945",
+          "node/11432727670",
+          "node/12564665101",
+          "node/13604569601",
+          "node/13651459702",
+          "node/13683701802",
+          "node/13702922104",
+          "node/13713920301",
+          "node/14205641982",
+          "node/1582812860",
+          "node/1613129550",
+          "node/1966249434",
+          "node/2607757067"
+        ]
+      },
+      {
+        "categories": [
+          "FUEL"
+        ],
+        "count": 20,
+        "names": [
+          "Independent"
+        ],
+        "normalizedName": "independent",
+        "sourceReferences": [
+          "node/11327604944",
+          "node/11327612213",
+          "node/11327612215",
+          "node/11327612219",
+          "node/11327612220",
+          "node/11327612221",
+          "node/11327612228",
+          "node/11327683634",
+          "node/11327683638",
+          "node/11327683639",
+          "node/11372565419",
+          "node/11372644976",
+          "node/11374083343",
+          "node/11374109341",
+          "node/11374746208",
+          "node/11380757185",
+          "node/11380760926",
+          "node/3439101445",
+          "node/6385525015",
+          "way/1029537077"
+        ]
+      },
+      {
+        "categories": [
+          "RESTAURANT"
+        ],
+        "count": 11,
+        "names": [
+          "คาเฟ่ อเมซอน"
+        ],
+        "normalizedName": "คาเฟ่ อเมซอน",
+        "sourceReferences": [
+          "node/10175123417",
+          "node/10216341631",
+          "node/11530108369",
+          "node/13429825545",
+          "node/13604569501",
+          "node/13651459701",
+          "node/13683688303",
+          "node/3374315661",
+          "node/5612983106",
+          "node/8150328817",
+          "node/9435403396"
+        ]
+      },
+      {
+        "categories": [
+          "FUEL"
+        ],
+        "count": 10,
+        "names": [
+          "ป.ต.ท."
+        ],
+        "normalizedName": "ป ต ท",
+        "sourceReferences": [
+          "node/10178279744",
+          "node/11107322705",
+          "node/11433231102",
+          "node/11433318657",
+          "node/11536418587",
+          "node/13667102440",
+          "node/3439101452",
+          "node/6021659648",
+          "node/633029476",
+          "node/8165206765"
+        ]
+      },
+      {
+        "categories": [
+          "ATM",
+          "BANK"
+        ],
+        "count": 9,
+        "names": [
+          "ธนาคารกรุงเทพ"
+        ],
+        "normalizedName": "ธนาคารกรุงเทพ",
+        "sourceReferences": [
+          "node/10704295043",
+          "node/11350910573",
+          "node/2802930109",
+          "node/4776659922",
+          "node/9435787062",
+          "node/2647297904",
+          "node/3374348428",
+          "node/634522306",
+          "way/1260585959"
+        ]
+      },
+      {
+        "categories": [
+          "FUEL"
+        ],
+        "count": 9,
+        "names": [
+          "บางจาก"
+        ],
+        "normalizedName": "บางจาก",
+        "sourceReferences": [
+          "node/11433241760",
+          "node/2651193896",
+          "node/3371440883",
+          "node/3374332533",
+          "node/4286885695",
+          "way/1029534322",
+          "way/1031210273",
+          "way/1156844419",
+          "way/1180697505"
+        ]
+      },
+      {
+        "categories": [
+          "HOTEL",
+          "RESTAURANT"
+        ],
+        "count": 8,
+        "names": [
+          "Baan Suan Khao Kham"
+        ],
+        "normalizedName": "baan suan khao kham",
+        "sourceReferences": [
+          "way/708011723",
+          "way/708011724",
+          "way/708011725",
+          "way/708011726",
+          "way/708011727",
+          "way/708011728",
+          "way/708011729",
+          "way/614633795"
+        ]
+      },
+      {
+        "categories": [
+          "ATM",
+          "BANK"
+        ],
+        "count": 6,
+        "names": [
+          "กรุงศรี"
+        ],
+        "normalizedName": "กรุงศรี",
+        "sourceReferences": [
+          "node/10704321589",
+          "node/2647610184",
+          "node/4634663440",
+          "node/13677519714",
+          "node/3371462591",
+          "node/3676113259"
+        ]
+      },
+      {
+        "categories": [
+          "ATM",
+          "BANK"
+        ],
+        "count": 6,
+        "names": [
+          "ธนาคารกรุงไทย"
+        ],
+        "normalizedName": "ธนาคารกรุงไทย",
+        "sourceReferences": [
+          "node/2802930108",
+          "node/2882992411",
+          "node/2829153063",
+          "node/3374315665",
+          "node/3374348432",
+          "node/633029478"
+        ]
+      },
+      {
+        "categories": [
+          "ATM",
+          "BANK"
+        ],
+        "count": 6,
+        "names": [
+          "ธนาคารไทยพาณิชย์"
+        ],
+        "normalizedName": "ธนาคารไทยพาณิชย์",
+        "sourceReferences": [
+          "node/3021718633",
+          "node/4535700227",
+          "node/5285671921",
+          "node/2655966402",
+          "node/2829153067",
+          "node/3374315667"
+        ]
+      },
+      {
+        "categories": [
+          "RESTAURANT"
+        ],
+        "count": 5,
+        "names": [
+          "Cafe Amazon"
+        ],
+        "normalizedName": "cafe amazon",
+        "sourceReferences": [
+          "node/10187599018",
+          "node/11563504469",
+          "node/7806627485",
+          "node/8302285817",
+          "node/8519857417"
+        ]
+      },
+      {
+        "categories": [
+          "CONVENIENCE_STORE"
+        ],
+        "count": 5,
+        "names": [
+          "Fresh Mart"
+        ],
+        "normalizedName": "fresh mart",
+        "sourceReferences": [
+          "node/10722816941",
+          "node/1149254186",
+          "node/3678511049",
+          "node/3678511050",
+          "node/3678511051"
+        ]
+      },
+      {
+        "categories": [
+          "RESTAURANT"
+        ],
+        "count": 5,
+        "names": [
+          "KFC"
+        ],
+        "normalizedName": "kfc",
+        "sourceReferences": [
+          "node/10165700207",
+          "node/10187590517",
+          "node/10216371680",
+          "node/11530108269",
+          "node/4634663439"
+        ]
+      },
+      {
+        "categories": [
+          "CONVENIENCE_STORE"
+        ],
+        "count": 5,
+        "names": [
+          "Minimart"
+        ],
+        "normalizedName": "minimart",
+        "sourceReferences": [
+          "node/10723090861",
+          "node/10724827929",
+          "node/4131790655",
+          "node/5934410387",
+          "node/6188157013"
+        ]
+      },
+      {
+        "categories": [
+          "FUEL"
+        ],
+        "count": 5,
+        "names": [
+          "เชลล์"
+        ],
+        "normalizedName": "เชลล์",
+        "sourceReferences": [
+          "node/11433231072",
+          "node/2647297736",
+          "node/3266087831",
+          "node/634835632",
+          "way/1156844420"
+        ]
+      },
+      {
+        "categories": [
+          "RESTAURANT"
+        ],
+        "count": 4,
+        "names": [
+          "Black Canyon Coffee"
+        ],
+        "normalizedName": "black canyon coffee",
+        "sourceReferences": [
+          "node/10308584502",
+          "node/3371480070",
+          "node/3676282141",
+          "node/7041769587"
+        ]
+      },
+      {
+        "categories": [
+          "RESTAURANT"
+        ],
+        "count": 4,
+        "names": [
+          "Five Star",
+          "Five star"
+        ],
+        "normalizedName": "five star",
+        "sourceReferences": [
+          "node/10187599117",
+          "node/5612983107",
+          "node/7806627387",
+          "node/8519857317"
+        ]
+      },
+      {
+        "categories": [
+          "FUEL"
+        ],
+        "count": 4,
+        "names": [
+          "PTT",
+          "ptt"
+        ],
+        "normalizedName": "ptt",
+        "sourceReferences": [
+          "node/11563494969",
+          "node/7797991986",
+          "node/8519860118",
+          "node/9595528550"
+        ]
+      },
+      {
+        "categories": [
+          "BANK"
+        ],
+        "count": 4,
+        "names": [
+          "ธนาคารออมสิน"
+        ],
+        "normalizedName": "ธนาคารออมสิน",
+        "sourceReferences": [
+          "node/2784775767",
+          "node/3371480079",
+          "node/3676113255",
+          "way/1260585960"
+        ]
+      },
+      {
+        "categories": [
+          "HOTEL",
+          "RESTAURANT"
+        ],
+        "count": 3,
+        "names": [
+          "Bamboo"
+        ],
+        "normalizedName": "bamboo",
+        "sourceReferences": [
+          "node/4375236190",
+          "node/2624836739",
+          "node/7153710886"
+        ]
+      },
+      {
+        "categories": [
+          "TOURISM"
+        ],
+        "count": 3,
+        "names": [
+          "Closed view by trees"
+        ],
+        "normalizedName": "closed view by trees",
+        "sourceReferences": [
+          "node/11327571299",
+          "node/11327571307",
+          "node/11327571309"
+        ]
+      },
+      {
+        "categories": [
+          "RESTAURANT"
+        ],
+        "count": 3,
+        "names": [
+          "Food Court",
+          "Food court"
+        ],
+        "normalizedName": "food court",
+        "sourceReferences": [
+          "node/13604656101",
+          "node/8150328818",
+          "way/1148156485"
+        ]
+      },
+      {
+        "categories": [
+          "HOTEL"
+        ],
+        "count": 3,
+        "names": [
+          "Koh Jum Hostel"
+        ],
+        "normalizedName": "koh jum hostel",
+        "sourceReferences": [
+          "node/6199459196",
+          "node/6339439985",
+          "way/674053271"
+        ]
+      },
+      {
+        "categories": [
+          "HOTEL",
+          "RESTAURANT"
+        ],
+        "count": 3,
+        "names": [
+          "Mango House"
+        ],
+        "normalizedName": "mango house",
+        "sourceReferences": [
+          "node/2625010973",
+          "node/703062366",
+          "node/4794969547"
+        ]
+      },
+      {
+        "categories": [
+          "FUEL"
+        ],
+        "count": 3,
+        "names": [
+          "Minipump"
+        ],
+        "normalizedName": "minipump",
+        "sourceReferences": [
+          "node/4358833890",
+          "node/4358835089",
+          "node/9491673331"
+        ]
+      }
+    ],
+    "groupCount": 127,
+    "largestGroupSize": 99,
+    "recordCount": 455
+  },
+  "elementTypes": {
+    "node": 2410,
+    "relation": 15,
+    "way": 277
+  },
+  "mappingSignatures": {
+    "AIRPORT": {
+      "aeroway=aerodrome": 1,
+      "aeroway=terminal": 1
+    },
+    "ATM": {
+      "amenity=atm": 24
+    },
+    "AUTO_SERVICE": {
+      "shop=car_repair": 4
+    },
+    "BANK": {
+      "amenity=bank": 38
+    },
+    "BUS_TERMINAL": {
+      "amenity=bus_station": 6
+    },
+    "CONVENIENCE_STORE": {
+      "amenity=atm;shop=convenience": 1,
+      "shop=convenience": 167
+    },
+    "EV_CHARGER": {
+      "amenity=charging_station": 1
+    },
+    "FERRY": {
+      "amenity=ferry_terminal": 30
+    },
+    "FUEL": {
+      "amenity=fuel": 91,
+      "amenity=fuel;shop=kiosk": 1
+    },
+    "GOVERNMENT": {
+      "amenity=courthouse": 1,
+      "amenity=townhall": 6,
+      "office=government": 44
+    },
+    "HALAL_RESTAURANT": {
+      "amenity=restaurant;cuisine=coffee_shop;thai;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=indian;seafood;thai;pizza;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=malaysian;thai;curry;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=malaysian;thai;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=seafood;thai;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=thai;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=thai;italian;diet:halal=yes": 1,
+      "amenity=restaurant;cuisine=thai;seafood;diet:halal=yes": 3,
+      "amenity=restaurant;diet:halal=only": 1,
+      "amenity=restaurant;diet:halal=yes": 1
+    },
+    "HOSPITAL": {
+      "amenity=hospital": 9,
+      "amenity=hospital;healthcare=hospital": 10
+    },
+    "HOTEL": {
+      "cuisine=regional;tourism=hotel": 1,
+      "cuisine=thai;tourism=hotel": 1,
+      "shop=laundry;tourism=hostel": 1,
+      "tourism=chalet": 13,
+      "tourism=guest_house": 207,
+      "tourism=hostel": 102,
+      "tourism=hotel": 628,
+      "tourism=motel": 12
+    },
+    "MARKET": {
+      "amenity=marketplace": 15,
+      "amenity=marketplace;cuisine=burger;chicken;crepe;fish;fish_and_chips;friture;grill": 1,
+      "amenity=marketplace;tourism=attraction": 1
+    },
+    "MOSQUE": {
+      "amenity=place_of_worship;religion=muslim": 18
+    },
+    "PIER": {
+      "amenity=ferry_terminal;man_made=pier": 3,
+      "man_made=pier": 15
+    },
+    "POLICE": {
+      "amenity=police": 20
+    },
+    "RESTAURANT": {
+      "amenity=cafe": 108,
+      "amenity=cafe;cuisine=american;coffee_shop": 1,
+      "amenity=cafe;cuisine=breakfast": 1,
+      "amenity=cafe;cuisine=breakfast;burger;diner;sandwich;thai": 1,
+      "amenity=cafe;cuisine=breakfast;cake": 1,
+      "amenity=cafe;cuisine=breakfast;cake;coffee_shop": 1,
+      "amenity=cafe;cuisine=breakfast;cake;coffee_shop;ice_cream;tea": 1,
+      "amenity=cafe;cuisine=breakfast;coffee_shop;crepe;ice_cream": 1,
+      "amenity=cafe;cuisine=breakfast;coffee_shop;crepe;ice_cream;pancake;tea": 1,
+      "amenity=cafe;cuisine=breakfast;mediterranean": 1,
+      "amenity=cafe;cuisine=breakfast;sandwich;tourism=information": 1,
+      "amenity=cafe;cuisine=breakfast;thai": 3,
+      "amenity=cafe;cuisine=breakfast;thai;seafood;chicken;noodles": 1,
+      "amenity=cafe;cuisine=burger;crepe;donut;ice_cream;breakfast;savory_pancakes;greek;coffee_shop;noodles;pasta;pancake;pizza;sandwich;tea;thai;bagel": 1,
+      "amenity=cafe;cuisine=cake;coffee_shop;ice_cream": 1,
+      "amenity=cafe;cuisine=cake;coffee_shop;tea": 2,
+      "amenity=cafe;cuisine=chinese;sushi;japanese": 1,
+      "amenity=cafe;cuisine=chinese;thai": 1,
+      "amenity=cafe;cuisine=coffee_shop": 28,
+      "amenity=cafe;cuisine=coffee_shop;cake": 1,
+      "amenity=cafe;cuisine=coffee_shop;ice_cream": 1,
+      "amenity=cafe;cuisine=coffee_shop;ice_cream;thai;dessert;diner": 1,
+      "amenity=cafe;cuisine=coffee_shop;shop=coffee": 2,
+      "amenity=cafe;cuisine=coffee_shop;tea": 2,
+      "amenity=cafe;cuisine=coffee_shop;tea;pastry": 1,
+      "amenity=cafe;cuisine=coffee_shop;tea;thai": 1,
+      "amenity=cafe;cuisine=coffee_shop;thai": 1,
+      "amenity=cafe;cuisine=indian;coffee_shop": 1,
+      "amenity=cafe;cuisine=kebab": 1,
+      "amenity=cafe;cuisine=mexican": 1,
+      "amenity=cafe;cuisine=noodles;pasta;asian;thai;local": 1,
+      "amenity=cafe;cuisine=pancake;coffee_shop;local;thai;crepe;tea": 1,
+      "amenity=cafe;cuisine=pancake;ice_cream;coffee_shop;local;thai;crepe;savory_pancakes": 1,
+      "amenity=cafe;cuisine=regional": 1,
+      "amenity=cafe;cuisine=sandwich;breakfast;international;ice_cream;asian": 1,
+      "amenity=cafe;cuisine=sandwich;breakfast;tea;cake;asian": 1,
+      "amenity=cafe;cuisine=seafood;burger;pasta;thai;sausage": 1,
+      "amenity=cafe;cuisine=tea": 1,
+      "amenity=cafe;cuisine=tea;coffee_shop": 1,
+      "amenity=cafe;cuisine=tea;thai": 1,
+      "amenity=cafe;cuisine=thai": 4,
+      "amenity=cafe;cuisine=thai;american;chicken;friture;international": 1,
+      "amenity=cafe;cuisine=thai;asian;breakfast": 1,
+      "amenity=cafe;cuisine=thai;breakfast": 1,
+      "amenity=cafe;cuisine=thai;indian": 1,
+      "amenity=cafe;cuisine=thai;indonesian": 1,
+      "amenity=cafe;cuisine=thai;tourism=guest_house": 1,
+      "amenity=cafe;shop=books": 1,
+      "amenity=cafe;shop=massage": 1,
+      "amenity=cafe;shop=wine": 1,
+      "amenity=cafe;tourism=hotel": 1,
+      "amenity=fast_food": 16,
+      "amenity=fast_food;cuisine=burger": 6,
+      "amenity=fast_food;cuisine=burger;sandwich;pizza;asian": 1,
+      "amenity=fast_food;cuisine=chicken": 8,
+      "amenity=fast_food;cuisine=chinese;thai;asian": 1,
+      "amenity=fast_food;cuisine=dessert": 1,
+      "amenity=fast_food;cuisine=kebab": 1,
+      "amenity=fast_food;cuisine=pizza": 5,
+      "amenity=fast_food;cuisine=pizza;italian_pizza": 1,
+      "amenity=fast_food;cuisine=sandwich": 1,
+      "amenity=fast_food;cuisine=smoothie;juice;ice_cream;fruits;sandwich;salad": 1,
+      "amenity=fast_food;cuisine=sushi": 1,
+      "amenity=fast_food;cuisine=thai": 3,
+      "amenity=food_court": 8,
+      "amenity=food_court;tourism=attraction": 1,
+      "amenity=restaurant": 435,
+      "amenity=restaurant;cuisine=Thai,_Western": 1,
+      "amenity=restaurant;cuisine=Thai;Europeia": 1,
+      "amenity=restaurant;cuisine=Typical Thai Food": 1,
+      "amenity=restaurant;cuisine=american;indian;italian_pizza": 1,
+      "amenity=restaurant;cuisine=american;indian;thai": 1,
+      "amenity=restaurant;cuisine=asian": 2,
+      "amenity=restaurant;cuisine=asian;breakfast;burger;chicken;crepe;curry;galettes;fusion": 1,
+      "amenity=restaurant;cuisine=asian;breakfast;chicken;coffee_shop;tea": 1,
+      "amenity=restaurant;cuisine=asian;italian;american": 1,
+      "amenity=restaurant;cuisine=asian;italian;pasta;german;pizza;thai;french": 1,
+      "amenity=restaurant;cuisine=asian;seafood;pasta;thai;pizza": 1,
+      "amenity=restaurant;cuisine=asian;seafood;thai": 1,
+      "amenity=restaurant;cuisine=asian;thai": 3,
+      "amenity=restaurant;cuisine=barbecue": 1,
+      "amenity=restaurant;cuisine=barbecue;thai": 2,
+      "amenity=restaurant;cuisine=breakfast;burger;fine_dining;italian_pizza;coffee_shop;thai": 1,
+      "amenity=restaurant;cuisine=breakfast;burger;thai": 1,
+      "amenity=restaurant;cuisine=breakfast;international;thai": 1,
+      "amenity=restaurant;cuisine=breakfast;noodles;thai;seafood;chicken;chinese;curry;pizza;italian;sandwich;tourism=hostel": 1,
+      "amenity=restaurant;cuisine=breakfast;thai;western;seafood;lunch;dinner;coffee_shop": 1,
+      "amenity=restaurant;cuisine=burger": 1,
+      "amenity=restaurant;cuisine=burger;american;breakfast;cake;thai": 1,
+      "amenity=restaurant;cuisine=burger;breakfast;thai": 1,
+      "amenity=restaurant;cuisine=burger;cake;thai;tourism=hotel": 1,
+      "amenity=restaurant;cuisine=burger;diner;noodles": 1,
+      "amenity=restaurant;cuisine=burger;fish;asian;breakfast": 1,
+      "amenity=restaurant;cuisine=burger;noodles;kebab;curry;local;thai": 1,
+      "amenity=restaurant;cuisine=burger;pasta;italian;pizza;italian_pizza": 1,
+      "amenity=restaurant;cuisine=burger;pasta;thai": 1,
+      "amenity=restaurant;cuisine=burger;pizza;thai;western": 1,
+      "amenity=restaurant;cuisine=burger;sandwich;shawarma": 1,
+      "amenity=restaurant;cuisine=burger;sandwich;thai;italian_pizza;friture;pasta;fish;pizza;chicken;sausage": 1,
+      "amenity=restaurant;cuisine=burger;thai": 1,
+      "amenity=restaurant;cuisine=cake;curry;ice_cream;italian_pizza;pizza;thai": 1,
+      "amenity=restaurant;cuisine=chicken": 1,
+      "amenity=restaurant;cuisine=chicken;italian_pizza;curry;asian;thai": 1,
+      "amenity=restaurant;cuisine=chinese": 1,
+      "amenity=restaurant;cuisine=chinese;barbecue;burger;noodles;asian;fish_and_chips;international;breakfast;curry;coffee_shop": 1,
+      "amenity=restaurant;cuisine=coffee_shop": 1,
+      "amenity=restaurant;cuisine=coffee_shop;breakfast": 1,
+      "amenity=restaurant;cuisine=coffee_shop;international;italian;sandwich;breakfast;american": 1,
+      "amenity=restaurant;cuisine=coffee_shop;noodles;thai": 1,
+      "amenity=restaurant;cuisine=coffee_shop;seafood;thai": 1,
+      "amenity=restaurant;cuisine=coffee_shop;thai": 1,
+      "amenity=restaurant;cuisine=crepe;thai": 1,
+      "amenity=restaurant;cuisine=crepes;galettes_bretonnes;thai_food;fusion;cocktails;burger;sandwich;dessert;seafood": 1,
+      "amenity=restaurant;cuisine=curry;mexican;seafood;thai": 1,
+      "amenity=restaurant;cuisine=diner;tea;coffee_shop": 1,
+      "amenity=restaurant;cuisine=diner;thai": 1,
+      "amenity=restaurant;cuisine=european": 1,
+      "amenity=restaurant;cuisine=fine_dining": 1,
+      "amenity=restaurant;cuisine=fish": 1,
+      "amenity=restaurant;cuisine=fish;burger;sandwich;grill;seafood;asian;coffee_shop;friture;noodles;chicken;curry;thai": 1,
+      "amenity=restaurant;cuisine=fish;regional;lao;grill;chicken;diner;sausage": 1,
+      "amenity=restaurant;cuisine=fish;seafood;thai": 1,
+      "amenity=restaurant;cuisine=french": 1,
+      "amenity=restaurant;cuisine=french;burger": 1,
+      "amenity=restaurant;cuisine=french;ice_cream;thai": 1,
+      "amenity=restaurant;cuisine=german": 1,
+      "amenity=restaurant;cuisine=greek": 1,
+      "amenity=restaurant;cuisine=greek;tourism=hostel": 1,
+      "amenity=restaurant;cuisine=grill": 1,
+      "amenity=restaurant;cuisine=ice_cream": 1,
+      "amenity=restaurant;cuisine=ice_cream;italian;italian_pizza;pasta;pizza": 1,
+      "amenity=restaurant;cuisine=ice_cream;italian;pizza;thai": 1,
+      "amenity=restaurant;cuisine=indian": 8,
+      "amenity=restaurant;cuisine=indian;italian;pizza;thai": 1,
+      "amenity=restaurant;cuisine=indian;italian;thai": 1,
+      "amenity=restaurant;cuisine=indian;local;thai": 1,
+      "amenity=restaurant;cuisine=indian;pizza;italian_pizza;pasta;thai;asian": 1,
+      "amenity=restaurant;cuisine=indian;thai": 2,
+      "amenity=restaurant;cuisine=international": 3,
+      "amenity=restaurant;cuisine=international;breakfast;asian": 1,
+      "amenity=restaurant;cuisine=international;thai": 4,
+      "amenity=restaurant;cuisine=italian": 10,
+      "amenity=restaurant;cuisine=italian;italian_pizza": 1,
+      "amenity=restaurant;cuisine=italian;italian_pizza;mediterranean;seafood;pizza": 1,
+      "amenity=restaurant;cuisine=italian;pizza": 1,
+      "amenity=restaurant;cuisine=italian;thai": 2,
+      "amenity=restaurant;cuisine=italian_pizza;italian": 1,
+      "amenity=restaurant;cuisine=italian_pizza;italian;international": 1,
+      "amenity=restaurant;cuisine=italian_pizza;local": 1,
+      "amenity=restaurant;cuisine=italian_pizza;thai": 1,
+      "amenity=restaurant;cuisine=japanese": 1,
+      "amenity=restaurant;cuisine=japanese;deli;seafood;indian;curry;thai": 1,
+      "amenity=restaurant;cuisine=japanese;international": 1,
+      "amenity=restaurant;cuisine=japanese;ramen": 1,
+      "amenity=restaurant;cuisine=korean": 1,
+      "amenity=restaurant;cuisine=local": 5,
+      "amenity=restaurant;cuisine=local;thai": 2,
+      "amenity=restaurant;cuisine=malaysian": 2,
+      "amenity=restaurant;cuisine=mediterranean;oriental;turkish": 1,
+      "amenity=restaurant;cuisine=mexican": 1,
+      "amenity=restaurant;cuisine=noodle; chinese": 1,
+      "amenity=restaurant;cuisine=noodles;thai": 2,
+      "amenity=restaurant;cuisine=pancake": 1,
+      "amenity=restaurant;cuisine=pancake;salad;thai;coffee_shop": 1,
+      "amenity=restaurant;cuisine=pizza": 6,
+      "amenity=restaurant;cuisine=pizza;burger;coffee_shop;french;ice_cream": 1,
+      "amenity=restaurant;cuisine=pizza;burger;fish;asian;thai": 1,
+      "amenity=restaurant;cuisine=pizza;burger;italian;pasta": 1,
+      "amenity=restaurant;cuisine=pizza;burger;regional;italian": 1,
+      "amenity=restaurant;cuisine=pizza;burger;thai;american;international;breakfast": 1,
+      "amenity=restaurant;cuisine=pizza;falafel;hummus;salad;argentinian;nepali;asian;mediterranean;middle_eastern;sandwich;loaf": 1,
+      "amenity=restaurant;cuisine=pizza;international": 1,
+      "amenity=restaurant;cuisine=pizza;italian;thai": 1,
+      "amenity=restaurant;cuisine=pizza;thai": 2,
+      "amenity=restaurant;cuisine=pizza;thai;fish;barbecue": 1,
+      "amenity=restaurant;cuisine=regional": 6,
+      "amenity=restaurant;cuisine=regional;asian;thai": 1,
+      "amenity=restaurant;cuisine=regional;crepe;asian;local;curry;thai": 1,
+      "amenity=restaurant;cuisine=regional;thai": 1,
+      "amenity=restaurant;cuisine=russian;thai": 1,
+      "amenity=restaurant;cuisine=sandwich;breakfast;burger": 1,
+      "amenity=restaurant;cuisine=seafood": 5,
+      "amenity=restaurant;cuisine=seafood;barbecue;thai": 1,
+      "amenity=restaurant;cuisine=seafood;fish;thai;curry;local": 1,
+      "amenity=restaurant;cuisine=seafood;italian_pizza;italian;thai": 1,
+      "amenity=restaurant;cuisine=seafood;thai": 3,
+      "amenity=restaurant;cuisine=seafood;thai;asian": 1,
+      "amenity=restaurant;cuisine=steak": 1,
+      "amenity=restaurant;cuisine=steak_house": 2,
+      "amenity=restaurant;cuisine=suki": 2,
+      "amenity=restaurant;cuisine=tailandesa": 1,
+      "amenity=restaurant;cuisine=tea;coffee_shop": 1,
+      "amenity=restaurant;cuisine=thai": 139,
+      "amenity=restaurant;cuisine=thai;american": 1,
+      "amenity=restaurant;cuisine=thai;asian": 1,
+      "amenity=restaurant;cuisine=thai;asian;breakfast": 1,
+      "amenity=restaurant;cuisine=thai;asian;juice;fish;noodle": 1,
+      "amenity=restaurant;cuisine=thai;asian;western;fusion": 1,
+      "amenity=restaurant;cuisine=thai;barbecue;seafood;grill;steak_house;breakfast;italian_pizza": 1,
+      "amenity=restaurant;cuisine=thai;breakfast": 1,
+      "amenity=restaurant;cuisine=thai;breakfast;international": 1,
+      "amenity=restaurant;cuisine=thai;breakfast;pasta": 1,
+      "amenity=restaurant;cuisine=thai;burger": 1,
+      "amenity=restaurant;cuisine=thai;chinese": 1,
+      "amenity=restaurant;cuisine=thai;coffee_shop;fish_and_chips;seafood;diner": 1,
+      "amenity=restaurant;cuisine=thai;crepe;curry;seafood;fish;pancake;tea": 1,
+      "amenity=restaurant;cuisine=thai;esan": 1,
+      "amenity=restaurant;cuisine=thai;european": 2,
+      "amenity=restaurant;cuisine=thai;german;european;swiss": 1,
+      "amenity=restaurant;cuisine=thai;indian": 2,
+      "amenity=restaurant;cuisine=thai;indian;american": 1,
+      "amenity=restaurant;cuisine=thai;indian;mexican": 1,
+      "amenity=restaurant;cuisine=thai;indian;pizza": 1,
+      "amenity=restaurant;cuisine=thai;international;pizza;burger": 1,
+      "amenity=restaurant;cuisine=thai;italian;breakfast": 1,
+      "amenity=restaurant;cuisine=thai;local": 2,
+      "amenity=restaurant;cuisine=thai;noodle": 2,
+      "amenity=restaurant;cuisine=thai;regional": 1,
+      "amenity=restaurant;cuisine=thai;seafood": 2,
+      "amenity=restaurant;cuisine=thai;seafood;international": 1,
+      "amenity=restaurant;cuisine=thai;seafood;western;brunch;breakfast;pizza;mexican": 1,
+      "amenity=restaurant;cuisine=thai;shop=tyres": 1,
+      "amenity=restaurant;cuisine=thai;swiss": 1,
+      "amenity=restaurant;cuisine=thai;tourism=hotel": 1,
+      "amenity=restaurant;cuisine=thai;western": 3,
+      "amenity=restaurant;cuisine=thai;western;pizza;breakfast;pasta;steak": 1,
+      "amenity=restaurant;cuisine=thai_roti": 1,
+      "amenity=restaurant;cuisine=western": 3,
+      "amenity=restaurant;cuisine=western, thai, pasta, breakfast, dinner": 1,
+      "amenity=restaurant;cuisine=อาหารตามสั่ง;หมาล่า": 1,
+      "amenity=restaurant;tourism=guest_house": 1
+    },
+    "SHOPPING": {
+      "shop=department_store": 5,
+      "shop=mall": 4
+    },
+    "TIRE_SERVICE": {
+      "shop=tyres": 2
+    },
+    "TOURISM": {
+      "amenity=place_of_worship;religion=buddhist;tourism=viewpoint": 1,
+      "amenity=waste_basket;tourism=artwork": 1,
+      "religion=buddhist;tourism=artwork": 2,
+      "shop=ticket;tourism=attraction": 1,
+      "tourism=aquarium": 1,
+      "tourism=artwork": 15,
+      "tourism=attraction": 94,
+      "tourism=museum": 5,
+      "tourism=viewpoint": 37,
+      "tourism=zoo": 2
+    }
+  },
+  "missingAddress": 2232,
+  "missingEnglishNameTag": 1774,
+  "missingPhone": 2412,
+  "missingThaiNameTag": 2383,
+  "poiCount": 2702,
+  "sampleAudit": {
+    "FERRY": {
+      "categoryCount": 30,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:10136622867",
+          "latitude": 8.0627609,
+          "longitude": 98.9195058,
+          "name": "ท่าเรือเจ้าฟ้า",
+          "sourceNameTags": {
+            "name": "ท่าเรือเจ้าฟ้า",
+            "name:en": "Chaofa Pier",
+            "name:th": "ท่าเรือเจ้าฟ้า"
+          },
+          "sourceReference": "node/10136622867",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:10181649000",
+          "latitude": 8.0964105,
+          "longitude": 98.9164684,
+          "name": "ท่าเรือหินขวาง",
+          "sourceNameTags": {
+            "name": "ท่าเรือหินขวาง",
+            "name:en": "Hin Khwang Pier",
+            "name:th": "ท่าเรือหินขวาง"
+          },
+          "sourceReference": "node/10181649000",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:1286410591",
+          "latitude": 8.0258472,
+          "longitude": 98.8625369,
+          "name": "อ่าวน้ำเมา",
+          "sourceNameTags": {
+            "name": "อ่าวน้ำเมา",
+            "name:en": "Ao Nam Mao pier",
+            "name:th": "อ่าวน้ำเมา"
+          },
+          "sourceReference": "node/1286410591",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2457772223",
+          "latitude": 8.018093,
+          "longitude": 98.8306576,
+          "name": "หาดต้นไทร",
+          "sourceNameTags": {
+            "name": "หาดต้นไทร",
+            "name:en": "Ton Sai Beach Pier",
+            "name:th": "หาดต้นไทร"
+          },
+          "sourceReference": "node/2457772223",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2502554722",
+          "latitude": 8.0557259,
+          "longitude": 98.920713,
+          "name": "ท่าเรือมารีน่า",
+          "sourceNameTags": {
+            "alt_name": "ท่าเรือแม่น้ำกระบี่",
+            "name": "ท่าเรือมารีน่า",
+            "name:en": "Marina Pier",
+            "name:th": "ท่าเรือมารีน่า"
+          },
+          "sourceReference": "node/2502554722",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:265688020",
+          "latitude": 8.009222,
+          "longitude": 98.8439154,
+          "name": "อ่าวไร่เลย์ (ตะวันออก)",
+          "sourceNameTags": {
+            "name": "อ่าวไร่เลย์ (ตะวันออก)",
+            "name:en": "Railay East pier",
+            "name:th": "อ่าวไร่เลย์ (ตะวันออก)"
+          },
+          "sourceReference": "node/265688020",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:3233091096",
+          "latitude": 7.7373725,
+          "longitude": 98.7704546,
+          "name": "ท่าเรืออ่าวต้นไทร",
+          "sourceNameTags": {
+            "name": "ท่าเรืออ่าวต้นไทร",
+            "name:en": "Ton Sai Pier Ko Phi Phi",
+            "name:th": "ท่าเรืออ่าวต้นไทร"
+          },
+          "sourceReference": "node/3233091096",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6126121289",
+          "latitude": 8.028918,
+          "longitude": 98.8632011,
+          "name": "อ่าวน้ำเมา",
+          "sourceNameTags": {
+            "name": "อ่าวน้ำเมา",
+            "name:en": "Ao Nam Mao pier",
+            "name:th": "อ่าวน้ำเมา"
+          },
+          "sourceReference": "node/6126121289",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:642936790",
+          "latitude": 7.7968232,
+          "longitude": 98.9916723,
+          "name": "ท่าเรือเกาะจัม",
+          "sourceNameTags": {
+            "name": "ท่าเรือเกาะจัม",
+            "name:en": "Koh Jum pier",
+            "name:th": "ท่าเรือเกาะจัม"
+          },
+          "sourceReference": "node/642936790",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:686512115",
+          "latitude": 8.1219809,
+          "longitude": 98.7489406,
+          "name": "Din Deng Noi FERRY",
+          "sourceNameTags": {
+            "name": "Din Deng Noi FERRY"
+          },
+          "sourceReference": "way/686512115",
+          "sourceTags": {
+            "amenity": "ferry_terminal"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "FUEL": {
+      "categoryCount": 92,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:10132281004",
+          "latitude": 8.0876248,
+          "longitude": 98.8937429,
+          "name": "เอสโซ่",
+          "sourceNameTags": {
+            "name": "เอสโซ่",
+            "name:en": "Esso",
+            "name:th": "เอสโซ่"
+          },
+          "sourceReference": "node/10132281004",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:11327612228",
+          "latitude": 8.0794261,
+          "longitude": 99.0855127,
+          "name": "Independent",
+          "sourceNameTags": {
+            "name": "Independent"
+          },
+          "sourceReference": "node/11327612228",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:11360074069",
+          "latitude": 8.0444036,
+          "longitude": 98.8103098,
+          "name": "Motorbike",
+          "sourceNameTags": {
+            "name:en": "Motorbike"
+          },
+          "sourceReference": "node/11360074069",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:11433231072",
+          "latitude": 8.3935945,
+          "longitude": 98.7425658,
+          "name": "เชลล์",
+          "sourceNameTags": {
+            "name": "Shell",
+            "name:en": "Shell",
+            "name:th": "เชลล์"
+          },
+          "sourceReference": "node/11433231072",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:13667102440",
+          "latitude": 8.3847102,
+          "longitude": 98.714986,
+          "name": "ป.ต.ท.",
+          "sourceNameTags": {
+            "name": "PTT",
+            "name:en": "PTT",
+            "name:th": "ป.ต.ท."
+          },
+          "sourceReference": "node/13667102440",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:3374332533",
+          "latitude": 8.0151228,
+          "longitude": 99.1174569,
+          "name": "บางจาก",
+          "sourceNameTags": {
+            "name": "บางจาก",
+            "name:en": "Bangchak",
+            "name:th": "บางจาก"
+          },
+          "sourceReference": "node/3374332533",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4463799656",
+          "latitude": 8.0824378,
+          "longitude": 98.9142915,
+          "name": "พีที",
+          "sourceNameTags": {
+            "name": "PT",
+            "name:en": "PT",
+            "name:th": "พีที"
+          },
+          "sourceReference": "node/4463799656",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:634835632",
+          "latitude": 8.073695,
+          "longitude": 98.9961371,
+          "name": "เชลล์",
+          "sourceNameTags": {
+            "name": "เชลล์",
+            "name:en": "Shell"
+          },
+          "sourceReference": "node/634835632",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:1029534322",
+          "latitude": 8.0414837,
+          "longitude": 98.8422366,
+          "name": "บางจาก",
+          "sourceNameTags": {
+            "name": "บางจาก",
+            "name:en": "Bangchak",
+            "name:th": "บางจาก"
+          },
+          "sourceReference": "way/1029534322",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:491361236",
+          "latitude": 7.6391211,
+          "longitude": 99.0343608,
+          "name": "PT Petroleum",
+          "sourceNameTags": {
+            "name": "PT Petroleum",
+            "name:en": "PT Petroleum"
+          },
+          "sourceReference": "way/491361236",
+          "sourceTags": {
+            "amenity": "fuel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "HALAL_RESTAURANT": {
+      "categoryCount": 12,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:11703996669",
+          "latitude": 7.5910235,
+          "longitude": 99.035647,
+          "name": "Phra Ae Seafood",
+          "sourceNameTags": {
+            "name:en": "Phra Ae Seafood"
+          },
+          "sourceReference": "node/11703996669",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "seafood;thai",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:12695418653",
+          "latitude": 7.4881764,
+          "longitude": 99.0848211,
+          "name": "Summa Thai Seafood",
+          "sourceNameTags": {
+            "name": "Summa Thai Seafood"
+          },
+          "sourceReference": "node/12695418653",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "thai;seafood",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:3432501611",
+          "latitude": 8.0650994,
+          "longitude": 98.91598,
+          "name": "ฮาลาลฟู้ด",
+          "sourceNameTags": {
+            "name": "ฮาลาลฟู้ด",
+            "name:en": "Halal Food",
+            "name:th": "ฮาลาลฟู้ด"
+          },
+          "sourceReference": "node/3432501611",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "diet:halal": "only"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4361390797",
+          "latitude": 8.0457281,
+          "longitude": 98.8461809,
+          "name": "Halal restaurant",
+          "sourceNameTags": {
+            "name:en": "Halal restaurant"
+          },
+          "sourceReference": "node/4361390797",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "malaysian;thai",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:5638649721",
+          "latitude": 8.0370778,
+          "longitude": 98.8333824,
+          "name": "Plant-erion Vegie Restaurant",
+          "sourceNameTags": {
+            "name": "Plant-erion Vegie Restaurant"
+          },
+          "sourceReference": "node/5638649721",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "indian;seafood;thai;pizza",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6021568690",
+          "latitude": 8.0347836,
+          "longitude": 98.8303442,
+          "name": "Khawfhang Restaurant",
+          "sourceNameTags": {
+            "name": "Khawfhang Restaurant"
+          },
+          "sourceReference": "node/6021568690",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "thai;seafood",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6021568937",
+          "latitude": 8.0347332,
+          "longitude": 98.8302761,
+          "name": "Aree BaBa",
+          "sourceNameTags": {
+            "name": "Aree BaBa"
+          },
+          "sourceReference": "node/6021568937",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "thai;seafood",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:7153710898",
+          "latitude": 7.8034378,
+          "longitude": 98.9783111,
+          "name": "Pizza & Classic kohjum",
+          "sourceNameTags": {
+            "name": "Pizza & Classic kohjum"
+          },
+          "sourceReference": "node/7153710898",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "thai;italian",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:8940767259",
+          "latitude": 8.0388264,
+          "longitude": 98.8390819,
+          "name": "Yaya Cups Cafe",
+          "sourceNameTags": {
+            "name": "Yaya Cups Cafe"
+          },
+          "sourceReference": "node/8940767259",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "coffee_shop;thai",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:9606215756",
+          "latitude": 8.0832287,
+          "longitude": 98.8962516,
+          "name": "มากันบุฟเฟต์",
+          "sourceNameTags": {
+            "name": "มากันบุฟเฟต์",
+            "name:en": "Makan Buffet",
+            "name:th": "มากันบุฟเฟต์"
+          },
+          "sourceReference": "node/9606215756",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "diet:halal": "yes"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "HOSPITAL": {
+      "categoryCount": 19,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:10127760493",
+          "latitude": 8.0758642,
+          "longitude": 98.9152065,
+          "name": "โรงพยาบาลกระบี่",
+          "sourceNameTags": {
+            "name": "โรงพยาบาลกระบี่",
+            "name:en": "Krabi Hospital",
+            "name:th": "โรงพยาบาลกระบี่"
+          },
+          "sourceReference": "node/10127760493",
+          "sourceTags": {
+            "amenity": "hospital",
+            "healthcare": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:1150191198",
+          "latitude": 7.7380885,
+          "longitude": 98.7677255,
+          "name": "โรงพยาบาลเกาะพีพี",
+          "sourceNameTags": {
+            "alt_name": "Phi Phi Island Hospital",
+            "name": "โรงพยาบาลเกาะพีพี",
+            "name:en": "Phi Phi Island Hospital",
+            "name:th": "โรงพยาบาลเกาะพีพี"
+          },
+          "sourceReference": "node/1150191198",
+          "sourceTags": {
+            "amenity": "hospital",
+            "healthcare": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2784775764",
+          "latitude": 7.9521151,
+          "longitude": 99.14422,
+          "name": "โรงพยาบาลคลองท่อม",
+          "sourceNameTags": {
+            "name": "โรงพยาบาลคลองท่อม",
+            "name:en": "Khlong Thom Hospital",
+            "name:th": "โรงพยาบาลคลองท่อม"
+          },
+          "sourceReference": "node/2784775764",
+          "sourceTags": {
+            "amenity": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:5068687521",
+          "latitude": 8.0807978,
+          "longitude": 98.9058189,
+          "name": "โรงพยาบาลกระบี่นครินทร์ อินเตอร์เนชั่นแนล",
+          "sourceNameTags": {
+            "alt_name": "Krabi Nakharin International Hospital",
+            "name": "โรงพยาบาลกระบี่นครินทร์ อินเตอร์เนชั่นแนล",
+            "name:en": "Krabi Nakharin International Hospital",
+            "name:th": "โรงพยาบาลกระบี่นครินทร์ อินเตอร์เนชั่นแนล"
+          },
+          "sourceReference": "node/5068687521",
+          "sourceTags": {
+            "amenity": "hospital",
+            "healthcare": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6317749586",
+          "latitude": 7.6635155,
+          "longitude": 99.0433601,
+          "name": "Koh Lanta Hospital",
+          "sourceNameTags": {
+            "name:en": "Koh Lanta Hospital"
+          },
+          "sourceReference": "node/6317749586",
+          "sourceTags": {
+            "amenity": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:7856632160",
+          "latitude": 7.5198366,
+          "longitude": 99.0968567,
+          "name": "โรงพยาบาลเกาะลันตา",
+          "sourceNameTags": {
+            "name": "โรงพยาบาลเกาะลันตา",
+            "name:en": "Ko Lanta Hospital",
+            "name:th": "โรงพยาบาลเกาะลันตา"
+          },
+          "sourceReference": "node/7856632160",
+          "sourceTags": {
+            "amenity": "hospital",
+            "healthcare": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:7856667409",
+          "latitude": 8.2572655,
+          "longitude": 99.0459269,
+          "name": "โรงพยาบาลเขาพนม",
+          "sourceNameTags": {
+            "name": "โรงพยาบาลเขาพนม",
+            "name:en": "Khao Phanom Hospital"
+          },
+          "sourceReference": "node/7856667409",
+          "sourceTags": {
+            "amenity": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:1028352368",
+          "latitude": 8.5325702,
+          "longitude": 98.8654545,
+          "name": "โรงพยาบาลปลายพระยา",
+          "sourceNameTags": {
+            "name": "โรงพยาบาลปลายพระยา",
+            "name:en": "Plai Phraya Hospital"
+          },
+          "sourceReference": "way/1028352368",
+          "sourceTags": {
+            "amenity": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:1227068087",
+          "latitude": 8.0566041,
+          "longitude": 98.8174936,
+          "name": "Wattanapat hospital ao nang",
+          "sourceNameTags": {
+            "name": "Wattanapat hospital ao nang",
+            "name:en": "Wattanapat hospital ao nang (private)"
+          },
+          "sourceReference": "way/1227068087",
+          "sourceTags": {
+            "amenity": "hospital",
+            "healthcare": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:646514742",
+          "latitude": 7.805949,
+          "longitude": 98.9732947,
+          "name": "Kohjum Tambon Health Promotion Hospital",
+          "sourceNameTags": {
+            "name:en": "Kohjum Tambon Health Promotion Hospital"
+          },
+          "sourceReference": "way/646514742",
+          "sourceTags": {
+            "amenity": "hospital",
+            "healthcare": "hospital"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "HOTEL": {
+      "categoryCount": 965,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:1001395211",
+          "latitude": 7.4093757,
+          "longitude": 99.211821,
+          "name": "Koh Hai Fantasy Resort",
+          "sourceNameTags": {
+            "name": "Koh Hai Fantasy Resort"
+          },
+          "sourceReference": "node/1001395211",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:12526618859",
+          "latitude": 7.7612588,
+          "longitude": 98.7725086,
+          "name": "SAii Phi Phi Island Village Resort",
+          "sourceNameTags": {
+            "name": "SAii Phi Phi Island Village Resort"
+          },
+          "sourceReference": "node/12526618859",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2085694846",
+          "latitude": 8.0411752,
+          "longitude": 98.8203479,
+          "name": "Thai Village Hotel",
+          "sourceNameTags": {
+            "name": "Thai Village Hotel"
+          },
+          "sourceReference": "node/2085694846",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:3419574708",
+          "latitude": 8.0189933,
+          "longitude": 98.8377136,
+          "name": "Sai-Ngam Botanic Garden Resort",
+          "sourceNameTags": {
+            "name": "Sai-Ngam Botanic Garden Resort"
+          },
+          "sourceReference": "node/3419574708",
+          "sourceTags": {
+            "tourism": "guest_house"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4143815190",
+          "latitude": 8.0384985,
+          "longitude": 98.8169617,
+          "name": "Krabi Forest Homestay",
+          "sourceNameTags": {
+            "name": "Krabi Forest Homestay"
+          },
+          "sourceReference": "node/4143815190",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4688974265",
+          "latitude": 7.5460509,
+          "longitude": 99.0612452,
+          "name": "Baan Reenaa Lanta",
+          "sourceNameTags": {
+            "name": "Baan Reenaa Lanta"
+          },
+          "sourceReference": "node/4688974265",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:5839948191",
+          "latitude": 8.0898446,
+          "longitude": 98.8948985,
+          "name": "The Chill @ Krabi Hotel",
+          "sourceNameTags": {
+            "name": "The Chill @ Krabi Hotel"
+          },
+          "sourceReference": "node/5839948191",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:702448722",
+          "latitude": 7.6280955,
+          "longitude": 99.0328017,
+          "name": "Andaman Lanta Resort",
+          "sourceNameTags": {
+            "name": "Andaman Lanta Resort"
+          },
+          "sourceReference": "node/702448722",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:relation:19799646",
+          "latitude": 8.033388,
+          "longitude": 98.8288786,
+          "name": "Adam Bungalows",
+          "sourceNameTags": {
+            "name": "Adam Bungalows"
+          },
+          "sourceReference": "relation/19799646",
+          "sourceTags": {
+            "tourism": "guest_house"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:873037321",
+          "latitude": 8.0310758,
+          "longitude": 98.8683086,
+          "name": "Seashell Resort Krabi",
+          "sourceNameTags": {
+            "name": "Seashell Resort Krabi"
+          },
+          "sourceReference": "way/873037321",
+          "sourceTags": {
+            "tourism": "hotel"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "MOSQUE": {
+      "categoryCount": 18,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:11377505508",
+          "latitude": 8.0744795,
+          "longitude": 98.8359274,
+          "name": "มัสยิดนูหรุนยันน๊ะ",
+          "sourceNameTags": {
+            "name": "มัสยิดนูหรุนยันน๊ะ",
+            "name:en": "Matsayit Nu Run Yan Na"
+          },
+          "sourceReference": "node/11377505508",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2330200012",
+          "latitude": 7.736737,
+          "longitude": 98.7759897,
+          "name": "Al-Islah Koh Phi Phi Mosque",
+          "sourceNameTags": {
+            "name": "Al-Islah Koh Phi Phi Mosque"
+          },
+          "sourceReference": "node/2330200012",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4306950092",
+          "latitude": 8.3068383,
+          "longitude": 98.8818021,
+          "name": "มัสยิดบ้านช่องไม้ดำ",
+          "sourceNameTags": {
+            "name": "มัสยิดบ้านช่องไม้ดำ"
+          },
+          "sourceReference": "node/4306950092",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4826556321",
+          "latitude": 7.6031234,
+          "longitude": 99.0656025,
+          "name": "Ba-Lai",
+          "sourceNameTags": {
+            "name": "Ba-Lai",
+            "name:en": "Ba-Lai"
+          },
+          "sourceReference": "node/4826556321",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6186080470",
+          "latitude": 8.058944,
+          "longitude": 98.808583,
+          "name": "มัสยิดบ้านนาตีน",
+          "sourceNameTags": {
+            "name": "มัสยิดบ้านนาตีน",
+            "name:en": "Matsayit Ban Na Tin"
+          },
+          "sourceReference": "node/6186080470",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:7161046604",
+          "latitude": 8.317545,
+          "longitude": 98.7746295,
+          "name": "Masjid darussalam",
+          "sourceNameTags": {
+            "name:en": "Masjid darussalam"
+          },
+          "sourceReference": "node/7161046604",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:1561270282",
+          "latitude": 8.2751903,
+          "longitude": 98.650539,
+          "name": "มัสยิดบ้านแหลมสัก",
+          "sourceNameTags": {
+            "name": "มัสยิดบ้านแหลมสัก",
+            "name:en": "Masjid Ban Laem Sak",
+            "name:th": "มัสยิดบ้านแหลมสัก"
+          },
+          "sourceReference": "way/1561270282",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:399675767",
+          "latitude": 8.052395,
+          "longitude": 98.7617901,
+          "name": "มัสยิดบ้านคลองม่วง",
+          "sourceNameTags": {
+            "name": "มัสยิดบ้านคลองม่วง",
+            "name:en": "Matsayit Ban Khlong Muang"
+          },
+          "sourceReference": "way/399675767",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:659547702",
+          "latitude": 8.0498437,
+          "longitude": 98.8156872,
+          "name": "มัสยิดบ้านคลองแห้ง",
+          "sourceNameTags": {
+            "alt_name": "Matsayit Ban Khlong Haeng",
+            "name": "มัสยิดบ้านคลองแห้ง",
+            "name:en": "Al-Aman Mosque"
+          },
+          "sourceReference": "way/659547702",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:660722327",
+          "latitude": 8.0688683,
+          "longitude": 98.7920215,
+          "name": "มัสยิดทรายขาว",
+          "sourceNameTags": {
+            "name": "มัสยิดทรายขาว",
+            "name:en": "Matsayit Sai Khao"
+          },
+          "sourceReference": "way/660722327",
+          "sourceTags": {
+            "amenity": "place_of_worship",
+            "religion": "muslim"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "RESTAURANT": {
+      "categoryCount": 1047,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:10120898316",
+          "latitude": 8.064429,
+          "longitude": 98.9157908,
+          "name": "Vogue Food Court",
+          "sourceNameTags": {
+            "name": "Vogue Food Court"
+          },
+          "sourceReference": "node/10120898316",
+          "sourceTags": {
+            "amenity": "food_court"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:11765315870",
+          "latitude": 7.7395462,
+          "longitude": 98.772863,
+          "name": "Good time cafe",
+          "sourceNameTags": {
+            "name:en": "Good time cafe"
+          },
+          "sourceReference": "node/11765315870",
+          "sourceTags": {
+            "amenity": "cafe"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:13259451325",
+          "latitude": 7.6494335,
+          "longitude": 99.0379505,
+          "name": "Maharaja",
+          "sourceNameTags": {
+            "name": "Maharaja"
+          },
+          "sourceReference": "node/13259451325",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "indian"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2486043510",
+          "latitude": 7.5257379,
+          "longitude": 99.0959965,
+          "name": "Shanti old town",
+          "sourceNameTags": {
+            "name": "Shanti old town"
+          },
+          "sourceReference": "node/2486043510",
+          "sourceTags": {
+            "amenity": "restaurant"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4170903434",
+          "latitude": 7.5452654,
+          "longitude": 99.0477753,
+          "name": "Muslim Restaurant",
+          "sourceNameTags": {
+            "name": "Muslim Restaurant"
+          },
+          "sourceReference": "node/4170903434",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "malaysian"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4772082222",
+          "latitude": 7.649189,
+          "longitude": 99.0395097,
+          "name": "Not a Toy",
+          "sourceNameTags": {
+            "name:en": "Not a Toy"
+          },
+          "sourceReference": "node/4772082222",
+          "sourceTags": {
+            "amenity": "cafe",
+            "cuisine": "breakfast;coffee_shop;crepe;ice_cream"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:5484048422",
+          "latitude": 7.6464096,
+          "longitude": 99.0363143,
+          "name": "Breakfast",
+          "sourceNameTags": {
+            "name": "Breakfast"
+          },
+          "sourceReference": "node/5484048422",
+          "sourceTags": {
+            "amenity": "cafe"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6353631945",
+          "latitude": 7.5689514,
+          "longitude": 99.0359944,
+          "name": "T Lanta",
+          "sourceNameTags": {
+            "name": "T Lanta"
+          },
+          "sourceReference": "node/6353631945",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "local"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:7199818485",
+          "latitude": 8.0322636,
+          "longitude": 98.8274586,
+          "name": "Food Center",
+          "sourceNameTags": {
+            "name": "Food Center"
+          },
+          "sourceReference": "node/7199818485",
+          "sourceTags": {
+            "amenity": "restaurant",
+            "cuisine": "seafood;barbecue;thai"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:926972243",
+          "latitude": 8.5857825,
+          "longitude": 98.7414231,
+          "name": "ไร่ครูครื้น แคมป์ปิ้ง เขาต่อ กระบี่",
+          "sourceNameTags": {
+            "name": "ไร่ครูครื้น แคมป์ปิ้ง เขาต่อ กระบี่"
+          },
+          "sourceReference": "way/926972243",
+          "sourceTags": {
+            "amenity": "cafe",
+            "cuisine": "coffee_shop"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    },
+    "TOURISM": {
+      "categoryCount": 159,
+      "sampleCount": 10,
+      "samples": [
+        {
+          "id": "osm:node:10129485777",
+          "latitude": 8.0557541,
+          "longitude": 98.9199461,
+          "name": "ประติมากรรมน้ำใจ",
+          "sourceNameTags": {
+            "alt_name": "Sculpture of Kindness",
+            "name": "ประติมากรรมน้ำใจ",
+            "name:en": "Sculpture of Kindness",
+            "name:th": "ประติมากรรมน้ำใจ"
+          },
+          "sourceReference": "node/10129485777",
+          "sourceTags": {
+            "tourism": "artwork"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:11461360740",
+          "latitude": 8.3729773,
+          "longitude": 98.7355069,
+          "name": "Gap between Karsts",
+          "sourceNameTags": {
+            "name:en": "Gap between Karsts"
+          },
+          "sourceReference": "node/11461360740",
+          "sourceTags": {
+            "tourism": "viewpoint"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:12629943801",
+          "latitude": 7.498176,
+          "longitude": 99.0721502,
+          "name": "Statue of Koh Lanta",
+          "sourceNameTags": {
+            "name": "Statue of Koh Lanta"
+          },
+          "sourceReference": "node/12629943801",
+          "sourceTags": {
+            "tourism": "attraction"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:2653537261",
+          "latitude": 8.0939515,
+          "longitude": 98.7652018,
+          "name": "View Point 2",
+          "sourceNameTags": {
+            "name": "View Point 2"
+          },
+          "sourceReference": "node/2653537261",
+          "sourceTags": {
+            "tourism": "viewpoint"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:4615501789",
+          "latitude": 8.1804875,
+          "longitude": 98.7506055,
+          "name": "Khao Thong",
+          "sourceNameTags": {
+            "name:en": "Khao Thong"
+          },
+          "sourceReference": "node/4615501789",
+          "sourceTags": {
+            "tourism": "viewpoint"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:5301974323",
+          "latitude": 8.1370786,
+          "longitude": 98.757129,
+          "name": "entrance",
+          "sourceNameTags": {
+            "name:en": "entrance"
+          },
+          "sourceReference": "node/5301974323",
+          "sourceTags": {
+            "tourism": "viewpoint"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:5585813422",
+          "latitude": 7.2812706,
+          "longitude": 98.8689115,
+          "name": "Hin Daeng",
+          "sourceNameTags": {
+            "name": "Hin Daeng",
+            "name:en": "Red Rock",
+            "name:th": "Hin Daeng"
+          },
+          "sourceReference": "node/5585813422",
+          "sourceTags": {
+            "tourism": "attraction"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:6384967285",
+          "latitude": 8.0176654,
+          "longitude": 98.838288,
+          "name": "ถ้ำหินย้อย",
+          "sourceNameTags": {
+            "name": "ถ้ำหินย้อย",
+            "name:en": "Tufa Cave"
+          },
+          "sourceReference": "node/6384967285",
+          "sourceTags": {
+            "tourism": "attraction"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:node:7546186285",
+          "latitude": 8.0083027,
+          "longitude": 98.8357715,
+          "name": "Cave",
+          "sourceNameTags": {
+            "name:en": "Cave"
+          },
+          "sourceReference": "node/7546186285",
+          "sourceTags": {
+            "tourism": "viewpoint"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        },
+        {
+          "id": "osm:way:99307403",
+          "latitude": 8.038496,
+          "longitude": 99.0892319,
+          "name": "Krabi Hot Spring",
+          "sourceNameTags": {
+            "name": "Krabi Hot Spring",
+            "name:en": "Krabi Hot Spring"
+          },
+          "sourceReference": "way/99307403",
+          "sourceTags": {
+            "tourism": "attraction"
+          },
+          "validation": {
+            "mismatches": [],
+            "passed": true
+          }
+        }
+      ],
+      "validatedCount": 10
+    }
+  },
+  "sampleValidation": {
+    "passed": 80,
+    "sampled": 80
+  },
+  "unnamedRecords": {
+    "blankNameQuarantineCount": 701,
+    "candidateFieldOccurrences": {
+      "brand": 25,
+      "operator": 56
+    },
+    "examples": [
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungthai"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungthai",
+        "category": "ATM",
+        "sourceReference": "node/10175214717"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/10175479017"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/10175582217"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungthai Bank"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungthai Bank",
+        "category": "ATM",
+        "sourceReference": "node/10175582218"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/10181661417"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungthai"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungthai",
+        "category": "ATM",
+        "sourceReference": "node/10187644417"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/10187714817"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Ao-Nang Boat Service Co-operative"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Ao-Nang Boat Service Co-operative",
+        "category": "FERRY",
+        "sourceReference": "node/10219050488"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/10676101105"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/10723328497"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "Independent"
+        },
+        "candidateField": "brand",
+        "candidateValue": "Independent",
+        "category": "FUEL",
+        "sourceReference": "node/1091831493"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Siam City Bank"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Siam City Bank",
+        "category": "ATM",
+        "sourceReference": "node/1102901747"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "KBank"
+        },
+        "candidateField": "operator",
+        "candidateValue": "KBank",
+        "category": "ATM",
+        "sourceReference": "node/11350910373"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "krungsri",
+        "category": "ATM",
+        "sourceReference": "node/11350910574"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "krungsri",
+        "category": "ATM",
+        "sourceReference": "node/11363956371"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Ao-Nang Boat Service Co-operative"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Ao-Nang Boat Service Co-operative",
+        "category": "FERRY",
+        "sourceReference": "node/11378820322"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Siam Commercial Bank"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Siam Commercial Bank",
+        "category": "ATM",
+        "sourceReference": "node/1150191358"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "gates"
+        },
+        "candidateField": "operator",
+        "candidateValue": "gates",
+        "category": "ATM",
+        "sourceReference": "node/11548255269"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "AEON"
+        },
+        "candidateField": "operator",
+        "candidateValue": "AEON",
+        "category": "ATM",
+        "sourceReference": "node/11591930269"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "ธนาคารกรุงเทพ",
+          "operator": "ธนาคารกรุงเทพ"
+        },
+        "candidateField": "brand",
+        "candidateValue": "ธนาคารกรุงเทพ",
+        "category": "ATM",
+        "sourceReference": "node/12605943326"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Krungsri"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Krungsri",
+        "category": "ATM",
+        "sourceReference": "node/13666094302"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "ธนาคารไทยพาณิชย์",
+          "operator": "ธนาคารไทยพาณิชย์"
+        },
+        "candidateField": "brand",
+        "candidateValue": "ธนาคารไทยพาณิชย์",
+        "category": "ATM",
+        "sourceReference": "node/14234913984"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "ธนาคารกรุงไทย",
+          "operator": "ธนาคารกรุงไทย"
+        },
+        "candidateField": "brand",
+        "candidateValue": "ธนาคารกรุงไทย",
+        "category": "ATM",
+        "sourceReference": "node/14234913985"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "Ao-Nang Boat Service Co-operative"
+        },
+        "candidateField": "operator",
+        "candidateValue": "Ao-Nang Boat Service Co-operative",
+        "category": "FERRY",
+        "sourceReference": "node/1611313308"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "ธนาคารไทยพาณิชย์",
+          "operator": "ธนาคารไทยพาณิชย์"
+        },
+        "candidateField": "brand",
+        "candidateValue": "ธนาคารไทยพาณิชย์",
+        "category": "ATM",
+        "sourceReference": "node/1966249435"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "Three ATM's"
+        },
+        "candidateField": "brand",
+        "candidateValue": "Three ATM's",
+        "category": "ATM",
+        "sourceReference": "node/2624866886"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "GSB"
+        },
+        "candidateField": "operator",
+        "candidateValue": "GSB",
+        "category": "ATM",
+        "sourceReference": "node/2713457862"
+      },
+      {
+        "allStructuredCandidates": {
+          "operator": "SCB"
+        },
+        "candidateField": "operator",
+        "candidateValue": "SCB",
+        "category": "ATM",
+        "sourceReference": "node/2713457867"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "KBANK",
+          "operator": "KBANK"
+        },
+        "candidateField": "brand",
+        "candidateValue": "KBANK",
+        "category": "ATM",
+        "sourceReference": "node/2784775791"
+      },
+      {
+        "allStructuredCandidates": {
+          "brand": "KBANK",
+          "operator": "KBANK"
+        },
+        "candidateField": "brand",
+        "candidateValue": "KBANK",
+        "category": "ATM",
+        "sourceReference": "node/2784775794"
+      }
+    ],
+    "note": "Candidates are reported only; none are promoted automatically.",
+    "withStructuredDisplayNameCandidate": 66,
+    "withoutStructuredDisplayNameCandidate": 635
+  },
+  "verifiedStatus": {
+    "unverified": 2702
+  }
+}

@@ -145,6 +145,38 @@ class VelaPoiRepositoryTest {
     }
 
     @Test
+    fun `search tier ordering is saved then OpenStreetMap then Longdo`() {
+        val saved = fixturePoi(
+            id = "saved-test",
+            name = "TEST ONLY Saved",
+            source = PoiSource.USER_PLACE
+        )
+        val osm = fixturePoi(
+            id = "osm:node:1",
+            name = "TEST ONLY OSM",
+            latitude = 10.1,
+            source = PoiSource.OPENSTREETMAP
+        )
+        val longdo = fixturePoi(
+            id = "longdo-test",
+            name = "TEST ONLY Longdo",
+            latitude = 10.2,
+            source = PoiSource.LONGDO
+        )
+
+        val outcome = PoiSearchMerger.merge(
+            savedResults = listOf(saved),
+            velaResults = Result.success(listOf(osm)),
+            longdoResults = Result.success(listOf(longdo))
+        )
+
+        assertEquals(
+            listOf(PoiSource.USER_PLACE, PoiSource.OPENSTREETMAP, PoiSource.LONGDO),
+            outcome.results.map(PoiSearchResult::source)
+        )
+    }
+
+    @Test
     fun `asset schema retains provenance and dataset metadata`() {
         val dataset = VelaPoiDatasetParser.parse(
             """
@@ -178,6 +210,37 @@ class VelaPoiRepositoryTest {
         assertTrue(poi.verified)
         assertEquals("test-only-v1", poi.datasetVersion)
         assertEquals("2000-01-01", poi.updatedAt)
+    }
+
+    @Test
+    fun `OpenStreetMap asset retains source reference and classification tags`() {
+        val dataset = VelaPoiDatasetParser.parse(
+            """
+            {
+              "schemaVersion": 1,
+              "datasetVersion": "osm-test-only",
+              "updatedAt": "2000-01-01",
+              "pois": [
+                {
+                  "id": "osm:node:123",
+                  "name": "TEST ONLY OSM Record",
+                  "category": "FUEL",
+                  "latitude": 10.0,
+                  "longitude": 100.0,
+                  "source": "OPENSTREETMAP",
+                  "sourceReference": "node/123",
+                  "sourceUrl": "https://www.openstreetmap.org/node/123",
+                  "sourceTags": {"amenity": "fuel"}
+                }
+              ]
+            }
+            """.trimIndent()
+        )
+
+        val poi = dataset.pois.single()
+        assertEquals(PoiSource.OPENSTREETMAP, poi.source)
+        assertEquals("node/123", poi.sourceReference)
+        assertEquals(mapOf("amenity" to "fuel"), poi.sourceTags)
     }
 
     private fun repository(vararg pois: PoiSearchResult): VelaPoiRepository =

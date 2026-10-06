@@ -18,6 +18,7 @@ data class StoredPlace(
     val source: PoiSource = PoiSource.LEGACY_UNKNOWN,
     val sourceReference: String? = null,
     val sourceUrl: String? = null,
+    val sourceTags: Map<String, String> = emptyMap(),
     val verified: Boolean = false,
     val updatedAt: String? = null,
     val datasetVersion: String? = null,
@@ -40,6 +41,7 @@ data class StoredPlace(
             source = source,
             sourceReference = sourceReference,
             sourceUrl = sourceUrl,
+            sourceTags = sourceTags,
             verified = verified,
             updatedAt = updatedAt,
             datasetVersion = datasetVersion
@@ -77,6 +79,7 @@ class VelaPlaceStore(context: Context) {
                 source = poi.source,
                 sourceReference = poi.sourceReference,
                 sourceUrl = poi.sourceUrl,
+                sourceTags = poi.sourceTags,
                 verified = poi.verified,
                 updatedAt = poi.updatedAt,
                 datasetVersion = poi.datasetVersion,
@@ -104,6 +107,7 @@ class VelaPlaceStore(context: Context) {
                 source = poi.source,
                 sourceReference = poi.sourceReference,
                 sourceUrl = poi.sourceUrl,
+                sourceTags = poi.sourceTags,
                 verified = poi.verified,
                 updatedAt = poi.updatedAt,
                 datasetVersion = poi.datasetVersion,
@@ -162,6 +166,7 @@ class VelaPlaceStore(context: Context) {
                             sourceReference =
                                 item.optString("sourceReference").takeIf { it.isNotBlank() },
                             sourceUrl = item.optString("sourceUrl").takeIf { it.isNotBlank() },
+                            sourceTags = item.optStringMap("sourceTags"),
                             verified = item.optBoolean("verified", false),
                             updatedAt = item.optString("updatedAt").takeIf { it.isNotBlank() },
                             datasetVersion =
@@ -193,6 +198,7 @@ class VelaPlaceStore(context: Context) {
                     .put("source", place.source.name)
                     .put("sourceReference", place.sourceReference ?: "")
                     .put("sourceUrl", place.sourceUrl ?: "")
+                    .put("sourceTags", JSONObject(place.sourceTags))
                     .put("verified", place.verified)
                     .put("updatedAt", place.updatedAt ?: "")
                     .put("datasetVersion", place.datasetVersion ?: "")
@@ -217,6 +223,15 @@ class VelaPlaceStore(context: Context) {
         return buildList {
             for (index in 0 until array.length()) {
                 array.optString(index).trim().takeIf { it.isNotEmpty() }?.let(::add)
+            }
+        }
+    }
+
+    private fun JSONObject.optStringMap(key: String): Map<String, String> {
+        val value = optJSONObject(key) ?: return emptyMap()
+        return buildMap {
+            value.keys().forEach { mapKey ->
+                value.optString(mapKey).takeIf { it.isNotBlank() }?.let { put(mapKey, it) }
             }
         }
     }

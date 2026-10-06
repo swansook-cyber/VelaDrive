@@ -3,6 +3,23 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+val krabiPoiDataset =
+    rootProject.file("tools/osm_poi_importer/generated/krabi/vela_pois_krabi.json")
+val krabiPoiAssetsDirectory =
+    layout.buildDirectory.dir("generated/krabiPoiAssets").get().asFile
+val prepareKrabiPoiAsset by tasks.registering(Sync::class) {
+    group = "build"
+    description = "Copies the audited Krabi OSM POI dataset into app assets."
+    from(krabiPoiDataset)
+    into(krabiPoiAssetsDirectory)
+    rename { "vela_pois_krabi.json" }
+    doFirst {
+        require(krabiPoiDataset.isFile) {
+            "Generate the Krabi OSM POI dataset before building the app"
+        }
+    }
+}
+
 android {
     namespace = "net.velalab.veladrive"
     compileSdk = 37
@@ -23,6 +40,29 @@ android {
             .orElse("")
             .get()
         buildConfigField("String", "LONGDO_MAP_API_KEY", "\"$longdoMapApiKey\"")
+        buildConfigField("String", "VELA_POI_ASSET_NAME", "\"vela_pois_krabi.json\"")
+        buildConfigField("boolean", "KRABI_OSM_PILOT", "false")
+        buildConfigField("String", "POI_DATASET_LABEL", "\"Krabi OSM · 2,702 POIs\"")
+    }
+
+    buildTypes {
+        create("pilot") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".pilot"
+            versionNameSuffix = "-krabi-osm-pilot"
+            matchingFallbacks += listOf("debug")
+            buildConfigField(
+                "String",
+                "VELA_POI_ASSET_NAME",
+                "\"vela_pois_krabi.json\""
+            )
+            buildConfigField("boolean", "KRABI_OSM_PILOT", "true")
+            buildConfigField("String", "POI_DATASET_LABEL", "\"Krabi OSM Pilot\"")
+        }
+    }
+
+    sourceSets {
+        getByName("main").assets.directories.add(krabiPoiAssetsDirectory.absolutePath)
     }
 
     buildFeatures {
@@ -35,6 +75,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+}
+
+tasks.named("preBuild").configure {
+    dependsOn(prepareKrabiPoiAsset)
 }
 
 dependencies {

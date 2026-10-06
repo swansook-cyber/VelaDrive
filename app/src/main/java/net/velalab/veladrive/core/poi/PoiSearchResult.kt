@@ -15,6 +15,7 @@ data class PoiSearchResult(
     val source: PoiSource = PoiSource.LEGACY_UNKNOWN,
     val sourceReference: String? = null,
     val sourceUrl: String? = null,
+    val sourceTags: Map<String, String> = emptyMap(),
     val verified: Boolean = false,
     val updatedAt: String? = null,
     val datasetVersion: String? = null
@@ -23,6 +24,7 @@ data class PoiSearchResult(
 enum class PoiSource(val displayName: String) {
     USER_PLACE("บันทึกไว้"),
     VELA_CURATED("Vela POI"),
+    OPENSTREETMAP("OpenStreetMap"),
     LONGDO("Longdo"),
     GOOGLE_MAPS("Google Maps"),
     LEGACY_UNKNOWN("บันทึกไว้")
