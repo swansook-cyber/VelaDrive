@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.velalab.veladrive.core.destination.Destination
@@ -41,8 +42,9 @@ class MainActivity : ComponentActivity() {
     private val shareResolver = GoogleMapsShareResolver()
     private lateinit var locationController: AndroidLocationController
     private val routeClient by lazy { ValhallaRouteClient(BuildConfig.VALHALLA_BASE_URL) }
-    private lateinit var ferrostarController: VelaFerrostarController
-    private lateinit var thaiTts: VelaThaiTts
+    private var ferrostarController: VelaFerrostarController? = null
+    private var thaiTts: VelaThaiTts? = null
+    private var navigationStateJob: Job? = null
     private val placeStore by lazy { VelaPlaceStore(this) }
     private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
 
@@ -92,29 +94,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         MapLibre.getInstance(this)
         locationController = AndroidLocationController(this)
-        ferrostarController = VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL)
-        thaiTts = VelaThaiTts(this)
         locationPermissionGranted = hasLocationPermission()
         refreshStoredPlaces()
         refreshPoiSettings()
-
-        lifecycleScope.launch {
-            ferrostarController.state.collect { state ->
-                val uiState = NavigationUiState.fromFerrostar(
-                    state,
-                    thaiTts.isMuted,
-                    null
-                )
-                val nextGuidance = VelaGuidanceEngine.from(
-                    uiState = uiState,
-                    routePreview = routePreview,
-                    speedMetersPerSecond = currentLocation?.speedMetersPerSecond?.toDouble()
-                )
-                guidance = nextGuidance
-                thaiTts.speakGuidance(nextGuidance)
-                isSimulationMuted = thaiTts.isMuted
-            }
-        }
 
         consumeIntent(intent)
 
@@ -170,7 +152,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        thaiTts.start()
+        thaiTts?.start()
         locationPermissionGranted = hasLocationPermission()
         if (locationPermissionGranted) {
             startLocationUpdates()
@@ -183,8 +165,12 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onDestroy() {
-        ferrostarController.shutdown()
-        thaiTts.shutdown()
+        navigationStateJob?.cancel()
+        navigationStateJob = null
+        ferrostarController?.shutdown()
+        ferrostarController = null
+        thaiTts?.shutdown()
+        thaiTts = null
         super.onDestroy()
     }
 
@@ -220,9 +206,9 @@ class MainActivity : ComponentActivity() {
                     destination = resolved
                     routePreview = null
                     routeError = null
-                    ferrostarController.stopNavigation()
+                    ferrostarController?.stopNavigation()
                     guidance = null
-                    thaiTts.resetDeduplication()
+                    thaiTts?.resetDeduplication()
                     simulationError = null
                     shareError = null
                 }
@@ -292,9 +278,9 @@ class MainActivity : ComponentActivity() {
         poiError = null
         routePreview = null
         routeError = null
-        ferrostarController.stopNavigation()
+        ferrostarController?.stopNavigation()
         guidance = null
-        thaiTts.resetDeduplication()
+        thaiTts?.resetDeduplication()
         simulationError = null
     }
 
@@ -339,12 +325,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun clearDestination() {
-        ferrostarController.stopNavigation()
+        ferrostarController?.stopNavigation()
         destination = null
         routePreview = null
         routeError = null
         guidance = null
-        thaiTts.resetDeduplication()
+        thaiTts?.resetDeduplication()
         simulationError = null
     }
 
@@ -372,9 +358,14 @@ class MainActivity : ComponentActivity() {
         navigationError = null
         simulationError = null
 
+        val controller = ensureNavigationStack() ?: run {
+            isNavigationStarting = false
+            return
+        }
+
         lifecycleScope.launch {
             runCatching {
-                ferrostarController.startLiveNavigation(origin, target)
+                controller.startLiveNavigation(origin, target)
             }.onFailure {
                 navigationError = it.message ?: "เริ่มนำทางด้วย GPS ไม่สำเร็จ"
             }
@@ -390,9 +381,14 @@ class MainActivity : ComponentActivity() {
         isSimulationStarting = true
         simulationError = null
 
+        val controller = ensureNavigationStack() ?: run {
+            isSimulationStarting = false
+            return
+        }
+
         lifecycleScope.launch {
             runCatching {
-                ferrostarController.startSimulation(origin, target)
+                controller.startSimulation(origin, target)
             }.onFailure {
                 simulationError = it.message ?: "เริ่มการจำลองนำทางไม่สำเร็จ"
             }
@@ -401,9 +397,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun stopNavigation() {
-        ferrostarController.stopNavigation()
+        ferrostarController?.stopNavigation()
         guidance = null
-        thaiTts.resetDeduplication()
+        thaiTts?.resetDeduplication()
         navigationError = null
         simulationError = null
         isNavigationStarting = false
@@ -411,8 +407,53 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun toggleSimulationMute() {
-        thaiTts.toggleMuted()
-        isSimulationMuted = thaiTts.isMuted
+        val tts = thaiTts ?: return
+        tts.toggleMuted()
+        isSimulationMuted = tts.isMuted
+    }
+
+    private fun ensureNavigationStack(): VelaFerrostarController? {
+        ferrostarController?.let { return it }
+
+        return runCatching {
+            val tts = VelaThaiTts(this).also {
+                thaiTts = it
+                it.start()
+            }
+            val controller =
+                VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL).also {
+                    ferrostarController = it
+                }
+
+            navigationStateJob?.cancel()
+            navigationStateJob =
+                lifecycleScope.launch {
+                    controller.state.collect { state ->
+                        val uiState = NavigationUiState.fromFerrostar(
+                            state,
+                            tts.isMuted,
+                            null
+                        )
+                        val nextGuidance = VelaGuidanceEngine.from(
+                            uiState = uiState,
+                            routePreview = routePreview,
+                            speedMetersPerSecond = currentLocation?.speedMetersPerSecond?.toDouble()
+                        )
+                        guidance = nextGuidance
+                        tts.speakGuidance(nextGuidance)
+                        isSimulationMuted = tts.isMuted
+                    }
+                }
+
+            controller
+        }.onFailure { error ->
+            navigationError =
+                "เริ่มระบบนำทางไม่สำเร็จ: " +
+                    (error.message ?: error.javaClass.simpleName)
+            thaiTts?.shutdown()
+            thaiTts = null
+            ferrostarController = null
+        }.getOrNull()
     }
 
     private fun requestNotificationPermissionIfNeeded() {
