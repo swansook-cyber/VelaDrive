@@ -36,7 +36,8 @@ class ValhallaRouteClient(
 
     suspend fun route(
         origin: LocationSnapshot,
-        destination: Destination
+        destination: Destination,
+        options: RouteOptions = RouteOptions()
     ): Result<RoutePreview> = withContext(Dispatchers.IO) {
         runCatching {
             val body = """
@@ -46,6 +47,14 @@ class ValhallaRouteClient(
                     {"lat": ${destination.latitude}, "lon": ${destination.longitude}}
                   ],
                   "costing": "auto",
+                  "costing_options": {
+                    "auto": {
+                      "exclude_unpaved": ${options.avoidUnpaved},
+                      "use_ferry": ${if (options.avoidFerry) 0.0 else 0.5},
+                      "use_highways": ${if (options.avoidHighways) 0.0 else 0.5},
+                      "use_tolls": ${if (options.avoidTolls) 0.0 else 0.5}
+                    }
+                  },
                   "units": "kilometers",
                   "language": "en-US",
                   "turn_lanes": true,
