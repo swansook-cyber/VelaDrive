@@ -60,6 +60,106 @@ class VelaPoiRepositoryTest {
         assertTrue(results.first().distanceText?.isNotBlank() == true)
     }
 
+
+    @Test
+    fun `category keyword ranks nearest matching category first`() {
+        val repository = repository(
+            fixturePoi(
+                id = "fuel-far",
+                name = "TEST ONLY Fuel Far",
+                latitude = 10.20,
+                category = PoiCategory.FUEL
+            ),
+            fixturePoi(
+                id = "fuel-near",
+                name = "TEST ONLY Fuel Near",
+                latitude = 10.01,
+                category = PoiCategory.FUEL
+            ),
+            fixturePoi(
+                id = "hotel-near",
+                name = "TEST ONLY Hotel Near",
+                latitude = 10.001,
+                category = PoiCategory.HOTEL
+            )
+        )
+
+        val results = repository.search("ปั๊ม", 10.0, 100.0).getOrThrow()
+
+        assertEquals(listOf("fuel-near", "fuel-far"), results.map { it.id })
+    }
+
+    @Test
+    fun `Thai and English category aliases find Vela POIs`() {
+        val repository = repository(
+            fixturePoi(
+                id = "mosque-test",
+                name = "TEST ONLY Mosque",
+                category = PoiCategory.MOSQUE
+            ),
+            fixturePoi(
+                id = "halal-test",
+                name = "TEST ONLY Halal",
+                category = PoiCategory.HALAL_RESTAURANT
+            )
+        )
+
+        assertEquals(
+            listOf("mosque-test"),
+            repository.search("สุเหร่า", null, null).getOrThrow().map { it.id }
+        )
+        assertEquals(
+            listOf("halal-test"),
+            repository.search("halal", null, null).getOrThrow().map { it.id }
+        )
+    }
+
+    @Test
+    fun `exact place name outranks nearer generic category match`() {
+        val repository = repository(
+            fixturePoi(
+                id = "exact-name",
+                name = "ปั๊ม",
+                latitude = 10.20,
+                category = PoiCategory.OTHER
+            ),
+            fixturePoi(
+                id = "generic-near",
+                name = "TEST ONLY Nearby Fuel",
+                latitude = 10.001,
+                category = PoiCategory.FUEL
+            )
+        )
+
+        val results = repository.search("ปั๊ม", 10.0, 100.0).getOrThrow()
+
+        assertEquals(listOf("exact-name", "generic-near"), results.map { it.id })
+    }
+
+    @Test
+    fun `verified POI wins equal match tier before distance`() {
+        val repository = repository(
+            fixturePoi(
+                id = "unverified-near",
+                name = "TEST ONLY Bank",
+                latitude = 10.001,
+                category = PoiCategory.BANK,
+                verified = false
+            ),
+            fixturePoi(
+                id = "verified-far",
+                name = "TEST ONLY Bank",
+                latitude = 10.02,
+                category = PoiCategory.BANK,
+                verified = true
+            )
+        )
+
+        val results = repository.search("TEST ONLY Bank", 10.0, 100.0).getOrThrow()
+
+        assertEquals(listOf("verified-far", "unverified-near"), results.map { it.id })
+    }
+
     @Test
     fun `Vela result wins coordinate and normalized-name deduplication against remote`() {
         val vela = fixturePoi(
@@ -252,7 +352,9 @@ class VelaPoiRepositoryTest {
         latitude: Double = 10.0,
         longitude: Double = 100.0,
         alternateNames: List<String> = emptyList(),
-        source: PoiSource = PoiSource.VELA_CURATED
+        source: PoiSource = PoiSource.VELA_CURATED,
+        category: PoiCategory = PoiCategory.OTHER,
+        verified: Boolean = false
     ): PoiSearchResult =
         PoiSearchResult(
             id = id,
@@ -262,10 +364,10 @@ class VelaPoiRepositoryTest {
             address = null,
             distanceText = null,
             alternateNames = alternateNames,
-            category = PoiCategory.OTHER,
+            category = category,
             source = source,
             sourceReference = "test-fixture",
-            verified = false,
+            verified = verified,
             datasetVersion = "test-only"
         )
 }
