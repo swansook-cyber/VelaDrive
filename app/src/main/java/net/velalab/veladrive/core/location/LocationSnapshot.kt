@@ -40,5 +40,4 @@ data class LocationSnapshot(
         return "$source • ±$accuracy • ${ageSeconds}s"
     }
 
-    companion object
 }
