@@ -115,6 +115,48 @@ class VelaPoiRepositoryTest {
     }
 
     @Test
+    fun `7-Eleven brand search does not return every convenience store`() {
+        val repository = repository(
+            fixturePoi(
+                id = "seven",
+                name = "7-Eleven TEST ONLY",
+                category = PoiCategory.CONVENIENCE_STORE
+            ),
+            fixturePoi(
+                id = "familymart",
+                name = "FamilyMart TEST ONLY",
+                category = PoiCategory.CONVENIENCE_STORE
+            )
+        )
+
+        val results = repository.search("7-eleven", null, null).getOrThrow()
+
+        assertEquals(listOf("seven"), results.map { it.id })
+    }
+
+    @Test
+    fun `7-Eleven Thai alias can match retained brand metadata`() {
+        val repository = repository(
+            fixturePoi(
+                id = "seven-brand",
+                name = "TEST ONLY Convenience Store",
+                category = PoiCategory.CONVENIENCE_STORE,
+                sourceTags = mapOf("brand" to "7-Eleven")
+            ),
+            fixturePoi(
+                id = "other-brand",
+                name = "TEST ONLY Other Convenience Store",
+                category = PoiCategory.CONVENIENCE_STORE,
+                sourceTags = mapOf("brand" to "FamilyMart")
+            )
+        )
+
+        val results = repository.search("เซเว่น", null, null).getOrThrow()
+
+        assertEquals(listOf("seven-brand"), results.map { it.id })
+    }
+
+    @Test
     fun `exact place name outranks nearer generic category match`() {
         val repository = repository(
             fixturePoi(
@@ -354,7 +396,8 @@ class VelaPoiRepositoryTest {
         alternateNames: List<String> = emptyList(),
         source: PoiSource = PoiSource.VELA_CURATED,
         category: PoiCategory = PoiCategory.OTHER,
-        verified: Boolean = false
+        verified: Boolean = false,
+        sourceTags: Map<String, String> = emptyMap()
     ): PoiSearchResult =
         PoiSearchResult(
             id = id,
@@ -367,6 +410,7 @@ class VelaPoiRepositoryTest {
             category = category,
             source = source,
             sourceReference = "test-fixture",
+            sourceTags = sourceTags,
             verified = verified,
             datasetVersion = "test-only"
         )
