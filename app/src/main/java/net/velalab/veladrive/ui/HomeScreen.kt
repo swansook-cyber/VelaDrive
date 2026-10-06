@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -24,9 +25,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +38,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.launch
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.poi.PoiSearchResult
 import org.maplibre.compose.camera.CameraPosition
@@ -317,44 +323,95 @@ private fun HomeMap(
     currentLocation: LocationSnapshot?,
     modifier: Modifier
 ) {
+    val validLocation = currentLocation?.takeIf(LocationSnapshot::hasValidCoordinates)
     val initialPosition = Position(
-        longitude = currentLocation?.longitude ?: 101.0,
-        latitude = currentLocation?.latitude ?: 13.0
+        longitude = validLocation?.longitude ?: 101.0,
+        latitude = validLocation?.latitude ?: 13.0
     )
     val cameraState = rememberCameraState(
         CameraPosition(
             target = initialPosition,
-            zoom = if (currentLocation == null) 5.5 else 15.0
+            zoom = if (validLocation == null) 5.5 else HOME_LOCATION_ZOOM
         )
     )
+    var hasCenteredOnFirstFix by rememberSaveable {
+        mutableStateOf(validLocation != null)
+    }
+    val coroutineScope = rememberCoroutineScope()
 
-    MaplibreMap(
-        modifier = modifier,
-        baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
-        cameraState = cameraState
-    ) {
-        currentLocation?.let { location ->
-            val source = rememberGeoJsonSource(
-                GeoJsonData.Features(
-                    Feature(
-                        geometry = Point(
-                            Position(
-                                longitude = location.longitude,
-                                latitude = location.latitude
-                            )
-                        ),
-                        properties = null
-                    )
-                )
-            )
-            CircleLayer(
-                id = "vela-home-location",
-                source = source,
-                color = const(Color(0xFF1565C0)),
-                radius = const(8.dp),
-                strokeColor = const(Color.White),
-                strokeWidth = const(3.dp)
+    LaunchedEffect(validLocation?.latitude, validLocation?.longitude) {
+        if (!hasCenteredOnFirstFix && validLocation != null) {
+            hasCenteredOnFirstFix = true
+            cameraState.animateTo(
+                finalPosition = validLocation.toHomeCameraPosition(),
+                duration = HOME_CAMERA_ANIMATION_MILLIS.milliseconds
             )
         }
     }
+
+    Box(modifier = modifier) {
+        MaplibreMap(
+            modifier = Modifier.fillMaxSize(),
+            baseStyle = BaseStyle.Uri("https://tiles.openfreemap.org/styles/liberty"),
+            cameraState = cameraState
+        ) {
+            validLocation?.let { location ->
+                val source = rememberGeoJsonSource(
+                    GeoJsonData.Features(
+                        Feature(
+                            geometry = Point(
+                                Position(
+                                    longitude = location.longitude,
+                                    latitude = location.latitude
+                                )
+                            ),
+                            properties = null
+                        )
+                    )
+                )
+
+                CircleLayer(
+                    id = "vela-home-location",
+                    source = source,
+                    color = const(Color(0xFF1565C0)),
+                    radius = const(8.dp),
+                    strokeColor = const(Color.White),
+                    strokeWidth = const(3.dp)
+                )
+            }
+        }
+
+        validLocation?.let { location ->
+            ExtendedFloatingActionButton(
+                onClick = {
+                    coroutineScope.launch {
+                        cameraState.animateTo(
+                            finalPosition = location.toHomeCameraPosition(),
+                            duration = HOME_CAMERA_ANIMATION_MILLIS.milliseconds
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 84.dp)
+            ) {
+                Text("ตำแหน่งฉัน")
+            }
+        }
+    }
 }
+
+private fun LocationSnapshot.hasValidCoordinates(): Boolean =
+    latitude.isFinite() &&
+        longitude.isFinite() &&
+        latitude in -90.0..90.0 &&
+        longitude in -180.0..180.0
+
+private fun LocationSnapshot.toHomeCameraPosition(): CameraPosition =
+    CameraPosition(
+        target = Position(longitude = longitude, latitude = latitude),
+        zoom = HOME_LOCATION_ZOOM
+    )
+
+private const val HOME_LOCATION_ZOOM = 15.0
+private const val HOME_CAMERA_ANIMATION_MILLIS = 450
