@@ -26,6 +26,7 @@ import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
+import net.velalab.veladrive.core.safety.ActiveSafetyAlert
 import kotlin.math.roundToInt
 
 private val GarminGreen = Color(0xFF3B7F0B)
@@ -42,6 +43,7 @@ fun DriveModeScreen(
     routePreview: RoutePreview,
     guidance: VelaGuidanceSnapshot,
     isMuted: Boolean,
+    activeSafetyAlert: ActiveSafetyAlert?,
     onToggleMute: () -> Unit,
     onStopNavigation: () -> Unit
 ) {
@@ -81,6 +83,39 @@ fun DriveModeScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
+                }
+            }
+
+            activeSafetyAlert?.let { safety ->
+                Surface(
+                    color = Color(0xFFD84315),
+                    contentColor = Color.White,
+                    shadowElevation = 8.dp,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "⚠",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Black
+                        )
+                        Spacer(Modifier.width(10.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = safety.title(),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                            Text(
+                                text = formatDistance(safety.distanceMeters) +
+                                    " • " + safety.alert.source,
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
                 }
             }
 
