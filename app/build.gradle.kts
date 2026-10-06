@@ -3,19 +3,19 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
-val krabiPilotDataset =
+val krabiPoiDataset =
     rootProject.file("tools/osm_poi_importer/generated/krabi/vela_pois_krabi.json")
-val krabiPilotAssetsDirectory =
-    layout.buildDirectory.dir("generated/krabiPilotAssets").get().asFile
-val prepareKrabiPilotAsset by tasks.registering(Sync::class) {
+val krabiPoiAssetsDirectory =
+    layout.buildDirectory.dir("generated/krabiPoiAssets").get().asFile
+val prepareKrabiPoiAsset by tasks.registering(Sync::class) {
     group = "build"
-    description = "Copies the review-only Krabi OSM dataset into the pilot variant."
-    from(krabiPilotDataset)
-    into(krabiPilotAssetsDirectory)
-    rename { "vela_pois_krabi_pilot.json" }
+    description = "Copies the audited Krabi OSM POI dataset into app assets."
+    from(krabiPoiDataset)
+    into(krabiPoiAssetsDirectory)
+    rename { "vela_pois_krabi.json" }
     doFirst {
-        require(krabiPilotDataset.isFile) {
-            "Generate the Krabi OSM pilot dataset before building :app:assemblePilot"
+        require(krabiPoiDataset.isFile) {
+            "Generate the Krabi OSM POI dataset before building the app"
         }
     }
 }
@@ -40,9 +40,9 @@ android {
             .orElse("")
             .get()
         buildConfigField("String", "LONGDO_MAP_API_KEY", "\"$longdoMapApiKey\"")
-        buildConfigField("String", "VELA_POI_ASSET_NAME", "\"vela_pois.json\"")
+        buildConfigField("String", "VELA_POI_ASSET_NAME", "\"vela_pois_krabi.json\"")
         buildConfigField("boolean", "KRABI_OSM_PILOT", "false")
-        buildConfigField("String", "POI_DATASET_LABEL", "\"\"")
+        buildConfigField("String", "POI_DATASET_LABEL", "\"Krabi OSM · 2,702 POIs\"")
     }
 
     buildTypes {
@@ -54,7 +54,7 @@ android {
             buildConfigField(
                 "String",
                 "VELA_POI_ASSET_NAME",
-                "\"vela_pois_krabi_pilot.json\""
+                "\"vela_pois_krabi.json\""
             )
             buildConfigField("boolean", "KRABI_OSM_PILOT", "true")
             buildConfigField("String", "POI_DATASET_LABEL", "\"Krabi OSM Pilot\"")
@@ -62,7 +62,7 @@ android {
     }
 
     sourceSets {
-        getByName("pilot").assets.directories.add(krabiPilotAssetsDirectory.absolutePath)
+        getByName("main").assets.directories.add(krabiPoiAssetsDirectory.absolutePath)
     }
 
     buildFeatures {
@@ -77,10 +77,8 @@ android {
     }
 }
 
-tasks.configureEach {
-    if (name != "prepareKrabiPilotAsset" && name.contains("Pilot")) {
-        dependsOn(prepareKrabiPilotAsset)
-    }
+tasks.named("preBuild").configure {
+    dependsOn(prepareKrabiPoiAsset)
 }
 
 dependencies {
