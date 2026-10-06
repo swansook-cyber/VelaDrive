@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
@@ -26,10 +28,12 @@ import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import kotlin.math.roundToInt
 
-private val VelaGuidanceGreen = Color(0xFF2E7D32)
-private val VelaGuidanceGreenDark = Color(0xFF1B5E20)
-private val VelaPanel = Color(0xEEFFFFFF)
-private val VelaDarkPanel = Color(0xEE202124)
+private val GarminGreen = Color(0xFF3B7F0B)
+private val GarminGreenDark = Color(0xFF285A08)
+private val GarminBlack = Color(0xF0181818)
+private val GarminWhitePanel = Color(0xF7FFFFFF)
+private val GarminLanePanel = Color(0xE61B1B1B)
+private val GarminWarning = Color(0xFFF9A825)
 
 @Composable
 fun DriveModeScreen(
@@ -59,51 +63,52 @@ fun DriveModeScreen(
         )
 
         Column(
-            modifier = Modifier.align(Alignment.TopCenter),
-            verticalArrangement = Arrangement.spacedBy(0.dp)
+            modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            ManeuverBanner(guidance)
+            GarminManeuverBanner(guidance)
 
             guidance.junctionInstruction?.let { junction ->
                 Surface(
-                    color = VelaGuidanceGreenDark,
+                    color = GarminGreenDark,
                     contentColor = Color.White,
+                    shadowElevation = 6.dp,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = junction,
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
             }
 
             guidance.nextInstruction?.let { next ->
                 Surface(
-                    color = VelaPanel,
+                    color = GarminWhitePanel,
                     contentColor = Color.Black,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
+                    shadowElevation = 4.dp,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "ถัดไป",
+                            "ถัดไป",
                             style = MaterialTheme.typography.labelLarge,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(10.dp))
                         Text(
-                            text = maneuverArrow(next),
-                            style = MaterialTheme.typography.headlineSmall
+                            maneuverArrow(next),
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Black
                         )
                         Spacer(Modifier.width(10.dp))
                         Text(
-                            text = next,
+                            next,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.weight(1f)
@@ -112,137 +117,92 @@ fun DriveModeScreen(
                 }
             }
 
-            if (guidance.lanes.isNotEmpty()) {
-                LanePanel(guidance)
-            }
-
             if (guidance.isRerouting) {
                 Surface(
-                    color = Color(0xFFF9A825),
+                    color = GarminWarning,
                     contentColor = Color.Black,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         "กำลังคำนวณเส้นทางใหม่…",
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                        fontWeight = FontWeight.ExtraBold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
             }
         }
 
-        Surface(
-            color = VelaDarkPanel,
-            contentColor = Color.White,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-        ) {
-            Column {
-                guidance.preparationInstruction?.let { preparation ->
-                    Text(
-                        text = preparation,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    DriveStat(
-                        value = speedKmh.toString(),
-                        label = "กม./ชม.",
-                        modifier = Modifier.weight(0.9f)
-                    )
-                    DriveStat(
-                        value = "%.1f".format(routePreview.distanceKilometers),
-                        label = "กม. เหลือ",
-                        modifier = Modifier.weight(0.9f)
-                    )
-                    DriveStat(
-                        value = remainingMinutes.toString(),
-                        label = "นาที",
-                        modifier = Modifier.weight(0.8f)
-                    )
-
-                    OutlinedButton(onClick = onToggleMute) {
-                        Text(if (isMuted) "เสียง" else "ปิดเสียง")
-                    }
-
-                    Button(onClick = onStopNavigation) {
-                        Text("จบ")
-                    }
-                }
-
-                guidance.currentRoadName?.let { road ->
-                    Surface(
-                        color = Color(0xFF111214),
-                        contentColor = Color.White,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = road,
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp)
-                        )
-                    }
-                }
-            }
+        if (guidance.lanes.isNotEmpty()) {
+            LanePanel(
+                guidance = guidance,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 72.dp)
+            )
         }
+
+        GarminBottomBar(
+            speedKmh = speedKmh,
+            remainingDistanceKm = routePreview.distanceKilometers,
+            remainingMinutes = remainingMinutes,
+            roadName = guidance.currentRoadName,
+            preparationInstruction = guidance.preparationInstruction,
+            isMuted = isMuted,
+            onToggleMute = onToggleMute,
+            onStopNavigation = onStopNavigation,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
 @Composable
-private fun ManeuverBanner(guidance: VelaGuidanceSnapshot) {
+private fun GarminManeuverBanner(guidance: VelaGuidanceSnapshot) {
     val instruction = guidance.currentInstruction ?: "ตรงต่อไป"
+    val distance = guidance.distanceToNextManeuverMeters
 
     Surface(
-        color = VelaGuidanceGreen,
+        color = GarminGreen,
         contentColor = Color.White,
-        shadowElevation = 8.dp,
+        shadowElevation = 10.dp,
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.width(92.dp)
+                modifier = Modifier.width(118.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                guidance.distanceToNextManeuverMeters?.let { distance ->
-                    Text(
-                        text = formatDistance(distance),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                }
                 Text(
-                    text = maneuverArrow(instruction),
-                    style = MaterialTheme.typography.displaySmall,
+                    text = distance?.let(::formatDistance) ?: "—",
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Black
                 )
             }
 
-            Spacer(Modifier.width(10.dp))
+            Text(
+                text = maneuverArrow(instruction),
+                style = MaterialTheme.typography.displayMedium,
+                fontWeight = FontWeight.Black,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = instruction,
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.ExtraBold
+                    fontWeight = FontWeight.ExtraBold,
+                    maxLines = 2
                 )
-                guidance.currentRoadName?.let { road ->
+                guidance.currentRoadName?.takeIf { it.isNotBlank() }?.let { road ->
                     Text(
                         text = road,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1
                     )
                 }
             }
@@ -251,31 +211,41 @@ private fun ManeuverBanner(guidance: VelaGuidanceSnapshot) {
 }
 
 @Composable
-private fun LanePanel(guidance: VelaGuidanceSnapshot) {
-    Surface(
-        color = VelaDarkPanel,
-        contentColor = Color.White,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-    ) {
-        Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp)) {
-            val preferred = guidance.lanes.withIndex()
-                .filter { it.value.isActive }
-                .map { it.index + 1 }
+private fun LanePanel(
+    guidance: VelaGuidanceSnapshot,
+    modifier: Modifier = Modifier
+) {
+    val preferred = guidance.lanes.withIndex()
+        .filter { it.value.isActive }
+        .map { it.index + 1 }
 
+    Surface(
+        color = GarminLanePanel,
+        contentColor = Color.White,
+        shadowElevation = 8.dp,
+        modifier = modifier
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
-                text = guidance.lanes.joinToString("    ") { lane ->
-                    if (lane.isActive) "▰ ${lane.symbols}" else "▱ ${lane.symbols}"
+                text = guidance.lanes.joinToString("   ") { lane ->
+                    if (lane.isActive) {
+                        "▰ " + lane.symbols
+                    } else {
+                        "▱ " + lane.symbols
+                    }
                 },
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.ExtraBold,
+                textAlign = TextAlign.Center
             )
-
             if (preferred.isNotEmpty()) {
                 Text(
-                    "ใช้เลน ${preferred.joinToString(", ")} จากซ้าย",
-                    style = MaterialTheme.typography.bodyMedium
+                    "ใช้เลน " + preferred.joinToString(", ") + " จากซ้าย",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -283,7 +253,98 @@ private fun LanePanel(guidance: VelaGuidanceSnapshot) {
 }
 
 @Composable
-private fun DriveStat(
+private fun GarminBottomBar(
+    speedKmh: Int,
+    remainingDistanceKm: Double,
+    remainingMinutes: Int,
+    roadName: String?,
+    preparationInstruction: String?,
+    isMuted: Boolean,
+    onToggleMute: () -> Unit,
+    onStopNavigation: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        color = GarminBlack,
+        contentColor = Color.White,
+        shadowElevation = 12.dp,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column {
+            preparationInstruction?.let { preparation ->
+                Surface(
+                    color = Color(0xFF262626),
+                    contentColor = Color.White,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = preparation,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DriveMetric(
+                    value = speedKmh.toString(),
+                    label = "กม./ชม.",
+                    modifier = Modifier.weight(0.95f)
+                )
+
+                Surface(
+                    color = Color(0xFF202020),
+                    contentColor = Color.White,
+                    modifier = Modifier.weight(1.8f)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = roadName?.takeIf { it.isNotBlank() } ?: "กำลังนำทาง",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
+                        )
+                        Text(
+                            text = "%.1f กม. • %d นาที".format(
+                                remainingDistanceKm,
+                                remainingMinutes
+                            ),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+
+                OutlinedButton(
+                    onClick = onToggleMute,
+                    modifier = Modifier.padding(horizontal = 4.dp)
+                ) {
+                    Text(if (isMuted) "เปิดเสียง" else "เงียบ")
+                }
+
+                Button(
+                    onClick = onStopNavigation,
+                    modifier = Modifier.padding(end = 6.dp)
+                ) {
+                    Text("จบ", fontWeight = FontWeight.Bold)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DriveMetric(
     value: String,
     label: String,
     modifier: Modifier = Modifier
@@ -293,13 +354,14 @@ private fun DriveStat(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = value,
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.ExtraBold
+            value,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Black
         )
         Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Bold
         )
     }
 }
@@ -323,6 +385,6 @@ private fun formatDistance(meters: Double): String {
     return if (meters >= 1000.0) {
         "%.1f กม.".format(meters / 1000.0)
     } else {
-        "${meters.roundToInt()} ม."
+        meters.roundToInt().toString() + " ม."
     }
 }

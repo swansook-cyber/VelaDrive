@@ -7,15 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlin.math.log2
 import kotlin.time.Duration.Companion.milliseconds
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.expressions.dsl.const
+import org.maplibre.compose.expressions.dsl.image
 import org.maplibre.compose.layers.CircleLayer
 import org.maplibre.compose.layers.LineLayer
 import org.maplibre.compose.layers.SymbolLayer
+import org.maplibre.compose.expressions.value.IconRotationAlignment
 import org.maplibre.compose.map.MaplibreMap
 import org.maplibre.compose.camera.rememberCameraState
 import org.maplibre.compose.sources.GeoJsonData
@@ -25,6 +28,7 @@ import org.maplibre.spatialk.geojson.Feature
 import org.maplibre.spatialk.geojson.LineString
 import org.maplibre.spatialk.geojson.Point
 import org.maplibre.spatialk.geojson.Position
+import net.velalab.veladrive.R
 import net.velalab.veladrive.core.destination.Destination
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.navigation.RoutePreview
@@ -140,18 +144,29 @@ fun RoutePreviewMap(
         CircleLayer(
             id = "vela-origin-halo",
             source = originSource,
-            color = const(Color.White),
-            radius = const(13.dp),
-            strokeColor = const(Color(0xFF1565C0)),
-            strokeWidth = const(3.dp)
+            color = const(Color.White.copy(alpha = 0.82f)),
+            radius = const(16.dp),
+            strokeColor = const(Color(0xFF2F80ED)),
+            strokeWidth = const(2.dp)
         )
 
+        val carPainter = painterResource(R.drawable.ic_nav_car_top)
         SymbolLayer(
             id = "vela-car-marker",
             source = originSource,
-            textField = const("🚗"),
-            textSize = const(22.sp),
-            textColor = const(Color.Black)
+            iconImage = image(
+                carPainter,
+                size = DpSize(30.dp, 44.dp)
+            ),
+            iconAllowOverlap = const(true),
+            iconRotationAlignment = const(IconRotationAlignment.Viewport),
+            iconRotate = const(
+                if (driveMode) {
+                    0f
+                } else {
+                    currentLocation.bearingDegrees ?: 0f
+                }
+            )
         )
 
         val destinationSource = rememberGeoJsonSource(
