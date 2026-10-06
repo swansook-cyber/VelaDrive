@@ -123,9 +123,7 @@ class MainActivity : ComponentActivity() {
                     poiError = poiError ?: shareError,
                     isLongdoConfigured = isLongdoConfigured,
                     poiDatasetLabel =
-                        BuildConfig.POI_DATASET_LABEL.takeIf {
-                            BuildConfig.KRABI_OSM_PILOT && it.isNotBlank()
-                        },
+                        BuildConfig.POI_DATASET_LABEL.takeIf { it.isNotBlank() },
                     onSearchPoi = ::searchPoi,
                     onSelectPoi = ::selectPoi,
                     onSavePoi = ::savePoi,
