@@ -15,7 +15,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -24,7 +23,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.launch
@@ -64,18 +61,14 @@ fun HomeScreen(
     recentPlaces: List<PoiSearchResult>,
     savedPlaces: List<PoiSearchResult>,
     poiError: String?,
-    isLongdoConfigured: Boolean,
     poiDatasetLabel: String?,
     onSearchPoi: (String) -> Unit,
     onSelectPoi: (PoiSearchResult) -> Unit,
     onSavePoi: (PoiSearchResult) -> Unit,
-    onSaveLongdoApiKey: (String) -> Unit,
     onRequestLocationPermission: () -> Unit,
     onGoogleSearch: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
-    var showLongdoSettings by remember { mutableStateOf(false) }
-    var longdoKeyDraft by remember { mutableStateOf("") }
 
     MaterialTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -134,13 +127,6 @@ fun HomeScreen(
                                     Text("เปิด GPS")
                                 }
                             }
-                            if (!isLongdoConfigured) {
-                                OutlinedButton(
-                                    onClick = { showLongdoSettings = true }
-                                ) {
-                                    Text("ตั้งค่า POI")
-                                }
-                            }
                         }
 
                         Row(
@@ -169,7 +155,7 @@ fun HomeScreen(
                     isSearchingPois ||
                     poiResults.isNotEmpty() ||
                     poiError != null ||
-                    (query.isNotBlank() && !isLongdoConfigured)
+                    query.isNotBlank()
                 ) {
                     Surface(
                         tonalElevation = 10.dp,
@@ -229,19 +215,6 @@ fun HomeScreen(
 
                             poiError?.let {
                                 Text(it, style = MaterialTheme.typography.bodyMedium)
-                            }
-
-                            if (query.isNotBlank() && !isLongdoConfigured) {
-                                Text(
-                                    "ยังไม่ได้ตั้งค่า Longdo API Key บนอุปกรณ์นี้",
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                                OutlinedButton(
-                                    onClick = { showLongdoSettings = true },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text("ตั้งค่า Longdo API Key")
-                                }
                             }
 
                             if (!isSearchingPois && poiResults.isEmpty() && query.isNotBlank()) {
@@ -313,51 +286,7 @@ fun HomeScreen(
                     )
                 }
             }
-            if (showLongdoSettings) {
-                AlertDialog(
-                    onDismissRequest = {
-                        longdoKeyDraft = ""
-                        showLongdoSettings = false
-                    },
-                    title = { Text("ตั้งค่า Longdo POI") },
-                    text = {
-                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("API Key จะเก็บไว้ในเครื่องนี้เท่านั้น ไม่บันทึกลง GitHub")
-                            OutlinedTextField(
-                                value = longdoKeyDraft,
-                                onValueChange = { longdoKeyDraft = it },
-                                label = { Text("Longdo API Key") },
-                                singleLine = true,
-                                visualTransformation = PasswordVisualTransformation(),
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                if (longdoKeyDraft.isNotBlank()) {
-                                    onSaveLongdoApiKey(longdoKeyDraft)
-                                    longdoKeyDraft = ""
-                                    showLongdoSettings = false
-                                }
-                            }
-                        ) {
-                            Text("บันทึก")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = {
-                                longdoKeyDraft = ""
-                                showLongdoSettings = false
-                            }
-                        ) {
-                            Text("ยกเลิก")
-                        }
-                    }
-                )
-            }
+
         }
     }
 }

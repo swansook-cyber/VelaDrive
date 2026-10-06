@@ -74,7 +74,6 @@ class MainActivity : ComponentActivity() {
     private var poiError by mutableStateOf<String?>(null)
     private var recentPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var savedPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
-    private var isLongdoConfigured by mutableStateOf(false)
 
     private val locationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
@@ -102,7 +101,6 @@ class MainActivity : ComponentActivity() {
         locationController = AndroidLocationController(this)
         locationPermissionGranted = hasLocationPermission()
         refreshStoredPlaces()
-        refreshPoiSettings()
 
         consumeIntent(intent)
 
@@ -121,13 +119,11 @@ class MainActivity : ComponentActivity() {
                     recentPlaces = recentPlaces,
                     savedPlaces = savedPlaces,
                     poiError = poiError ?: shareError,
-                    isLongdoConfigured = isLongdoConfigured,
                     poiDatasetLabel =
                         BuildConfig.POI_DATASET_LABEL.takeIf { it.isNotBlank() },
                     onSearchPoi = ::searchPoi,
                     onSelectPoi = ::selectPoi,
                     onSavePoi = ::savePoi,
-                    onSaveLongdoApiKey = ::saveLongdoApiKey,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onGoogleSearch = { query -> GoogleMapsLauncher.openSearch(this, query) }
                 )
@@ -313,16 +309,6 @@ class MainActivity : ComponentActivity() {
     private fun activeLongdoApiKey(): String {
         val runtime = poiSettingsStore.longdoApiKey()
         return runtime.ifBlank { BuildConfig.LONGDO_MAP_API_KEY }
-    }
-
-    private fun refreshPoiSettings() {
-        isLongdoConfigured = activeLongdoApiKey().isNotBlank()
-    }
-
-    private fun saveLongdoApiKey(value: String) {
-        poiSettingsStore.saveLongdoApiKey(value)
-        refreshPoiSettings()
-        poiError = null
     }
 
     private fun savePoi(poi: PoiSearchResult) {
