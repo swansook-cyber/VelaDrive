@@ -335,7 +335,12 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun calculateRoute() {
-        val origin = currentLocation ?: return
+        val origin = currentLocation
+        if (origin == null || !origin.isFreshForRouting()) {
+            routeError = "กำลังรอพิกัด GPS ใหม่ กรุณารอสักครู่แล้วลองอีกครั้ง"
+            routePreview = null
+            return
+        }
         val target = destination ?: return
 
         isLoadingRoute = true
@@ -351,7 +356,11 @@ class MainActivity : ComponentActivity() {
 
     private fun startNavigation() {
         requestNotificationPermissionIfNeeded()
-        val origin = currentLocation ?: return
+        val origin = currentLocation
+        if (origin == null || !origin.isFreshForRouting()) {
+            navigationError = "GPS ยังไม่พร้อมสำหรับนำทาง กรุณารอพิกัดใหม่ก่อน"
+            return
+        }
         val target = destination ?: return
 
         isNavigationStarting = true
@@ -375,7 +384,11 @@ class MainActivity : ComponentActivity() {
 
     private fun startSimulation() {
         requestNotificationPermissionIfNeeded()
-        val origin = currentLocation ?: return
+        val origin = currentLocation
+        if (origin == null || !origin.isFreshForRouting()) {
+            simulationError = "GPS ยังไม่พร้อมสำหรับตั้งจุดเริ่มจำลอง กรุณารอพิกัดใหม่ก่อน"
+            return
+        }
         val target = destination ?: return
 
         isSimulationStarting = true
@@ -495,7 +508,12 @@ class MainActivity : ComponentActivity() {
         locationController.start(
             onLocation = {
                 currentLocation = it
-                locationError = null
+                locationError =
+                    if (it.isFreshForRouting()) {
+                        null
+                    } else {
+                        "กำลังรอ GPS ที่แม่นยำขึ้น…"
+                    }
             },
             onProviderUnavailable = {
                 locationError = "ไม่พบ GPS หรือ Location Provider กรุณาเปิดตำแหน่งของเครื่อง"
