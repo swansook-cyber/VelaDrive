@@ -35,6 +35,7 @@ import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.navigation.RouteOptions
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
+import net.velalab.veladrive.core.safety.ActiveSafetyAlert
 import kotlin.math.roundToInt
 
 private val PreviewGreen = Color(0xFF2E7D32)
@@ -58,6 +59,7 @@ fun NavigationShellScreen(
     navigationError: String?,
     simulationError: String?,
     isSimulationMuted: Boolean,
+    activeSafetyAlert: ActiveSafetyAlert?,
     onRequestLocationPermission: () -> Unit,
     onCalculateRoute: () -> Unit,
     onSelectRoute: (Int) -> Unit,
@@ -80,6 +82,7 @@ fun NavigationShellScreen(
                 routePreview = routePreview,
                 guidance = guidance,
                 isMuted = isSimulationMuted,
+                activeSafetyAlert = activeSafetyAlert,
                 onToggleMute = onToggleMute,
                 onStopNavigation = onStopNavigation
             )
