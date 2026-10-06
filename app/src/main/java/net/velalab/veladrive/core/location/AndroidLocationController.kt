@@ -27,9 +27,7 @@ class AndroidLocationController(context: Context) {
 
         val newListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
-                if (location.isFreshLiveFix()) {
-                    onLocation(location.toSnapshot())
-                }
+                onLocation(location.toSnapshot())
             }
 
             override fun onProviderDisabled(provider: String) {
@@ -102,9 +100,6 @@ class AndroidLocationController(context: Context) {
         return ageMillis() <= MAX_LAST_KNOWN_AGE_MILLIS && accuracyOk
     }
 
-    private fun Location.isFreshLiveFix(): Boolean =
-        ageMillis() <= MAX_LIVE_FIX_AGE_MILLIS
-
     private fun Location.toSnapshot() = LocationSnapshot(
         latitude = latitude,
         longitude = longitude,
@@ -118,7 +113,6 @@ class AndroidLocationController(context: Context) {
 
     private companion object {
         const val MAX_LAST_KNOWN_AGE_MILLIS = 5 * 60 * 1000L
-        const val MAX_LIVE_FIX_AGE_MILLIS = 60 * 1000L
         const val MAX_LAST_KNOWN_ACCURACY_METERS = 500f
     }
 }
