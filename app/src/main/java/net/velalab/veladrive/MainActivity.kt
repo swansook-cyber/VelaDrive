@@ -24,6 +24,8 @@ import net.velalab.veladrive.core.destination.ShareResolution
 import net.velalab.veladrive.core.location.AndroidLocationController
 import net.velalab.veladrive.core.location.LocationSnapshot
 import com.stadiamaps.ferrostar.core.NavigationUiState
+import net.velalab.veladrive.core.navigation.RouteOptions
+import net.velalab.veladrive.core.navigation.RouteOptionsStore
 import net.velalab.veladrive.core.navigation.RoutePreview
 import net.velalab.veladrive.core.navigation.ValhallaRouteClient
 import net.velalab.veladrive.core.navigation.VelaFerrostarController
@@ -53,6 +55,7 @@ class MainActivity : ComponentActivity() {
         AssetVelaPoiRepository(this, BuildConfig.VELA_POI_ASSET_NAME)
     }
     private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
+    private val routeOptionsStore by lazy { RouteOptionsStore(this) }
 
     private var destination by mutableStateOf<Destination?>(null)
     private var isResolvingShare by mutableStateOf(false)
@@ -63,6 +66,7 @@ class MainActivity : ComponentActivity() {
     private var routePreview by mutableStateOf<RoutePreview?>(null)
     private var isLoadingRoute by mutableStateOf(false)
     private var routeError by mutableStateOf<String?>(null)
+    private var routeOptions by mutableStateOf(RouteOptions())
     private var guidance by mutableStateOf<VelaGuidanceSnapshot?>(null)
     private var isNavigationStarting by mutableStateOf(false)
     private var isSimulationStarting by mutableStateOf(false)
@@ -101,6 +105,7 @@ class MainActivity : ComponentActivity() {
         locationController = AndroidLocationController(this)
         locationPermissionGranted = hasLocationPermission()
         refreshStoredPlaces()
+        routeOptions = routeOptionsStore.load()
 
         consumeIntent(intent)
 
@@ -136,6 +141,7 @@ class MainActivity : ComponentActivity() {
                     routePreview = routePreview,
                     isLoadingRoute = isLoadingRoute,
                     routeError = routeError,
+                    routeOptions = routeOptions,
                     guidance = guidance,
                     isNavigationStarting = isNavigationStarting,
                     isSimulationStarting = isSimulationStarting,
@@ -144,6 +150,7 @@ class MainActivity : ComponentActivity() {
                     isSimulationMuted = isSimulationMuted,
                     onRequestLocationPermission = ::requestLocationPermission,
                     onCalculateRoute = ::calculateRoute,
+                    onRouteOptionsChanged = ::applyRouteOptions,
                     onStartNavigation = ::startNavigation,
                     onStartSimulation = ::startSimulation,
                     onStopNavigation = ::stopNavigation,
@@ -346,11 +353,26 @@ class MainActivity : ComponentActivity() {
         routeError = null
 
         lifecycleScope.launch {
-            routeClient.route(origin, target)
+            routeClient.route(origin, target, routeOptions)
                 .onSuccess { routePreview = it }
                 .onFailure { routeError = it.message ?: "คำนวณเส้นทางไม่สำเร็จ" }
             isLoadingRoute = false
         }
+    }
+
+    private fun applyRouteOptions(options: RouteOptions) {
+        routeOptions = options
+        routeOptionsStore.save(options)
+
+        navigationStateJob?.cancel()
+        navigationStateJob = null
+        ferrostarController?.shutdown()
+        ferrostarController = null
+        guidance = null
+        navigationError = null
+        simulationError = null
+
+        calculateRoute()
     }
 
     private fun startNavigation() {
@@ -437,7 +459,11 @@ class MainActivity : ComponentActivity() {
                 it.start()
             }
             val controller =
-                VelaFerrostarController(this, BuildConfig.VALHALLA_BASE_URL).also {
+                VelaFerrostarController(
+                    this,
+                    BuildConfig.VALHALLA_BASE_URL,
+                    routeOptions
+                ).also {
                     ferrostarController = it
                 }
 
