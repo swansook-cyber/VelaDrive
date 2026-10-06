@@ -341,6 +341,8 @@ class MainActivity : ComponentActivity() {
         ferrostarController?.stopNavigation()
         destination = null
         routePreview = null
+        routeAlternatives = emptyList()
+        selectedRouteIndex = 0
         routeError = null
         guidance = null
         thaiTts?.resetDeduplication()
@@ -354,6 +356,8 @@ class MainActivity : ComponentActivity() {
                 origin?.let { location -> "GPS ยังไม่พร้อมใช้งาน: ${location.diagnosticsText()}" }
                     ?: "กำลังรอพิกัด GPS ใหม่ กรุณารอสักครู่แล้วลองอีกครั้ง"
             routePreview = null
+            routeAlternatives = emptyList()
+            selectedRouteIndex = 0
             return
         }
         val target = destination ?: return
