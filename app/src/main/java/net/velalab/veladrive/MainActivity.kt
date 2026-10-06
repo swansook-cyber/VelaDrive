@@ -11,6 +11,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -34,9 +44,7 @@ import net.velalab.veladrive.core.poi.LongdoPoiClient
 import net.velalab.veladrive.core.poi.PoiSearchResult
 import net.velalab.veladrive.core.poi.VelaPlaceStore
 import net.velalab.veladrive.core.poi.VelaPoiSettingsStore
-import net.velalab.veladrive.ui.HomeScreen
 import net.velalab.veladrive.ui.NavigationShellScreen
-import org.maplibre.android.MapLibre
 
 class MainActivity : ComponentActivity() {
     private val shareResolver = GoogleMapsShareResolver()
@@ -92,7 +100,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MapLibre.getInstance(this)
         locationController = AndroidLocationController(this)
         locationPermissionGranted = hasLocationPermission()
         refreshStoredPlaces()
@@ -107,22 +114,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activeDestination = destination
             if (activeDestination == null) {
-                HomeScreen(
-                    currentLocation = currentLocation,
-                    locationPermissionGranted = locationPermissionGranted,
-                    isSearchingPois = isSearchingPois || isResolvingShare,
-                    poiResults = poiResults,
-                    recentPlaces = recentPlaces,
-                    savedPlaces = savedPlaces,
-                    poiError = poiError ?: shareError,
-                    isLongdoConfigured = isLongdoConfigured,
-                    onSearchPoi = ::searchPoi,
-                    onSelectPoi = ::selectPoi,
-                    onSavePoi = ::savePoi,
-                    onSaveLongdoApiKey = ::saveLongdoApiKey,
-                    onRequestLocationPermission = ::requestLocationPermission,
-                    onGoogleSearch = { GoogleMapsLauncher.openSearch(this) }
-                )
+                MaterialTheme {
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(24.dp),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "Vela Drive Diagnostic",
+                                style = MaterialTheme.typography.headlineMedium
+                            )
+                            Text(
+                                "Safe mode: ยังไม่โหลด MapLibre / Ferrostar",
+                                modifier = Modifier.padding(top = 12.dp)
+                            )
+                            Text(
+                                if (locationPermissionGranted) {
+                                    "GPS permission: พร้อม"
+                                } else {
+                                    "GPS permission: ยังไม่ได้อนุญาต"
+                                },
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
+                    }
+                }
             } else {
                 NavigationShellScreen(
                     destination = activeDestination,
