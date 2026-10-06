@@ -69,6 +69,7 @@ class VelaFerrostarController(
                     "units" to "kilometers",
                     "language" to "en-US",
                     "turn_lanes" to true,
+                    "alternates" to MAX_ALTERNATE_ROUTES,
                     "costing_options" to
                         mapOf(
                             "auto" to routeOptions.valhallaAutoOptions()
@@ -109,18 +110,20 @@ class VelaFerrostarController(
 
     suspend fun startLiveNavigation(
         origin: LocationSnapshot,
-        destination: Destination
+        destination: Destination,
+        selectedRouteIndex: Int = 0
     ) {
         navigationLocationProvider.disableSimulation()
-        val route = fetchRoute(origin, destination)
+        val route = fetchRoute(origin, destination, selectedRouteIndex)
         core.startNavigation(route)
     }
 
     suspend fun startSimulation(
         origin: LocationSnapshot,
-        destination: Destination
+        destination: Destination,
+        selectedRouteIndex: Int = 0
     ) {
-        val route = fetchRoute(origin, destination)
+        val route = fetchRoute(origin, destination, selectedRouteIndex)
         navigationLocationProvider.enableSimulationOn(route)
         core.startNavigation(route)
     }
@@ -158,7 +161,8 @@ class VelaFerrostarController(
 
     private suspend fun fetchRoute(
         origin: LocationSnapshot,
-        destination: Destination
+        destination: Destination,
+        selectedRouteIndex: Int
     ): uniffi.ferrostar.Route {
         val initialLocation =
             UserLocation(
@@ -192,10 +196,14 @@ class VelaFerrostarController(
             )
 
         check(routes.isNotEmpty()) { "Ferrostar did not return a route" }
-        return routes.first()
+        check(selectedRouteIndex in routes.indices) {
+            "เส้นทางทางเลือกที่เลือกไม่มีแล้ว กรุณาคำนวณเส้นทางใหม่"
+        }
+        return routes[selectedRouteIndex]
     }
 
     private companion object {
         const val DEFAULT_UNKNOWN_ACCURACY_METERS = 50.0
+        const val MAX_ALTERNATE_ROUTES = 2
     }
 }
