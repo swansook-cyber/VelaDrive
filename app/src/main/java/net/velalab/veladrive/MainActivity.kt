@@ -291,7 +291,14 @@ class MainActivity : ComponentActivity() {
             latitude = poi.latitude,
             longitude = poi.longitude,
             label = poi.name,
-            source = DestinationSource.LONGDO_POI
+            source = when (poi.source) {
+                PoiSource.USER_PLACE,
+                PoiSource.LEGACY_UNKNOWN -> DestinationSource.USER_PLACE
+                PoiSource.VELA_CURATED,
+                PoiSource.OPENSTREETMAP -> DestinationSource.VELA_POI
+                PoiSource.LONGDO -> DestinationSource.LONGDO_POI
+                PoiSource.GOOGLE_MAPS -> DestinationSource.GOOGLE_MAPS_LINK
+            }
         )
         poiResults = emptyList()
         poiError = null

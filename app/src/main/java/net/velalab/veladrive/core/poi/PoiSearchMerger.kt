@@ -16,7 +16,10 @@ object PoiSearchMerger {
     ): PoiSearchOutcome {
         val merged = mutableListOf<PoiSearchResult>()
         sequenceOf(
+            // Personal saved places stay first because they are user-owned data.
             savedResults,
+            // Provider priority is intentionally fixed:
+            // Vela POI -> Longdo -> Google fallback outside this merger.
             velaResults.getOrDefault(emptyList()),
             longdoResults.getOrDefault(emptyList())
         ).flatten().forEach { candidate ->
