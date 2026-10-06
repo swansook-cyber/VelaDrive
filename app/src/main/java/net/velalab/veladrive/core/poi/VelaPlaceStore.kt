@@ -5,21 +5,44 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 data class StoredPlace(
+    val id: String? = null,
     val name: String,
     val latitude: Double,
     val longitude: Double,
     val address: String? = null,
+    val alternateNames: List<String> = emptyList(),
+    val category: PoiCategory? = null,
+    val phone: String? = null,
+    val province: String? = null,
+    val district: String? = null,
+    val source: PoiSource = PoiSource.LEGACY_UNKNOWN,
+    val sourceReference: String? = null,
+    val sourceUrl: String? = null,
+    val verified: Boolean = false,
+    val updatedAt: String? = null,
+    val datasetVersion: String? = null,
     val saved: Boolean = false,
     val lastUsedAt: Long = System.currentTimeMillis()
 ) {
     fun toPoiSearchResult(): PoiSearchResult =
         PoiSearchResult(
-            id = "local:$latitude,$longitude",
+            id = id ?: "local:$latitude,$longitude",
             name = name,
             latitude = latitude,
             longitude = longitude,
             address = address,
-            distanceText = null
+            distanceText = null,
+            alternateNames = alternateNames,
+            category = category,
+            phone = phone,
+            province = province,
+            district = district,
+            source = source,
+            sourceReference = sourceReference,
+            sourceUrl = sourceUrl,
+            verified = verified,
+            updatedAt = updatedAt,
+            datasetVersion = datasetVersion
         )
 }
 
@@ -41,10 +64,22 @@ class VelaPlaceStore(context: Context) {
     fun addRecent(poi: PoiSearchResult) {
         val place =
             StoredPlace(
+                id = poi.id,
                 name = poi.name,
                 latitude = poi.latitude,
                 longitude = poi.longitude,
                 address = poi.address,
+                alternateNames = poi.alternateNames,
+                category = poi.category,
+                phone = poi.phone,
+                province = poi.province,
+                district = poi.district,
+                source = poi.source,
+                sourceReference = poi.sourceReference,
+                sourceUrl = poi.sourceUrl,
+                verified = poi.verified,
+                updatedAt = poi.updatedAt,
+                datasetVersion = poi.datasetVersion,
                 lastUsedAt = System.currentTimeMillis()
             )
         val updated =
@@ -56,10 +91,22 @@ class VelaPlaceStore(context: Context) {
     fun save(poi: PoiSearchResult) {
         val place =
             StoredPlace(
+                id = poi.id,
                 name = poi.name,
                 latitude = poi.latitude,
                 longitude = poi.longitude,
                 address = poi.address,
+                alternateNames = poi.alternateNames,
+                category = poi.category,
+                phone = poi.phone,
+                province = poi.province,
+                district = poi.district,
+                source = poi.source,
+                sourceReference = poi.sourceReference,
+                sourceUrl = poi.sourceUrl,
+                verified = poi.verified,
+                updatedAt = poi.updatedAt,
+                datasetVersion = poi.datasetVersion,
                 saved = true,
                 lastUsedAt = System.currentTimeMillis()
             )
@@ -78,13 +125,16 @@ class VelaPlaceStore(context: Context) {
     }
 
     fun searchSaved(keyword: String): List<PoiSearchResult> {
-        val needle = keyword.trim().lowercase()
+        val needle = normalizePoiText(keyword)
         if (needle.isBlank()) return emptyList()
 
         return savedPlaces()
             .filter {
-                it.name.lowercase().contains(needle) ||
-                    it.address?.lowercase()?.contains(needle) == true
+                (
+                    sequenceOf(it.name) +
+                        it.alternateNames.asSequence() +
+                        listOfNotNull(it.address, it.province, it.district).asSequence()
+                ).any { field -> normalizePoiText(field).contains(needle) }
             }
             .map(StoredPlace::toPoiSearchResult)
     }
@@ -98,10 +148,24 @@ class VelaPlaceStore(context: Context) {
                     val item = array.getJSONObject(index)
                     add(
                         StoredPlace(
+                            id = item.optString("id").takeIf { it.isNotBlank() },
                             name = item.getString("name"),
                             latitude = item.getDouble("latitude"),
                             longitude = item.getDouble("longitude"),
                             address = item.optString("address").takeIf { it.isNotBlank() },
+                            alternateNames = item.optStringList("alternateNames"),
+                            category = item.optEnum<PoiCategory>("category"),
+                            phone = item.optString("phone").takeIf { it.isNotBlank() },
+                            province = item.optString("province").takeIf { it.isNotBlank() },
+                            district = item.optString("district").takeIf { it.isNotBlank() },
+                            source = item.optEnum<PoiSource>("source") ?: PoiSource.LEGACY_UNKNOWN,
+                            sourceReference =
+                                item.optString("sourceReference").takeIf { it.isNotBlank() },
+                            sourceUrl = item.optString("sourceUrl").takeIf { it.isNotBlank() },
+                            verified = item.optBoolean("verified", false),
+                            updatedAt = item.optString("updatedAt").takeIf { it.isNotBlank() },
+                            datasetVersion =
+                                item.optString("datasetVersion").takeIf { it.isNotBlank() },
                             saved = item.optBoolean("saved", false),
                             lastUsedAt = item.optLong("lastUsedAt", 0L)
                         )
@@ -116,10 +180,22 @@ class VelaPlaceStore(context: Context) {
         places.forEach { place ->
             array.put(
                 JSONObject()
+                    .put("id", place.id ?: "")
                     .put("name", place.name)
                     .put("latitude", place.latitude)
                     .put("longitude", place.longitude)
                     .put("address", place.address ?: "")
+                    .put("alternateNames", JSONArray(place.alternateNames))
+                    .put("category", place.category?.name ?: "")
+                    .put("phone", place.phone ?: "")
+                    .put("province", place.province ?: "")
+                    .put("district", place.district ?: "")
+                    .put("source", place.source.name)
+                    .put("sourceReference", place.sourceReference ?: "")
+                    .put("sourceUrl", place.sourceUrl ?: "")
+                    .put("verified", place.verified)
+                    .put("updatedAt", place.updatedAt ?: "")
+                    .put("datasetVersion", place.datasetVersion ?: "")
                     .put("saved", place.saved)
                     .put("lastUsedAt", place.lastUsedAt)
             )
@@ -135,6 +211,20 @@ class VelaPlaceStore(context: Context) {
     ): Boolean =
         kotlin.math.abs(aLat - bLat) < 0.00001 &&
             kotlin.math.abs(aLon - bLon) < 0.00001
+
+    private fun JSONObject.optStringList(key: String): List<String> {
+        val array = optJSONArray(key) ?: return emptyList()
+        return buildList {
+            for (index in 0 until array.length()) {
+                array.optString(index).trim().takeIf { it.isNotEmpty() }?.let(::add)
+            }
+        }
+    }
+
+    private inline fun <reified T : Enum<T>> JSONObject.optEnum(key: String): T? =
+        optString(key).takeIf { it.isNotBlank() }?.let { value ->
+            enumValues<T>().firstOrNull { it.name == value }
+        }
 
     private companion object {
         const val PREFS_NAME = "vela_places"
