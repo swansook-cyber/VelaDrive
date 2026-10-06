@@ -25,8 +25,13 @@ data class LocationSnapshot(
         }
     }
 
-    fun isReadyForRouting(): Boolean =
-        accuracyMeters == null || accuracyMeters <= MAX_ROUTING_ACCURACY_METERS
+    fun hasValidCoordinates(): Boolean =
+        latitude.isFinite() &&
+            longitude.isFinite() &&
+            latitude in -90.0..90.0 &&
+            longitude in -180.0..180.0
+
+    fun isReadyForRouting(): Boolean = hasValidCoordinates()
 
     fun diagnosticsText(): String {
         val ageSeconds = ageMillis() / 1000L
@@ -35,7 +40,5 @@ data class LocationSnapshot(
         return "$source • ±$accuracy • ${ageSeconds}s"
     }
 
-    companion object {
-        const val MAX_ROUTING_ACCURACY_METERS = 250f
-    }
+    companion object
 }
