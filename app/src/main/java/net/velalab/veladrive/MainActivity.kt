@@ -141,7 +141,12 @@ class MainActivity : ComponentActivity() {
                     savedPlaces = savedPlaces,
                     poiError = poiError ?: shareError,
                     poiDatasetLabel =
-                        BuildConfig.POI_DATASET_LABEL.takeIf { it.isNotBlank() },
+                        selectedProvinceCode
+                            ?.let { code -> provinceOptions.firstOrNull { it.code == code } }
+                            ?.let { province -> "${province.nameTh} · ${province.count} จุด" }
+                            ?: provinceOptions
+                                .takeIf { it.isNotEmpty() }
+                                ?.let { "Vela POI Thailand · ${it.size} จังหวัด" },
                     provinceOptions = provinceOptions,
                     selectedProvinceCode = selectedProvinceCode,
                     onProvinceSelected = { code ->
