@@ -84,13 +84,24 @@ def merge(osm: dict[str, Any], curated: dict[str, Any], snapshot_date: str) -> t
             ):
                 exact = candidate
                 break
-        if exact is not None:
+        osm_name_normalized = normalize(str(poi.get("name", "")))
+        is_isuzu_named = "isuzu" in osm_name_normalized or "อีซูซุ" in osm_name_normalized
+        is_near_curated_isuzu = (
+            str(poi.get("category")) == "AUTO_SERVICE"
+            and is_isuzu_named
+            and nearest is not None
+            and nearest_distance <= NEAR_CURATED_REVIEW_METERS
+        )
+        if exact is not None or is_near_curated_isuzu:
+            winner = exact if exact is not None else nearest
+            assert winner is not None
             deduped_against_curated.append(
                 {
                     "osmId": poi_id,
-                    "curatedId": exact.get("id"),
+                    "curatedId": winner.get("id"),
                     "name": poi.get("name"),
-                    "distanceMeters": round(distance_meters(exact, poi), 1),
+                    "distanceMeters": round(distance_meters(winner, poi), 1),
+                    "reason": "exact_name_25m" if exact is not None else "isuzu_name_100m",
                 }
             )
             continue
@@ -134,7 +145,7 @@ def merge(osm: dict[str, Any], curated: dict[str, Any], snapshot_date: str) -> t
         "provenance": {
             "osmDatasetVersion": osm.get("datasetVersion"),
             "curatedDatasetVersion": curated.get("datasetVersion"),
-            "mergeRule": "VELA_CURATED first; exact normalized name + same category within 25m dedupes OSM",
+            "mergeRule": "VELA_CURATED first; exact normalized name + same category within 25m, plus Isuzu-named AUTO_SERVICE within 100m, dedupes OSM",
         },
         "pois": output,
     }
