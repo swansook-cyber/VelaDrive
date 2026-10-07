@@ -32,9 +32,11 @@ import net.velalab.veladrive.core.navigation.VelaFerrostarController
 import net.velalab.veladrive.core.navigation.VelaGuidanceEngine
 import net.velalab.veladrive.core.navigation.VelaGuidanceSnapshot
 import net.velalab.veladrive.core.navigation.VelaThaiTts
+import net.velalab.veladrive.core.poi.AssetProvincePoiRepository
 import net.velalab.veladrive.core.poi.AssetVelaPoiRepository
 import net.velalab.veladrive.core.poi.LongdoPoiClient
 import net.velalab.veladrive.core.poi.PoiSearchResult
+import net.velalab.veladrive.core.poi.ProvincePoiOption
 import net.velalab.veladrive.core.poi.PoiSearchMerger
 import net.velalab.veladrive.core.poi.PoiSource
 import net.velalab.veladrive.core.poi.VelaPlaceStore
@@ -58,6 +60,7 @@ class MainActivity : ComponentActivity() {
     private val velaPoiRepository by lazy {
         AssetVelaPoiRepository(this, BuildConfig.VELA_POI_ASSET_NAME)
     }
+    private val provincePoiRepository by lazy { AssetProvincePoiRepository(this) }
     private val poiSettingsStore by lazy { VelaPoiSettingsStore(this) }
     private val routeOptionsStore by lazy { RouteOptionsStore(this) }
     private val safetyAlertRepository by lazy { AssetSafetyAlertRepository(this) }
@@ -83,6 +86,8 @@ class MainActivity : ComponentActivity() {
     private var poiResults by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var isSearchingPois by mutableStateOf(false)
     private var poiError by mutableStateOf<String?>(null)
+    private var provinceOptions by mutableStateOf<List<ProvincePoiOption>>(emptyList())
+    private var selectedProvinceCode by mutableStateOf<String?>(null)
     private var recentPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var savedPlaces by mutableStateOf<List<PoiSearchResult>>(emptyList())
     private var safetyAlerts: List<SafetyAlert> = emptyList()
@@ -116,6 +121,7 @@ class MainActivity : ComponentActivity() {
         refreshStoredPlaces()
         routeOptions = routeOptionsStore.load()
         safetyAlerts = safetyAlertRepository.load()
+        provinceOptions = provincePoiRepository.provinces().getOrDefault(emptyList())
 
         consumeIntent(intent)
 
@@ -136,6 +142,13 @@ class MainActivity : ComponentActivity() {
                     poiError = poiError ?: shareError,
                     poiDatasetLabel =
                         BuildConfig.POI_DATASET_LABEL.takeIf { it.isNotBlank() },
+                    provinceOptions = provinceOptions,
+                    selectedProvinceCode = selectedProvinceCode,
+                    onProvinceSelected = { code ->
+                        selectedProvinceCode = code
+                        poiResults = emptyList()
+                        poiError = null
+                    },
                     onSearchPoi = ::searchPoi,
                     onSelectPoi = ::selectPoi,
                     onSavePoi = ::savePoi,
@@ -257,6 +270,16 @@ class MainActivity : ComponentActivity() {
         val cleanKeyword = keyword.trim()
         if (cleanKeyword.isBlank()) return
 
+        val selectedProvince =
+            selectedProvinceCode?.let { code ->
+                provinceOptions.firstOrNull { it.code == code }
+            }
+        if (provinceOptions.isNotEmpty() && selectedProvince == null) {
+            poiResults = emptyList()
+            poiError = "กรุณาเลือกจังหวัดก่อนค้นหา"
+            return
+        }
+
         isSearchingPois = true
         poiError = null
         poiResults = emptyList()
@@ -265,16 +288,28 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch {
             val outcome = withContext(Dispatchers.IO) {
                 val savedResults = placeStore.searchSaved(cleanKeyword)
-                val velaResults = velaPoiRepository.search(
-                    keyword = cleanKeyword,
-                    latitude = location?.latitude,
-                    longitude = location?.longitude
-                )
+                val velaResults =
+                    if (selectedProvince != null) {
+                        provincePoiRepository.search(
+                            provinceCode = selectedProvince.code,
+                            keyword = cleanKeyword,
+                            latitude = location?.latitude,
+                            longitude = location?.longitude
+                        )
+                    } else {
+                        velaPoiRepository.search(
+                            keyword = cleanKeyword,
+                            latitude = location?.latitude,
+                            longitude = location?.longitude
+                        )
+                    }
+                val longdoKeyword =
+                    selectedProvince?.let { "${cleanKeyword} ${it.nameTh}" } ?: cleanKeyword
                 val longdoResults =
                     LongdoPoiClient(activeLongdoApiKey()).search(
-                        keyword = cleanKeyword,
-                        latitude = location?.latitude,
-                        longitude = location?.longitude
+                        keyword = longdoKeyword,
+                        latitude = if (selectedProvince == null) location?.latitude else null,
+                        longitude = if (selectedProvince == null) location?.longitude else null
                     )
                 PoiSearchMerger.merge(
                     savedResults = savedResults,
