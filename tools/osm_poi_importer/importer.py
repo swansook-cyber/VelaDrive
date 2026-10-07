@@ -270,18 +270,20 @@ def _load_pbf(path: Path) -> list[OsmElement]:
         def __init__(self) -> None:
             super().__init__()
             self.elements: list[OsmElement] = []
-            self.node_coordinates: dict[int, tuple[float, float]] = {}
+            # Keep only representative points for ways. The filtered PBF can still
+            # contain a very large number of dependency nodes; retaining every node
+            # coordinate made Thailand-wide imports unnecessarily memory-heavy.
             self.way_centers: dict[int, tuple[float, float]] = {}
 
         def node(self, node: Any) -> None:
+            tags = _clean_tags(dict(node.tags))
+            if not tags:
+                return
             if node.location.valid():
                 point = (float(node.location.lat), float(node.location.lon))
-                self.node_coordinates[int(node.id)] = point
             else:
                 point = (None, None)
-            tags = _clean_tags(dict(node.tags))
-            if tags:
-                self.elements.append(OsmElement("node", int(node.id), *point, tags))
+            self.elements.append(OsmElement("node", int(node.id), *point, tags))
 
         def way(self, way: Any) -> None:
             points = [
@@ -297,11 +299,12 @@ def _load_pbf(path: Path) -> list[OsmElement]:
                 self.elements.append(OsmElement("way", int(way.id), *center, tags))
 
         def relation(self, relation: Any) -> None:
+            # pyosmium does not attach member-node coordinates directly to relation
+            # members. Use cached way representative points when available instead
+            # of retaining every dependency node in memory.
             points: list[tuple[float | None, float | None]] = []
             for member in relation.members:
-                if member.type == "n":
-                    points.append(self.node_coordinates.get(int(member.ref), (None, None)))
-                elif member.type == "w":
+                if member.type == "w":
                     points.append(self.way_centers.get(int(member.ref), (None, None)))
             center = _representative_point(points)
             tags = _clean_tags(dict(relation.tags))
