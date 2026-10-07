@@ -9,6 +9,15 @@ from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
+try:
+    from shapely.geometry import Point as ShapelyPoint
+    from shapely.geometry import shape as shapely_shape
+    from shapely.strtree import STRtree
+except ImportError:
+    ShapelyPoint = None
+    shapely_shape = None
+    STRtree = None
+
 
 def _norm(value: str) -> str:
     return " ".join(unicodedata.normalize("NFKC", value).split()).casefold()
@@ -132,6 +141,7 @@ def load_provinces(path: Path) -> list[dict[str, Any]]:
                 "nameTh": name_th or display,
                 "nameEn": name_en or display,
                 "polygons": polygons,
+                "geometry": geometry,
                 "bbox": _bbox(polygons),
             }
         )
@@ -140,6 +150,32 @@ def load_provinces(path: Path) -> list[dict[str, Any]]:
     for province in provinces:
         deduped[province["code"]] = province
     return sorted(deduped.values(), key=lambda item: _norm(item["nameTh"]))
+
+
+
+class ProvinceMatcher:
+    def __init__(self, provinces: list[dict[str, Any]]) -> None:
+        self.provinces = provinces
+        self._tree = None
+        if STRtree is not None and shapely_shape is not None:
+            geometries = [shapely_shape(province["geometry"]) for province in provinces]
+            self._tree = STRtree(geometries)
+
+    def matches(self, latitude: float, longitude: float) -> list[dict[str, Any]]:
+        if self._tree is not None and ShapelyPoint is not None:
+            point = ShapelyPoint(longitude, latitude)
+            indices = self._tree.query(point, predicate="intersects")
+            return [self.provinces[int(index)] for index in indices]
+        return [
+            province
+            for province in self.provinces
+            if _contains(
+                province["polygons"],
+                province["bbox"],
+                latitude,
+                longitude,
+            )
+        ]
 
 
 def main() -> int:
@@ -159,15 +195,12 @@ def main() -> int:
 
     shards: dict[str, list[dict[str, Any]]] = {p["code"]: [] for p in provinces}
     unmatched: list[dict[str, Any]] = []
+    matcher = ProvinceMatcher(provinces)
 
     for poi in dataset.get("pois", []):
         lat = float(poi["latitude"])
         lon = float(poi["longitude"])
-        matches = [
-            province
-            for province in provinces
-            if _contains(province["polygons"], province["bbox"], lat, lon)
-        ]
+        matches = matcher.matches(lat, lon)
         if len(matches) != 1:
             unmatched.append(
                 {
