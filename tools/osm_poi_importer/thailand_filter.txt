@@ -1,0 +1,10 @@
+# VelaDrive Thailand POI pre-filter
+# Keep only tags that can map to a supported Vela category.
+nwr/amenity=restaurant,fast_food,food_court,cafe,fuel,hospital,marketplace,police,bus_station,bank,atm,charging_station,ferry_terminal,place_of_worship,townhall,courthouse
+nwr/healthcare=hospital
+nwr/tourism=hotel,hostel,guest_house,motel,resort,chalet,attraction,aquarium,artwork,gallery,museum,theme_park,viewpoint,zoo
+nwr/shop=mall,department_store,convenience,car_repair,tyres
+nwr/craft=car_repair
+nwr/aeroway=aerodrome,terminal
+nwr/man_made=pier
+nwr/office=government

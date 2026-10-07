@@ -1,0 +1,93 @@
+{
+  "categoryCounts": {
+    "AIRPORT": 135,
+    "ATM": 993,
+    "AUTO_SERVICE": 877,
+    "BANK": 2400,
+    "BUS_TERMINAL": 490,
+    "CONVENIENCE_STORE": 9190,
+    "EV_CHARGER": 49,
+    "FERRY": 391,
+    "FUEL": 6449,
+    "GOVERNMENT": 3545,
+    "HALAL_RESTAURANT": 143,
+    "HOSPITAL": 1710,
+    "HOTEL": 15729,
+    "MARKET": 1418,
+    "MOSQUE": 257,
+    "PIER": 212,
+    "POLICE": 1218,
+    "RESTAURANT": 31958,
+    "SHOPPING": 712,
+    "TIRE_SERVICE": 179,
+    "TOURISM": 5819
+  },
+  "curatedInputPois": 289,
+  "datasetVersion": "thailand-2026-10-07-osm+curated-v1",
+  "dedupedAgainstCurated": 2,
+  "dedupedExamples": [
+    {
+      "curatedId": "gpi-isuzu-0078",
+      "distanceMeters": 67.0,
+      "name": "Isuzu Phetchabun",
+      "osmId": "osm:node:5492536547",
+      "reason": "isuzu_name_100m"
+    },
+    {
+      "curatedId": "gpi-isuzu-0027",
+      "distanceMeters": 19.0,
+      "name": "Isuzu service center",
+      "osmId": "osm:node:3921131089",
+      "reason": "isuzu_name_100m"
+    }
+  ],
+  "nearCuratedReview": [
+    {
+      "category": "AUTO_SERVICE",
+      "curatedId": "gpi-isuzu-0069",
+      "curatedName": "โค้วยู่ฮะมอเตอร์ - สาขา มข.",
+      "distanceMeters": 71.1,
+      "osmId": "osm:node:14088707154",
+      "osmName": "B-Quick"
+    },
+    {
+      "category": "AUTO_SERVICE",
+      "curatedId": "gpi-isuzu-0253",
+      "curatedName": "สุโขทัย ฮกอันตึ๊ง (1978) - สำนักงานใหญ่",
+      "distanceMeters": 56.0,
+      "osmId": "osm:way:1020780377",
+      "osmName": "Bridgestone"
+    },
+    {
+      "category": "AUTO_SERVICE",
+      "curatedId": "gpi-isuzu-0211",
+      "curatedName": "อีซูซุแสงหงส์บางกอก  - สาขาประชาอุทิศ",
+      "distanceMeters": 68.8,
+      "osmId": "osm:way:1335912177",
+      "osmName": "Toyota"
+    },
+    {
+      "category": "AUTO_SERVICE",
+      "curatedId": "gpi-isuzu-0253",
+      "curatedName": "สุโขทัย ฮกอันตึ๊ง (1978) - สำนักงานใหญ่",
+      "distanceMeters": 76.4,
+      "osmId": "osm:way:1020780392",
+      "osmName": "Vee Rubber"
+    },
+    {
+      "category": "AUTO_SERVICE",
+      "curatedId": "gpi-isuzu-0166",
+      "curatedName": "อีซูซุแสงฟ้า  - สำนักงานใหญ่",
+      "distanceMeters": 87.5,
+      "osmId": "osm:way:1160458059",
+      "osmName": "เชลล์ เฮลิกส์ พลัส"
+    }
+  ],
+  "nearCuratedReviewCount": 5,
+  "osmInputPois": 83587,
+  "sourceCounts": {
+    "OPENSTREETMAP": 83585,
+    "VELA_CURATED": 289
+  },
+  "totalPois": 83874
+}

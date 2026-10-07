@@ -18,7 +18,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Convert a local OSM extract into the Vela POI schema."
     )
     parser.add_argument("--input", type=Path, required=True)
-    parser.add_argument("--boundary", type=Path, required=True)
+    parser.add_argument("--boundary", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--quarantine", type=Path, required=True)
@@ -26,16 +26,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--boundary-name", required=True)
     parser.add_argument("--boundary-reference", required=True)
+    parser.add_argument("--dataset-slug", default="krabi")
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
     input_sha256 = sha256_file(args.input)
-    boundary_sha256 = sha256_file(args.boundary)
+    boundary_sha256 = sha256_file(args.boundary) if args.boundary else "geofabrik-extract"
     result = import_elements(
         load_elements(args.input),
-        boundary=GeoJsonBoundary.from_path(args.boundary),
+        boundary=GeoJsonBoundary.from_path(args.boundary) if args.boundary else None,
         snapshot_date=args.snapshot_date,
         input_sha256=input_sha256,
         boundary_sha256=boundary_sha256,
@@ -44,6 +45,7 @@ def main() -> int:
         boundary_reference=args.boundary_reference,
         input_format=args.input.suffix.lower().lstrip("."),
         source_data_timestamp=source_data_timestamp(args.input),
+        dataset_slug=args.dataset_slug,
     )
     output_sha256 = write_import_outputs(
         result,

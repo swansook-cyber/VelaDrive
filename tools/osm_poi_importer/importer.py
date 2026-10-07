@@ -17,7 +17,7 @@ OSM_LICENSE = "Open Data Commons Open Database License (ODbL) 1.0"
 OSM_LICENSE_URL = "https://www.openstreetmap.org/copyright"
 OSM_ELEMENT_URL = "https://www.openstreetmap.org/{element_type}/{element_id}"
 SUPPORTED_SCHEMA_VERSION = 1
-IMPORTER_RULES_VERSION = 2
+IMPORTER_RULES_VERSION = 3
 DEDUPLICATION_DISTANCE_METERS = 10.0
 EARTH_RADIUS_METERS = 6_371_000.0
 
@@ -265,6 +265,28 @@ def _load_pbf(path: Path) -> list[OsmElement]:
             ".osm.pbf input requires the optional 'osmium' Python package"
         ) from error
 
+    relation_candidates: dict[int, tuple[dict[str, str], list[tuple[str, int]]]] = {}
+    needed_node_ids: set[int] = set()
+    needed_way_ids: set[int] = set()
+
+    class RelationScanner(osmium.SimpleHandler):  # type: ignore[misc, name-defined]
+        def relation(self, relation: Any) -> None:
+            tags = _clean_tags(dict(relation.tags))
+            if not tags or classify(tags) is None:
+                return
+            members: list[tuple[str, int]] = []
+            for member in relation.members:
+                member_type = str(member.type)
+                member_id = int(member.ref)
+                members.append((member_type, member_id))
+                if member_type == "n":
+                    needed_node_ids.add(member_id)
+                elif member_type == "w":
+                    needed_way_ids.add(member_id)
+            relation_candidates[int(relation.id)] = (tags, members)
+
+    RelationScanner().apply_file(str(path), locations=False)
+
     class Handler(osmium.SimpleHandler):  # type: ignore[misc, name-defined]
         def __init__(self) -> None:
             super().__init__()
@@ -273,44 +295,51 @@ def _load_pbf(path: Path) -> list[OsmElement]:
             self.way_centers: dict[int, tuple[float, float]] = {}
 
         def node(self, node: Any) -> None:
+            point: tuple[float | None, float | None]
             if node.location.valid():
                 point = (float(node.location.lat), float(node.location.lon))
-                self.node_coordinates[int(node.id)] = point
+                if int(node.id) in needed_node_ids:
+                    self.node_coordinates[int(node.id)] = (point[0], point[1])
             else:
                 point = (None, None)
             tags = _clean_tags(dict(node.tags))
-            if tags:
+            if tags and classify(tags) is not None:
                 self.elements.append(OsmElement("node", int(node.id), *point, tags))
 
         def way(self, way: Any) -> None:
+            tags = _clean_tags(dict(way.tags))
+            is_candidate = bool(tags and classify(tags) is not None)
+            needs_center = is_candidate or int(way.id) in needed_way_ids
+            if not needs_center:
+                return
             points = [
                 (float(node.lat), float(node.lon))
                 for node in way.nodes
                 if node.location.valid()
             ]
             center = _representative_point(points)
-            if center[0] is not None and center[1] is not None:
+            if int(way.id) in needed_way_ids and center[0] is not None and center[1] is not None:
                 self.way_centers[int(way.id)] = (center[0], center[1])
-            tags = _clean_tags(dict(way.tags))
-            if tags:
+            if is_candidate:
                 self.elements.append(OsmElement("way", int(way.id), *center, tags))
 
         def relation(self, relation: Any) -> None:
+            candidate = relation_candidates.get(int(relation.id))
+            if candidate is None:
+                return
+            tags, members = candidate
             points: list[tuple[float | None, float | None]] = []
-            for member in relation.members:
-                if member.type == "n":
-                    points.append(self.node_coordinates.get(int(member.ref), (None, None)))
-                elif member.type == "w":
-                    points.append(self.way_centers.get(int(member.ref), (None, None)))
+            for member_type, member_id in members:
+                if member_type == "n":
+                    points.append(self.node_coordinates.get(member_id, (None, None)))
+                elif member_type == "w":
+                    points.append(self.way_centers.get(member_id, (None, None)))
             center = _representative_point(points)
-            tags = _clean_tags(dict(relation.tags))
-            if tags:
-                self.elements.append(OsmElement("relation", int(relation.id), *center, tags))
+            self.elements.append(OsmElement("relation", int(relation.id), *center, tags))
 
     handler = Handler()
     handler.apply_file(str(path), locations=True, idx="flex_mem")
     return handler.elements
-
 
 def _xml_tags(element: ET.Element) -> dict[str, str]:
     return _clean_tags(
@@ -435,7 +464,7 @@ def _is_explicitly_halal(tags: Mapping[str, str]) -> bool:
 def import_elements(
     elements: Iterable[OsmElement],
     *,
-    boundary: GeoJsonBoundary,
+    boundary: GeoJsonBoundary | None,
     snapshot_date: str,
     input_sha256: str,
     boundary_sha256: str,
@@ -444,13 +473,17 @@ def import_elements(
     boundary_reference: str,
     input_format: str,
     source_data_timestamp: str | None = None,
+    dataset_slug: str = "krabi",
 ) -> ImportResult:
     date.fromisoformat(snapshot_date)
     counters = ImportCounters()
     quarantine: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
+    normalized_slug = re.sub(r"[^a-z0-9-]+", "-", dataset_slug.casefold()).strip("-")
+    if not normalized_slug:
+        raise ValueError("dataset_slug must contain at least one alphanumeric character")
     dataset_version = (
-        f"osm-krabi-{snapshot_date}-v{IMPORTER_RULES_VERSION}-{input_sha256[:12]}"
+        f"osm-{normalized_slug}-{snapshot_date}-v{IMPORTER_RULES_VERSION}-{input_sha256[:12]}"
     )
 
     ordered_elements = sorted(
@@ -475,7 +508,7 @@ def import_elements(
             _quarantine(element, "invalid_coordinates", counters, quarantine)
             continue
         assert element.latitude is not None and element.longitude is not None
-        if not boundary.contains(element.latitude, element.longitude):
+        if boundary is not None and not boundary.contains(element.latitude, element.longitude):
             _quarantine(element, "outside_boundary", counters, quarantine)
             continue
         name, aliases = _names(element.tags)
@@ -494,18 +527,21 @@ def import_elements(
         )
 
     canonical: list[dict[str, Any]] = []
+    canonical_by_name: dict[str, list[dict[str, Any]]] = {}
     for candidate in candidates:
+        normalized_name = _normalized_name(candidate["name"])
+        same_name_records = canonical_by_name.get(normalized_name, [])
         duplicate = next(
             (
                 record
-                for record in canonical
-                if _normalized_name(record["name"]) == _normalized_name(candidate["name"])
-                and _distance_meters(record, candidate) <= DEDUPLICATION_DISTANCE_METERS
+                for record in same_name_records
+                if _distance_meters(record, candidate) <= DEDUPLICATION_DISTANCE_METERS
             ),
             None,
         )
         if duplicate is None:
             canonical.append(candidate)
+            canonical_by_name.setdefault(normalized_name, []).append(candidate)
             continue
         counters.deduplicated += 1
         merged_aliases = _unique_text(

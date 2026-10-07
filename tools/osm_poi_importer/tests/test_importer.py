@@ -6,6 +6,7 @@ from pathlib import Path
 
 from tools.osm_poi_importer.importer import (
     GeoJsonBoundary,
+    IMPORTER_RULES_VERSION,
     OsmElement,
     classify,
     deterministic_json_bytes,
@@ -142,7 +143,7 @@ class ImporterTests(unittest.TestCase):
         second_bytes = deterministic_json_bytes(second.dataset)
         self.assertEqual(first_bytes, second_bytes)
         self.assertEqual(hashlib.sha256(first_bytes).hexdigest(), hashlib.sha256(second_bytes).hexdigest())
-        self.assertIn("-v2-", first.dataset["datasetVersion"])
+        self.assertIn(f"-v{IMPORTER_RULES_VERSION}-", first.dataset["datasetVersion"])
 
     def test_overpass_node_way_and_relation_coordinates(self):
         payload = {
