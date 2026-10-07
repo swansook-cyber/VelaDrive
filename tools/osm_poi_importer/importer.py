@@ -265,6 +265,28 @@ def _load_pbf(path: Path) -> list[OsmElement]:
             ".osm.pbf input requires the optional 'osmium' Python package"
         ) from error
 
+    relation_candidates: dict[int, tuple[dict[str, str], list[tuple[str, int]]]] = {}
+    needed_node_ids: set[int] = set()
+    needed_way_ids: set[int] = set()
+
+    class RelationScanner(osmium.SimpleHandler):  # type: ignore[misc, name-defined]
+        def relation(self, relation: Any) -> None:
+            tags = _clean_tags(dict(relation.tags))
+            if not tags or classify(tags) is None:
+                return
+            members: list[tuple[str, int]] = []
+            for member in relation.members:
+                member_type = str(member.type)
+                member_id = int(member.ref)
+                members.append((member_type, member_id))
+                if member_type == "n":
+                    needed_node_ids.add(member_id)
+                elif member_type == "w":
+                    needed_way_ids.add(member_id)
+            relation_candidates[int(relation.id)] = (tags, members)
+
+    RelationScanner().apply_file(str(path), locations=False)
+
     class Handler(osmium.SimpleHandler):  # type: ignore[misc, name-defined]
         def __init__(self) -> None:
             super().__init__()
@@ -273,9 +295,11 @@ def _load_pbf(path: Path) -> list[OsmElement]:
             self.way_centers: dict[int, tuple[float, float]] = {}
 
         def node(self, node: Any) -> None:
+            point: tuple[float | None, float | None]
             if node.location.valid():
                 point = (float(node.location.lat), float(node.location.lon))
-                self.node_coordinates[int(node.id)] = point
+                if int(node.id) in needed_node_ids:
+                    self.node_coordinates[int(node.id)] = (point[0], point[1])
             else:
                 point = (None, None)
             tags = _clean_tags(dict(node.tags))
@@ -283,34 +307,39 @@ def _load_pbf(path: Path) -> list[OsmElement]:
                 self.elements.append(OsmElement("node", int(node.id), *point, tags))
 
         def way(self, way: Any) -> None:
+            tags = _clean_tags(dict(way.tags))
+            is_candidate = bool(tags and classify(tags) is not None)
+            needs_center = is_candidate or int(way.id) in needed_way_ids
+            if not needs_center:
+                return
             points = [
                 (float(node.lat), float(node.lon))
                 for node in way.nodes
                 if node.location.valid()
             ]
             center = _representative_point(points)
-            if center[0] is not None and center[1] is not None:
+            if int(way.id) in needed_way_ids and center[0] is not None and center[1] is not None:
                 self.way_centers[int(way.id)] = (center[0], center[1])
-            tags = _clean_tags(dict(way.tags))
-            if tags and classify(tags) is not None:
+            if is_candidate:
                 self.elements.append(OsmElement("way", int(way.id), *center, tags))
 
         def relation(self, relation: Any) -> None:
+            candidate = relation_candidates.get(int(relation.id))
+            if candidate is None:
+                return
+            tags, members = candidate
             points: list[tuple[float | None, float | None]] = []
-            for member in relation.members:
-                if member.type == "n":
-                    points.append(self.node_coordinates.get(int(member.ref), (None, None)))
-                elif member.type == "w":
-                    points.append(self.way_centers.get(int(member.ref), (None, None)))
+            for member_type, member_id in members:
+                if member_type == "n":
+                    points.append(self.node_coordinates.get(member_id, (None, None)))
+                elif member_type == "w":
+                    points.append(self.way_centers.get(member_id, (None, None)))
             center = _representative_point(points)
-            tags = _clean_tags(dict(relation.tags))
-            if tags and classify(tags) is not None:
-                self.elements.append(OsmElement("relation", int(relation.id), *center, tags))
+            self.elements.append(OsmElement("relation", int(relation.id), *center, tags))
 
     handler = Handler()
     handler.apply_file(str(path), locations=True, idx="flex_mem")
     return handler.elements
-
 
 def _xml_tags(element: ET.Element) -> dict[str, str]:
     return _clean_tags(
