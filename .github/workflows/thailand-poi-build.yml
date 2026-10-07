@@ -1,0 +1,116 @@
+name: Build Thailand POI Snapshot
+
+on:
+  push:
+    branches:
+      - "feat/thailand-poi-v1-20261007"
+    paths:
+      - ".github/workflows/thailand-poi-build.yml"
+      - "tools/osm_poi_importer/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build-thailand-poi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PBF parser
+        run: python -m pip install --disable-pip-version-check osmium
+
+      - name: Download Thailand OpenStreetMap extract
+        run: |
+          mkdir -p .cache/osm
+          curl -fL --retry 4 --retry-delay 5 \
+            -o .cache/osm/thailand-latest.osm.pbf \
+            https://download.geofabrik.de/asia/thailand-latest.osm.pbf
+          ls -lh .cache/osm/thailand-latest.osm.pbf
+
+      - name: Generate nationwide OSM POIs
+        run: |
+          mkdir -p build/thailand-poi
+          python -m tools.osm_poi_importer.cli \
+            --input .cache/osm/thailand-latest.osm.pbf \
+            --snapshot-date 2026-10-07 \
+            --dataset-slug thailand \
+            --source-url "https://download.geofabrik.de/asia/thailand-latest.osm.pbf" \
+            --boundary-name "Thailand Geofabrik extract" \
+            --boundary-reference "geofabrik/asia/thailand" \
+            --output build/thailand-poi/vela_pois_osm_thailand.json \
+            --report build/thailand-poi/osm_import_report.json \
+            --quarantine build/thailand-poi/osm_quarantine.json
+
+      - name: Merge OSM with Vela curated POIs
+        run: |
+          cp app/src/main/assets/vela_pois.json build/thailand-poi/vela_pois_curated_before_merge.json
+          python -m tools.osm_poi_importer.merge_production \
+            --osm build/thailand-poi/vela_pois_osm_thailand.json \
+            --curated build/thailand-poi/vela_pois_curated_before_merge.json \
+            --snapshot-date 2026-10-07 \
+            --output app/src/main/assets/vela_pois.json \
+            --report docs/THAILAND_POI_IMPORT_REPORT.json
+
+      - name: Validate production dataset
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("app/src/main/assets/vela_pois.json")
+          root = json.loads(path.read_text(encoding="utf-8"))
+          pois = root["pois"]
+          assert root["schemaVersion"] == 1
+          assert len(pois) > 10000, f"Nationwide POI count unexpectedly low: {len(pois)}"
+          ids = [p["id"] for p in pois]
+          assert len(ids) == len(set(ids)), "Duplicate POI ids"
+          curated = [p for p in pois if p["source"] == "VELA_CURATED"]
+          osm = [p for p in pois if p["source"] == "OPENSTREETMAP"]
+          assert len(curated) == 289, f"Curated POIs changed unexpectedly: {len(curated)}"
+          assert len(osm) > 9000, f"OSM POI count unexpectedly low: {len(osm)}"
+          categories = {}
+          for p in pois:
+              lat = float(p["latitude"])
+              lon = float(p["longitude"])
+              assert 5.0 <= lat <= 21.0, (p["id"], lat)
+              assert 96.0 <= lon <= 106.5, (p["id"], lon)
+              categories[p["category"]] = categories.get(p["category"], 0) + 1
+          print("total", len(pois))
+          print("curated", len(curated), "osm", len(osm))
+          print(json.dumps(categories, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Run importer tests
+        run: python -m unittest discover -s tools/osm_poi_importer/tests -v
+
+      - name: Upload nationwide POI audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VelaDrive-thailand-poi-audit
+          path: |
+            build/thailand-poi/osm_import_report.json
+            build/thailand-poi/osm_quarantine.json
+            build/thailand-poi/vela_pois_osm_thailand.json
+            docs/THAILAND_POI_IMPORT_REPORT.json
+          retention-days: 14
+
+      - name: Commit production POI dataset to branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/assets/vela_pois.json docs/THAILAND_POI_IMPORT_REPORT.json
+          if git diff --cached --quiet; then
+            echo "No POI changes to commit"
+            exit 0
+          fi
+          git commit -m "data: generate nationwide Thailand POI dataset"
+          git push
