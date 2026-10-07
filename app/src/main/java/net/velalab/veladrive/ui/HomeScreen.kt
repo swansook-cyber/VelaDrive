@@ -77,6 +77,7 @@ fun HomeScreen(
     var query by remember { mutableStateOf("") }
     var provinceMenuExpanded by remember { mutableStateOf(false) }
     val selectedProvince = provinceOptions.firstOrNull { it.code == selectedProvinceCode }
+    val provinceReady = provinceOptions.isEmpty() || selectedProvince != null
 
     MaterialTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -152,7 +153,7 @@ fun HomeScreen(
                         ) {
                             Button(
                                 onClick = { onSearchPoi(query) },
-                                enabled = query.isNotBlank() && !isSearchingPois,
+                                enabled = query.isNotBlank() && !isSearchingPois && provinceReady,
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text("ค้นหา")
@@ -177,7 +178,7 @@ fun HomeScreen(
                                         query = shortcut.query
                                         onSearchPoi(shortcut.query)
                                     },
-                                    enabled = !isSearchingPois
+                                    enabled = !isSearchingPois && provinceReady
                                 ) {
                                     Text(shortcut.label)
                                 }
