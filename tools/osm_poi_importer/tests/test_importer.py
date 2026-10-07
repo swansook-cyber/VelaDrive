@@ -144,6 +144,30 @@ class ImporterTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(first_bytes).hexdigest(), hashlib.sha256(second_bytes).hexdigest())
         self.assertIn("-v2-", first.dataset["datasetVersion"])
 
+    def test_dataset_scope_is_country_generic(self):
+        result = import_elements(
+            [element(tags={"amenity": "fuel", "name": "Thai Fuel"})],
+            boundary=BOUNDARY,
+            snapshot_date="2026-10-07",
+            input_sha256="c" * 64,
+            boundary_sha256="d" * 64,
+            source_url="https://example.test/thailand",
+            boundary_name="Thailand",
+            boundary_reference="relation/2067731",
+            input_format="pbf",
+            dataset_scope="Thailand",
+        )
+        self.assertTrue(result.dataset["datasetVersion"].startswith("osm-thailand-2026-10-07-v"))
+
+    def test_spatial_bucket_dedupe_preserves_ten_metre_rule(self):
+        result = run_import(
+            element(1, tags={"amenity": "fuel", "name": "Bucket Fuel"}, latitude=8.00000, longitude=100.00000),
+            element(2, kind="way", tags={"amenity": "fuel", "name": "bucket fuel"}, latitude=8.00005, longitude=100.00000),
+            element(3, tags={"amenity": "fuel", "name": "Bucket Fuel"}, latitude=8.00020, longitude=100.00000),
+        )
+        self.assertEqual(2, len(result.dataset["pois"]))
+        self.assertEqual(1, result.report["deduplicatedCount"])
+
     def test_overpass_node_way_and_relation_coordinates(self):
         payload = {
             "elements": [
