@@ -72,7 +72,7 @@ fun RoutePreviewMap(
                     currentLocation.speedMetersPerSecond,
                     distanceToNextManeuverMeters
                 ),
-                padding = PaddingValues(top = 230.dp, bottom = 80.dp)
+                padding = PaddingValues(top = 120.dp, bottom = 90.dp)
             )
         } else {
             routeCamera(previewCameraPositions)
@@ -111,7 +111,7 @@ fun RoutePreviewMap(
                         currentLocation.speedMetersPerSecond,
                         distanceToNextManeuverMeters
                     ),
-                    padding = PaddingValues(top = 230.dp, bottom = 80.dp)
+                    padding = PaddingValues(top = 120.dp, bottom = 90.dp)
                 ),
                 duration = 450.milliseconds
             )
