@@ -15,10 +15,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -107,30 +106,14 @@ fun HomeScreen(
                             )
                         }
                         if (provinceOptions.isNotEmpty()) {
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                OutlinedButton(
-                                    onClick = { provinceMenuExpanded = true },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(
-                                        selectedProvince?.let { "จังหวัด: ${it.nameTh} (${it.count} จุด)" }
-                                            ?: "เลือกจังหวัดก่อนค้นหา"
-                                    )
-                                }
-                                DropdownMenu(
-                                    expanded = provinceMenuExpanded,
-                                    onDismissRequest = { provinceMenuExpanded = false }
-                                ) {
-                                    provinceOptions.forEach { province ->
-                                        DropdownMenuItem(
-                                            text = { Text("${province.nameTh} (${province.count})") },
-                                            onClick = {
-                                                provinceMenuExpanded = false
-                                                onProvinceSelected(province.code)
-                                            }
-                                        )
-                                    }
-                                }
+                            OutlinedButton(
+                                onClick = { provinceMenuExpanded = true },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    selectedProvince?.let { "จังหวัด: ${it.nameTh} (${it.count} จุด)" }
+                                        ?: "เลือกจังหวัดก่อนค้นหา"
+                                )
                             }
                         }
                         OutlinedTextField(
@@ -264,6 +247,39 @@ fun HomeScreen(
                         }
                     }
                 }
+            }
+
+            if (provinceMenuExpanded && provinceOptions.isNotEmpty()) {
+                AlertDialog(
+                    onDismissRequest = { provinceMenuExpanded = false },
+                    title = { Text("เลือกจังหวัด") },
+                    text = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 420.dp)
+                                .verticalScroll(rememberScrollState()),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            provinceOptions.forEach { province ->
+                                OutlinedButton(
+                                    onClick = {
+                                        provinceMenuExpanded = false
+                                        onProvinceSelected(province.code)
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("${province.nameTh} (${province.count} จุด)")
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        OutlinedButton(onClick = { provinceMenuExpanded = false }) {
+                            Text("ปิด")
+                        }
+                    }
+                )
             }
 
             Surface(
