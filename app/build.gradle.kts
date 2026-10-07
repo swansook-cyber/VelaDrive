@@ -37,6 +37,7 @@ android {
         buildConfigField("String", "VALHALLA_BASE_URL", "\"$valhallaBaseUrl\"")
 
         val longdoMapApiKey = providers.gradleProperty("LONGDO_MAP_API_KEY")
+            .orElse(providers.environmentVariable("LONGDO_MAP_API_KEY"))
             .orElse("")
             .get()
         buildConfigField("String", "LONGDO_MAP_API_KEY", "\"$longdoMapApiKey\"")
