@@ -107,6 +107,24 @@ class ImporterTests(unittest.TestCase):
             result.report["sourceDataTimestamp"],
         )
 
+    def test_trusted_extract_can_skip_boundary_filter(self):
+        result = import_elements(
+            [element(1, tags={"amenity": "fuel", "name": "Outside but clipped upstream"}, latitude=10.0)],
+            boundary=BOUNDARY,
+            snapshot_date="2026-10-07",
+            input_sha256="e" * 64,
+            boundary_sha256="f" * 64,
+            source_url="https://example.test/thailand",
+            boundary_name="Thailand",
+            boundary_reference="relation/2067731",
+            input_format="pbf",
+            dataset_scope="thailand",
+            apply_boundary_filter=False,
+        )
+        self.assertEqual(1, len(result.dataset["pois"]))
+        self.assertFalse(result.dataset["provenance"]["boundaryFilterApplied"])
+
+
     def test_deduplication_keeps_canonical_record_and_alias(self):
         result = run_import(
             element(1, tags={"amenity": "fuel", "name": "Test Fuel", "name:en": "English Fuel"}),
