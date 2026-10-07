@@ -31,7 +31,7 @@ import kotlin.math.roundToInt
 
 private val GarminGreen = Color(0xFF3B7F0B)
 private val GarminGreenDark = Color(0xFF285A08)
-private val GarminBlack = Color(0xF0181818)
+private val GarminBottomPanel = Color(0xF7F7F7F7)
 private val GarminWhitePanel = Color(0xF7FFFFFF)
 private val GarminLanePanel = Color(0xE61B1B1B)
 private val GarminWarning = Color(0xFFF9A825)
@@ -119,39 +119,6 @@ fun DriveModeScreen(
                 }
             }
 
-            guidance.nextInstruction?.let { next ->
-                Surface(
-                    color = GarminWhitePanel,
-                    contentColor = Color.Black,
-                    shadowElevation = 4.dp,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "ถัดไป",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.width(10.dp))
-                        Text(
-                            maneuverArrow(next),
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Black
-                        )
-                        Spacer(Modifier.width(10.dp))
-                        Text(
-                            next,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                }
-            }
-
             if (guidance.isRerouting) {
                 Surface(
                     color = GarminWarning,
@@ -200,8 +167,10 @@ private fun GarminManeuverBanner(guidance: VelaGuidanceSnapshot) {
     Surface(
         color = GarminGreen,
         contentColor = Color.White,
-        shadowElevation = 10.dp,
-        modifier = Modifier.fillMaxWidth()
+        shadowElevation = 6.dp,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(104.dp)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -213,14 +182,14 @@ private fun GarminManeuverBanner(guidance: VelaGuidanceSnapshot) {
             ) {
                 Text(
                     text = distance?.let(::formatDistance) ?: "—",
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Black
                 )
             }
 
             Text(
                 text = maneuverArrow(instruction),
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.displayLarge,
                 fontWeight = FontWeight.Black,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
@@ -228,7 +197,7 @@ private fun GarminManeuverBanner(guidance: VelaGuidanceSnapshot) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = instruction,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold,
                     maxLines = 2
                 )
@@ -300,28 +269,12 @@ private fun GarminBottomBar(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        color = GarminBlack,
-        contentColor = Color.White,
-        shadowElevation = 12.dp,
+        color = GarminBottomPanel,
+        contentColor = Color.Black,
+        shadowElevation = 6.dp,
         modifier = modifier.fillMaxWidth()
     ) {
         Column {
-            preparationInstruction?.let { preparation ->
-                Surface(
-                    color = Color(0xFF262626),
-                    contentColor = Color.White,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = preparation,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
-                    )
-                }
-            }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -335,8 +288,8 @@ private fun GarminBottomBar(
                 )
 
                 Surface(
-                    color = Color(0xFF202020),
-                    contentColor = Color.White,
+                    color = Color(0xFFF2F2F2),
+                    contentColor = Color.Black,
                     modifier = Modifier.weight(1.8f)
                 ) {
                     Column(
