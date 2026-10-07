@@ -449,6 +449,7 @@ def import_elements(
     input_format: str,
     source_data_timestamp: str | None = None,
     dataset_scope: str = "krabi",
+    apply_boundary_filter: bool = True,
 ) -> ImportResult:
     date.fromisoformat(snapshot_date)
     counters = ImportCounters()
@@ -483,7 +484,7 @@ def import_elements(
             _quarantine(element, "invalid_coordinates", counters, quarantine)
             continue
         assert element.latitude is not None and element.longitude is not None
-        if not boundary.contains(element.latitude, element.longitude):
+        if apply_boundary_filter and not boundary.contains(element.latitude, element.longitude):
             _quarantine(element, "outside_boundary", counters, quarantine)
             continue
         name, aliases = _names(element.tags)
@@ -567,6 +568,7 @@ def import_elements(
         "boundarySha256": boundary_sha256,
         "generator": f"VelaDrive OSM POI Importer v{IMPORTER_RULES_VERSION}",
         "containsProprietaryDerivedData": False,
+        "boundaryFilterApplied": apply_boundary_filter,
     }
     if source_data_timestamp:
         provenance["sourceDataTimestamp"] = source_data_timestamp
