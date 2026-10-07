@@ -527,18 +527,21 @@ def import_elements(
         )
 
     canonical: list[dict[str, Any]] = []
+    canonical_by_name: dict[str, list[dict[str, Any]]] = {}
     for candidate in candidates:
+        normalized_name = _normalized_name(candidate["name"])
+        same_name_records = canonical_by_name.get(normalized_name, [])
         duplicate = next(
             (
                 record
-                for record in canonical
-                if _normalized_name(record["name"]) == _normalized_name(candidate["name"])
-                and _distance_meters(record, candidate) <= DEDUPLICATION_DISTANCE_METERS
+                for record in same_name_records
+                if _distance_meters(record, candidate) <= DEDUPLICATION_DISTANCE_METERS
             ),
             None,
         )
         if duplicate is None:
             canonical.append(candidate)
+            canonical_by_name.setdefault(normalized_name, []).append(candidate)
             continue
         counters.deduplicated += 1
         merged_aliases = _unique_text(
