@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -220,7 +221,7 @@ fun NavigationShellScreen(
                     onRouteOptionsChanged = onRouteOptionsChanged,
                     onStartNavigation = onStartNavigation,
                     onStartSimulation = onStartSimulation,
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier.align(Alignment.BottomStart)
                 )
             }
         }
@@ -251,123 +252,94 @@ private fun RoutePreviewBottomCard(
     Surface(
         color = PreviewDark,
         contentColor = Color.White,
-        shadowElevation = 12.dp,
-        modifier = modifier.fillMaxWidth()
+        shadowElevation = 10.dp,
+        shape = MaterialTheme.shapes.large,
+        modifier = modifier
+            .padding(start = 12.dp, bottom = 12.dp)
+            .widthIn(min = 220.dp, max = 360.dp)
     ) {
-        Column(modifier = Modifier.padding(14.dp)) {
+        Column(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             Text(
                 destination.label ?: "ปลายทางที่เลือก",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
             )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                PreviewStat(
-                    value = "%.1f".format(routePreview.distanceKilometers),
-                    label = "กม.",
-                    modifier = Modifier.weight(1f)
-                )
-                PreviewStat(
-                    value = minutes.toString(),
-                    label = "นาที",
-                    modifier = Modifier.weight(1f)
-                )
-                PreviewStat(
-                    value = routePreview.maneuvers.size.toString(),
-                    label = "คำสั่ง",
-                    modifier = Modifier.weight(1f)
-                )
-            }
+            Text(
+                "%.1f กม. • %d นาที • %d เส้นทาง".format(
+                    routePreview.distanceKilometers,
+                    minutes,
+                    routeAlternatives.size.coerceAtLeast(1)
+                ),
+                style = MaterialTheme.typography.bodyMedium
+            )
 
             if (routeAlternatives.size > 1) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                        .padding(bottom = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     routeAlternatives.forEachIndexed { index, option ->
                         val optionMinutes = (option.durationSeconds / 60.0).roundToInt()
-                        val label =
-                            if (index == 0) {
-                                "แนะนำ"
-                            } else {
-                                "ทางเลือก $index"
-                            }
                         if (index == selectedRouteIndex) {
                             Button(onClick = { onSelectRoute(index) }) {
-                                Text("$label • $optionMinutes นาที")
+                                Text("${index + 1} • ${optionMinutes}น.")
                             }
                         } else {
                             OutlinedButton(onClick = { onSelectRoute(index) }) {
-                                Text("$label • $optionMinutes นาที")
+                                Text("${index + 1} • ${optionMinutes}น.")
                             }
                         }
                     }
                 }
             }
 
-            Button(
-                onClick = onStartNavigation,
-                enabled = !isNavigationStarting && !isSimulationStarting,
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    if (isNavigationStarting) {
-                        "กำลังเริ่มนำทาง…"
-                    } else {
-                        "เริ่มนำทาง"
-                    }
-                )
+                Button(
+                    onClick = onStartNavigation,
+                    enabled = !isNavigationStarting && !isSimulationStarting
+                ) {
+                    Text(if (isNavigationStarting) "กำลังเริ่ม…" else "เริ่มนำทาง")
+                }
+
+                OutlinedButton(
+                    onClick = { showRouteOptions = true },
+                    enabled = !isNavigationStarting && !isSimulationStarting
+                ) {
+                    Text("ตัวเลือก")
+                }
             }
 
-            OutlinedButton(
-                onClick = onStartSimulation,
-                enabled = !isNavigationStarting && !isSimulationStarting,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    if (isSimulationStarting) {
-                        "กำลังเริ่มจำลอง…"
-                    } else {
-                        "ทดลองจำลองเส้นทาง"
-                    }
-                )
-            }
-
-            OutlinedButton(
-                onClick = { showRouteOptions = true },
-                enabled = !isNavigationStarting && !isSimulationStarting,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            ) {
-                Text("ตัวเลือกเส้นทาง • " + routeOptions.summaryLabel())
-            }
-
-            OutlinedButton(
-                onClick = onCalculateRoute,
-                enabled = !isNavigationStarting && !isSimulationStarting,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-            ) {
-                Text("คำนวณเส้นทางใหม่")
+                TextButton(
+                    onClick = onStartSimulation,
+                    enabled = !isNavigationStarting && !isSimulationStarting
+                ) {
+                    Text(if (isSimulationStarting) "กำลังจำลอง…" else "จำลอง")
+                }
+                TextButton(
+                    onClick = onCalculateRoute,
+                    enabled = !isNavigationStarting && !isSimulationStarting
+                ) {
+                    Text("คำนวณใหม่")
+                }
             }
 
             navigationError?.let {
                 Text(
                     it,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp)
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
 
@@ -375,7 +347,7 @@ private fun RoutePreviewBottomCard(
                 Text(
                     it,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp)
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
