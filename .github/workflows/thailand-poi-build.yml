@@ -37,7 +37,17 @@ jobs:
           curl -fL --retry 4 --retry-delay 5 \
             -o .cache/osm/thailand-latest.osm.pbf \
             https://download.geofabrik.de/asia/thailand-latest.osm.pbf
-          ls -lh .cache/osm/thailand-latest.osm.pbf
+          curl -fL --retry 4 --retry-delay 5 \
+            -o .cache/osm/thailand.poly \
+            https://download.geofabrik.de/asia/thailand.poly
+          ls -lh .cache/osm/thailand-latest.osm.pbf .cache/osm/thailand.poly
+
+      - name: Build Thailand boundary
+        run: |
+          mkdir -p build/thailand-poi
+          python -m tools.osm_poi_importer.poly_to_geojson \
+            --input .cache/osm/thailand.poly \
+            --output build/thailand-poi/thailand-boundary.geojson
 
       - name: Pre-filter Thailand POI objects
         run: |
@@ -52,6 +62,7 @@ jobs:
           mkdir -p build/thailand-poi
           python -m tools.osm_poi_importer.cli \
             --input .cache/osm/thailand-pois.osm.pbf \
+            --boundary build/thailand-poi/thailand-boundary.geojson \
             --snapshot-date 2026-10-07 \
             --dataset-slug thailand \
             --source-url "https://download.geofabrik.de/asia/thailand-latest.osm.pbf" \
