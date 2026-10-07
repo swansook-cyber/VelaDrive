@@ -112,30 +112,26 @@ fun NavigationShellScreen(
             Surface(
                 color = PreviewGreen,
                 contentColor = Color.White,
-                shadowElevation = 8.dp,
+                shadowElevation = 6.dp,
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
+                    .align(Alignment.TopStart)
+                    .padding(10.dp)
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    OutlinedButton(onClick = onBackToSearch) {
-                        Text("‹ กลับ")
+                    TextButton(onClick = onBackToSearch) {
+                        Text("‹ กลับ", color = Color.White)
                     }
-                    Spacer(Modifier.width(12.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            destination.label ?: "ปลายทาง",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            "Vela Drive Route Preview",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        destination.label ?: "ปลายทาง",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1
+                    )
                 }
             }
 
