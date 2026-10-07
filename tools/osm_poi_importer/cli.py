@@ -26,6 +26,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-url", required=True)
     parser.add_argument("--boundary-name", required=True)
     parser.add_argument("--boundary-reference", required=True)
+    parser.add_argument("--dataset-scope", default="krabi", help="Stable dataset scope, e.g. krabi or thailand")
+    parser.add_argument("--skip-boundary-filter", action="store_true", help="Use only for trusted pre-clipped extracts; province sharding can provide the final spatial filter")
     return parser
 
 
@@ -44,6 +46,8 @@ def main() -> int:
         boundary_reference=args.boundary_reference,
         input_format=args.input.suffix.lower().lstrip("."),
         source_data_timestamp=source_data_timestamp(args.input),
+        dataset_scope=args.dataset_scope,
+        apply_boundary_filter=not args.skip_boundary_filter,
     )
     output_sha256 = write_import_outputs(
         result,

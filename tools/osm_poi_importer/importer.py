@@ -19,6 +19,7 @@ OSM_ELEMENT_URL = "https://www.openstreetmap.org/{element_type}/{element_id}"
 SUPPORTED_SCHEMA_VERSION = 1
 IMPORTER_RULES_VERSION = 2
 DEDUPLICATION_DISTANCE_METERS = 10.0
+DEDUPLICATION_GRID_DEGREES = 0.0001
 EARTH_RADIUS_METERS = 6_371_000.0
 
 ELEMENT_TYPE_ORDER = {"node": 0, "way": 1, "relation": 2}
@@ -269,18 +270,20 @@ def _load_pbf(path: Path) -> list[OsmElement]:
         def __init__(self) -> None:
             super().__init__()
             self.elements: list[OsmElement] = []
-            self.node_coordinates: dict[int, tuple[float, float]] = {}
+            # Keep only representative points for ways. The filtered PBF can still
+            # contain a very large number of dependency nodes; retaining every node
+            # coordinate made Thailand-wide imports unnecessarily memory-heavy.
             self.way_centers: dict[int, tuple[float, float]] = {}
 
         def node(self, node: Any) -> None:
+            tags = _clean_tags(dict(node.tags))
+            if not tags:
+                return
             if node.location.valid():
                 point = (float(node.location.lat), float(node.location.lon))
-                self.node_coordinates[int(node.id)] = point
             else:
                 point = (None, None)
-            tags = _clean_tags(dict(node.tags))
-            if tags:
-                self.elements.append(OsmElement("node", int(node.id), *point, tags))
+            self.elements.append(OsmElement("node", int(node.id), *point, tags))
 
         def way(self, way: Any) -> None:
             points = [
@@ -296,11 +299,12 @@ def _load_pbf(path: Path) -> list[OsmElement]:
                 self.elements.append(OsmElement("way", int(way.id), *center, tags))
 
         def relation(self, relation: Any) -> None:
+            # pyosmium does not attach member-node coordinates directly to relation
+            # members. Use cached way representative points when available instead
+            # of retaining every dependency node in memory.
             points: list[tuple[float | None, float | None]] = []
             for member in relation.members:
-                if member.type == "n":
-                    points.append(self.node_coordinates.get(int(member.ref), (None, None)))
-                elif member.type == "w":
+                if member.type == "w":
                     points.append(self.way_centers.get(int(member.ref), (None, None)))
             center = _representative_point(points)
             tags = _clean_tags(dict(relation.tags))
@@ -444,13 +448,18 @@ def import_elements(
     boundary_reference: str,
     input_format: str,
     source_data_timestamp: str | None = None,
+    dataset_scope: str = "krabi",
+    apply_boundary_filter: bool = True,
 ) -> ImportResult:
     date.fromisoformat(snapshot_date)
     counters = ImportCounters()
     quarantine: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
+    normalized_scope = re.sub(r"[^a-z0-9]+", "-", dataset_scope.casefold()).strip("-")
+    if not normalized_scope:
+        raise ValueError("dataset_scope must contain at least one alphanumeric character")
     dataset_version = (
-        f"osm-krabi-{snapshot_date}-v{IMPORTER_RULES_VERSION}-{input_sha256[:12]}"
+        f"osm-{normalized_scope}-{snapshot_date}-v{IMPORTER_RULES_VERSION}-{input_sha256[:12]}"
     )
 
     ordered_elements = sorted(
@@ -475,7 +484,7 @@ def import_elements(
             _quarantine(element, "invalid_coordinates", counters, quarantine)
             continue
         assert element.latitude is not None and element.longitude is not None
-        if not boundary.contains(element.latitude, element.longitude):
+        if apply_boundary_filter and not boundary.contains(element.latitude, element.longitude):
             _quarantine(element, "outside_boundary", counters, quarantine)
             continue
         name, aliases = _names(element.tags)
@@ -494,18 +503,36 @@ def import_elements(
         )
 
     canonical: list[dict[str, Any]] = []
+    dedup_index: dict[tuple[str, int, int], list[dict[str, Any]]] = {}
     for candidate in candidates:
-        duplicate = next(
-            (
-                record
-                for record in canonical
-                if _normalized_name(record["name"]) == _normalized_name(candidate["name"])
-                and _distance_meters(record, candidate) <= DEDUPLICATION_DISTANCE_METERS
-            ),
-            None,
-        )
+        normalized_name = _normalized_name(candidate["name"])
+        grid_lat, grid_lon = _dedup_grid(candidate)
+        duplicate = None
+        for lat_offset in (-1, 0, 1):
+            if duplicate is not None:
+                break
+            for lon_offset in (-1, 0, 1):
+                bucket = dedup_index.get(
+                    (normalized_name, grid_lat + lat_offset, grid_lon + lon_offset),
+                    [],
+                )
+                duplicate = next(
+                    (
+                        record
+                        for record in bucket
+                        if _distance_meters(record, candidate)
+                        <= DEDUPLICATION_DISTANCE_METERS
+                    ),
+                    None,
+                )
+                if duplicate is not None:
+                    break
         if duplicate is None:
             canonical.append(candidate)
+            dedup_index.setdefault(
+                (normalized_name, grid_lat, grid_lon),
+                [],
+            ).append(candidate)
             continue
         counters.deduplicated += 1
         merged_aliases = _unique_text(
@@ -541,6 +568,7 @@ def import_elements(
         "boundarySha256": boundary_sha256,
         "generator": f"VelaDrive OSM POI Importer v{IMPORTER_RULES_VERSION}",
         "containsProprietaryDerivedData": False,
+        "boundaryFilterApplied": apply_boundary_filter,
     }
     if source_data_timestamp:
         provenance["sourceDataTimestamp"] = source_data_timestamp
@@ -689,6 +717,13 @@ def _unique_text(values: Iterable[str]) -> list[str]:
             seen.add(normalized)
             result.append(value.strip())
     return result
+
+
+def _dedup_grid(record: Mapping[str, Any]) -> tuple[int, int]:
+    return (
+        math.floor(float(record["latitude"]) / DEDUPLICATION_GRID_DEGREES),
+        math.floor(float(record["longitude"]) / DEDUPLICATION_GRID_DEGREES),
+    )
 
 
 def _distance_meters(first: Mapping[str, Any], second: Mapping[str, Any]) -> float:
