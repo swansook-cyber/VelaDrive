@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - "feat/thailand-poi-pipeline-*"
     paths:
       - ".github/workflows/thailand-poi-dataset.yml"
