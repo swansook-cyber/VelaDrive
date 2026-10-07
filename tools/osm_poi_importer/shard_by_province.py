@@ -99,11 +99,13 @@ def _tags(properties: Mapping[str, Any]) -> Mapping[str, Any]:
 
 
 def _thai_name(tags: Mapping[str, Any]) -> str:
-    return str(tags.get("name:th") or tags.get("name") or "").strip()
+    value = str(tags.get("name:th") or tags.get("name") or "").strip()
+    return value.removeprefix("จังหวัด").strip() or value
 
 
 def _english_name(tags: Mapping[str, Any]) -> str:
-    return str(tags.get("name:en") or tags.get("name") or "").strip()
+    value = str(tags.get("name:en") or tags.get("name") or "").strip()
+    return value.removesuffix(" Province").strip() or value
 
 
 def _province_code(tags: Mapping[str, Any], fallback_name: str) -> str:
@@ -186,6 +188,7 @@ def main() -> int:
     parser.add_argument("--index", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--expected-provinces", type=int, default=77)
+    parser.add_argument("--overlay-dataset", type=Path, help="Optional Vela curated POI dataset to assign into the same province shards")
     args = parser.parse_args()
 
     dataset = json.loads(args.dataset.read_text(encoding="utf-8"))
@@ -197,7 +200,15 @@ def main() -> int:
     unmatched: list[dict[str, Any]] = []
     matcher = ProvinceMatcher(provinces)
 
-    for poi in dataset.get("pois", []):
+    source_pois = list(dataset.get("pois", []))
+    overlay_count = 0
+    if args.overlay_dataset:
+        overlay = json.loads(args.overlay_dataset.read_text(encoding="utf-8"))
+        overlay_pois = list(overlay.get("pois", []))
+        overlay_count = len(overlay_pois)
+        source_pois.extend(overlay_pois)
+
+    for poi in source_pois:
         lat = float(poi["latitude"])
         lon = float(poi["longitude"])
         matches = matcher.matches(lat, lon)
@@ -274,6 +285,8 @@ def main() -> int:
     report = {
         "provinceCount": len(index_items),
         "inputPois": len(dataset.get("pois", [])),
+        "overlayPois": overlay_count,
+        "combinedInputPois": len(source_pois),
         "writtenPois": total_written,
         "unmatchedPois": len(unmatched),
         "largestProvinces": sorted(
