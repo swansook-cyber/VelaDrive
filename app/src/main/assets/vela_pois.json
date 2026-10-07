@@ -1,6 +1,1000 @@
 {
   "schemaVersion": 1,
-  "datasetVersion": "2026-10-06-empty",
-  "updatedAt": "2026-10-06",
-  "pois": []
-}
+  "datasetVersion": "2026-10-07-gpi-isuzu-v1",
+  "updatedAt": "2026-10-07",
+  "pois": [
+    {
+      "id": "gpi-isuzu-0001",
+      "name": "อีซูซุหาดใหญ่ - สาขาละงู",
+      "latitude": 6.62317,
+      "longitude": 100.06802,
+      "address": "300 ม.1 ต. กำแพง อ. ละงู สตูล 91110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-782-101",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0002",
+      "name": "อีซูซุหาดใหญ่ - สาขาสะเดา",
+      "latitude": 6.65703,
+      "longitude": 100.43122,
+      "address": "19/9 ถ.กาญจนวณิชย์ อ.สะเดา สงขลา 90120",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-460-822-3",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0003",
+      "name": "อีซูซุหาดใหญ่ - สาขานาทวี",
+      "latitude": 6.7387,
+      "longitude": 100.69995,
+      "address": "169 ม.6 ถ.เพชรเกษม ต.นาทวี อ.นาทวี สงขลา 90160",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-371-524-5",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0004",
+      "name": "อีซูซุหาดใหญ่ - สาขาจะนะ",
+      "latitude": 6.92345,
+      "longitude": 100.76278,
+      "address": "155 ม.5 ต.บ้านนา อ.จะนะ สงขลา 90130",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-431-204-6",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0005",
+      "name": "อีซูซุหาดใหญ่ - สาขาเพชรเกษม",
+      "latitude": 6.99846,
+      "longitude": 100.43971,
+      "address": "491/1-2 ถ.เพชรเกษม อ.หาดใหญ่ สงขลา 90110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-237-242",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0006",
+      "name": "อีซูซุหาดใหญ่ - สำนักงานใหญ่",
+      "latitude": 7.01765,
+      "longitude": 100.47813,
+      "address": "1483 ถ.เพชรเกษม ต.หาดใหญ่ อ.หาดใหญ่ สงขลา  90110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-422-200-16",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0007",
+      "name": "หาดใหญ่สหมอเตอร์ - สาขานครหาดใหญ่",
+      "latitude": 7.0188833,
+      "longitude": 100.4331834,
+      "address": "456/3 ถ.เพชรเกษม ต.หาดใหญ่ อ.หาดใหญ่ สงขลา 90110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-346420-4",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0008",
+      "name": "หาดใหญ่สหมอเตอร์ - สำนักงานใหญ่",
+      "latitude": 7.0188833,
+      "longitude": 100.4332,
+      "address": "289 ม.7 ถ.ลพบุรีราเมศวร์ ต.ท่าช้าง อ.บางกล่ำ สงขลา 90110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-457-710-4",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0009",
+      "name": "อีซูซุหาดใหญ่ - สาขาสงขลา",
+      "latitude": 7.15947,
+      "longitude": 100.60464,
+      "address": "91/89 ม.2 ถ.กาญจนวานิช ต.เขารูปช้าง อ.เมือง สงขลา  90000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-323-900-3",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0010",
+      "name": "หาดใหญ่สหมอเตอร์ - สาขาสิงหนคร",
+      "latitude": 7.2562,
+      "longitude": 100.5292,
+      "address": "33/8 ม.2 ต.ชิงโค อ.สิงหนคร จ.สงขลา 90280",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-483700-3",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0011",
+      "name": "อีซูซุหาดใหญ่ - สาขาแม่ขรี",
+      "latitude": 7.36908,
+      "longitude": 100.10002,
+      "address": "69 ม.8ถ.เพชรเกษม ต.โคกสัก อ.บางแก้ว พัทลุง 93160",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-695-768-71",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0012",
+      "name": "อีซูซุหาดใหญ่ - สาขาสตูล",
+      "latitude": 6.91293,
+      "longitude": 99.78925,
+      "address": "37-37/1 ถ.สตูลธานี ต.พิมาน อ.เมือง สตูล  91000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-711-246",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0013",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาย่านตาขาว",
+      "latitude": 7.38917,
+      "longitude": 99.66668,
+      "address": "15/9-10  ม.1 ถ.ปะเหลียน-ตรัง ต.ย่านตาขาว อ.ย่านตาขาว ตรัง 92140",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-281-378",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0014",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาตรัง",
+      "latitude": 7.5714667,
+      "longitude": 99.6044,
+      "address": "297/1-5 ถ.ห้วยยอด ต. ทับเที่ยง อ.เมือง ตรัง 92000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-218-873-4",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0015",
+      "name": "อีซูซุหาดใหญ่ - สาขาพัทลุง",
+      "latitude": 7.61284,
+      "longitude": 100.06442,
+      "address": "356/17-21 ถ.ราเมศว์ ต.คูหาสวรรค์ อ.เมือง พัทลุง 93000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-620-827-30",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0016",
+      "name": "อีซูซุหาดใหญ่ - สาขาระโนด",
+      "latitude": 7.77128,
+      "longitude": 100.35633,
+      "address": "94/3 ม.1 ถ.เขาแดง-ระโนด ต.ปากแตระ อ.ระโนด สงขลา 90140",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "074-454-640-1",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0017",
+      "name": "บวรมอเตอร์ - สำนักงานใหญ่",
+      "latitude": 8.4663166,
+      "longitude": 99.9648833,
+      "address": "376/4 ม.5 ถ.อ้อมค่าย ต.ปากพูน อ.เมือง นครศรีธรรมราช 80000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-311-054",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0018",
+      "name": "อีซูซุนครมอเตอร์เซลส์ (1991) - สาขาอ้อมค่าย",
+      "latitude": 8.45269,
+      "longitude": 99.96761,
+      "address": "69 ถ.อ้อมค่าย-วชิราวุธ ต.ท่าวัง อ.เมือง นครศรีธรรมราช 80000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-313-002-5",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0019",
+      "name": "อีซูซุนครมอเตอร์เซลส์ (1991) - สาขาหัวอิฐ",
+      "latitude": 8.43325,
+      "longitude": 99.95203,
+      "address": "60/4 ม.1 ถ.กะโรม ต.โพธิ์เสด็จ อ.เมือง นครศรีธรรมราช 80000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-344-200",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0020",
+      "name": "อีซูซุนครมอเตอร์เซลส์ (1991) - สาขาจันดี",
+      "latitude": 8.37902,
+      "longitude": 99.55153,
+      "address": "298 ม.3 ต.จันดี อ.ฉวาง จ.นครศรีธรรมราช 80250",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-486-280",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0021",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาทุ่งสง",
+      "latitude": 8.156667,
+      "longitude": 99.67282,
+      "address": "169 ม.2 ถ.เอเชียทุ่งสง-เวียงสระ ต.ชะมาย อ.ทุ่งสง นครศรีธรรมราช 80110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-412-123",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0022",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาทุ่งใหญ่ (Mini)",
+      "latitude": 8.30215,
+      "longitude": 99.38418,
+      "address": "115/1 ม.4 ต.ปริก อ.ทุ่งใหญ่ จ.นครศรีธรรมราช 80240",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-368-883-5",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0023",
+      "name": "ประจักษ์อุตสาหกรรม (1982) - สาขาเวียงสระ",
+      "latitude": 8.6380667,
+      "longitude": 99.3508834,
+      "address": "65/4 หมู่ 9 ต.บ้านส้อง อ.เวียงสระ จ. สุราษฎร์ 84190",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-257-111",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0024",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาอ่าวลึก",
+      "latitude": 8.38995,
+      "longitude": 98.74212,
+      "address": "29/5 ม.2 ถ.เพชรเกษม ต.อ่าวลึก อ.อ่าวลึก กระบี่ 81110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-634-460-4",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0025",
+      "name": "อีซูซุอันดามันเซลส์ - สาขากระบี่",
+      "latitude": 8.10757,
+      "longitude": 98.94237,
+      "address": "199 ม.12 ต.กระบี่น้อย อ.เมือง กระบี่ 81000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-650-333",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0026",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาคลองท่อม (Mini)",
+      "latitude": 7.90602,
+      "longitude": 99.14978,
+      "address": "111/10 ม.1  ถ.เพชรเกษม ต.คลองท่อมใต้ อ.คลองท่อม กระบี่  81120",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "075-640-574-6",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0027",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาภูเก็ต",
+      "latitude": 7.9668167,
+      "longitude": 98.3729833,
+      "address": "73 ถ.เทพกระษัตรี ต.ตลาดใหญ่ อ.เมือง ภูเก็ต 83000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "076-210-754-5",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0028",
+      "name": "อีซูซุอันดามันเซลส์ - สำนักงานใหญ่",
+      "latitude": 7.8917834,
+      "longitude": 98.38955,
+      "address": "99-99/1 ม.4 ถ.เทพกระษัตรี ต.เกาะแก้ว อ.เมือง ภูเก็ต 83200",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "076-355-112-20",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0029",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาโคกกลอย",
+      "latitude": 8.25807,
+      "longitude": 98.30077,
+      "address": "89 ม.3, ต.โคกกลอย อ.ตะกั่วทุ่ง พังงา 82130",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "076-581-500",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0030",
+      "name": "อีซูซุอันดามันเซลส์ - สาขาตะกั่วป่า",
+      "latitude": 8.8642833,
+      "longitude": 98.3372667,
+      "address": "36/23 ม.1 ถ.เพชรเกษม ต.บางนายสี อ.ตะกั่วป่า พังงา 82110",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "076-421-600",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0031",
+      "name": "ประจักษ์อุตสาหกรรม (1982) - สำนักงานใหญ่",
+      "latitude": 9.1106833,
+      "longitude": 99.2859,
+      "address": "28/3 ม.3 ถ.สุราษฏร์-พุนพิน ต.วัดประดู่ อ.เมือง สุราษฏร์ฯ 84000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-200-121-5",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0032",
+      "name": "ประจักษ์อุตสาหกรรม (1982) - สาขาตลาดใหม่",
+      "latitude": 9.1463166,
+      "longitude": 99.33095,
+      "address": "297/4 ถ.ตลาดใหม่ อ.เมือง สุราษฏร์ฯ 84000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-286-890-3",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0033",
+      "name": "อีซูซุสุพรภัณฑ์ชุมพร - สาขาหลังสวน",
+      "latitude": 9.99215,
+      "longitude": 99.06705,
+      "address": "153 ม.1 ต.วังตะกอ อ.หลังสวน ชุมพร",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-582-589-90",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0034",
+      "name": "อีซูซุระนอง - สำนักงานใหญ่",
+      "latitude": 9.9498333,
+      "longitude": 98.6348,
+      "address": "6/49 ม.1 ต.บางริ้น อ.เมือง ระนอง  85000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-821-648-9",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0035",
+      "name": "อีซูซุสุพรภัณฑ์ชุมพร - สาขาท่าแซะ",
+      "latitude": 10.6766,
+      "longitude": 99.2023667,
+      "address": "178/2 ม.16 ถ.เพชรเกษม ต.ท่าแซะ อ.ท่าแซะ จ.ชุมพร 86140",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-584-099",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0036",
+      "name": "อีซูซุสุพรภัณฑ์ชุมพร - สาขาสวี",
+      "latitude": 10.21998,
+      "longitude": 99.10085,
+      "address": "5/10 ม.4 ต.นาโพธิ์ อ.สวี จ.ชุมพร 86130",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-512-444",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0037",
+      "name": "อีซูซุสุพรภัณฑ์ชุมพร - สำนักงานใหญ่",
+      "latitude": 10.50233,
+      "longitude": 99.11922,
+      "address": "42/1 ม.1 ถ.เพชรเกษม ต.บ้านนา อ.เมือง ชุมพร 86190",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-576-057-8",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0038",
+      "name": "อีซูซุสุพรภัณฑ์ชุมพร - สาขาในเมือง",
+      "latitude": 10.4901,
+      "longitude": 99.1829,
+      "address": "22/1 ม.11  ต.บางหมาก อ.เมือง จ.ชุมพร 86000",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-574-999",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0039",
+      "name": "อึ้งง่วนไต๋อีซูซุเซลส์ - สาขาบางสะพาน",
+      "latitude": 11.27793,
+      "longitude": 99.43995,
+      "address": "255 หมู่4 ถ.เพชรเกษม ต.ร่อนทอง อ.บางสะพาน จ.ประจวบฯ 77230",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "032-557-352-8",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
+        "import": "garmin_gpi"
+      },
+      "verified": false,
+      "updatedAt": "2026-10-07"
+    },
+    {
+      "id": "gpi-isuzu-0040",
+      "name": "ประจักษ์อุตสาหกรรม (1982) - สาขาสมุย",
+      "latitude": 9.5099834,
+      "longitude": 99.9455,
+      "address": "57/12 ม.4 ต.ลิปะน้อย อ.เกาะสมุย สุราษฏร์ฯ 84140",
+      "alternateNames": [
+        "Isuzu",
+        "อีซูซุ"
+      ],
+      "category": "AUTO_SERVICE",
+      "phone": "077-234-334-5",
+      "province": null,
+      "district": null,
+      "source": "VELA_CURATED",
+      "sourceReference": "Isuzu.gpi",
+      "sourceUrl": null,
+      "sourceTags": {
+        "brand": "Isuzu",
+        "poi_type": "dealer",
