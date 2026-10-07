@@ -104,6 +104,7 @@ jobs:
             --output-dir build/thailand-poi/poi_provinces \
             --index build/thailand-poi/provinces.json \
             --report build/thailand-poi/province_shard_report.json \
+            --overlay-dataset app/src/main/assets/vela_pois.json \
             --expected-provinces 77
 
       - name: Summarize dataset
@@ -121,6 +122,7 @@ jobs:
           shard_report = json.loads((root / "province_shard_report.json").read_text(encoding="utf-8"))
           print("Province shards:", shard_report["provinceCount"])
           print("Province written POIs:", shard_report["writtenPois"])
+          print("Curated overlay POIs:", shard_report.get("overlayPois", 0))
           print("Province unmatched POIs:", shard_report["unmatchedPois"])
           print("Largest provinces:", json.dumps(shard_report["largestProvinces"], ensure_ascii=False))
           PY
