@@ -17,6 +17,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -40,6 +42,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.launch
 import net.velalab.veladrive.core.location.LocationSnapshot
 import net.velalab.veladrive.core.poi.PoiSearchResult
+import net.velalab.veladrive.core.poi.ProvincePoiOption
 import org.maplibre.compose.camera.CameraPosition
 import org.maplibre.compose.camera.rememberCameraState
 import org.maplibre.compose.expressions.dsl.const
@@ -62,6 +65,9 @@ fun HomeScreen(
     savedPlaces: List<PoiSearchResult>,
     poiError: String?,
     poiDatasetLabel: String?,
+    provinceOptions: List<ProvincePoiOption>,
+    selectedProvinceCode: String?,
+    onProvinceSelected: (String) -> Unit,
     onSearchPoi: (String) -> Unit,
     onSelectPoi: (PoiSearchResult) -> Unit,
     onSavePoi: (PoiSearchResult) -> Unit,
@@ -69,6 +75,8 @@ fun HomeScreen(
     onGoogleSearch: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
+    var provinceMenuExpanded by remember { mutableStateOf(false) }
+    val selectedProvince = provinceOptions.firstOrNull { it.code == selectedProvinceCode }
 
     MaterialTheme {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -96,6 +104,33 @@ fun HomeScreen(
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
+                        }
+                        if (provinceOptions.isNotEmpty()) {
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                OutlinedButton(
+                                    onClick = { provinceMenuExpanded = true },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        selectedProvince?.let { "จังหวัด: ${it.nameTh} (${it.count} จุด)" }
+                                            ?: "เลือกจังหวัดก่อนค้นหา"
+                                    )
+                                }
+                                DropdownMenu(
+                                    expanded = provinceMenuExpanded,
+                                    onDismissRequest = { provinceMenuExpanded = false }
+                                ) {
+                                    provinceOptions.forEach { province ->
+                                        DropdownMenuItem(
+                                            text = { Text("${province.nameTh} (${province.count})") },
+                                            onClick = {
+                                                provinceMenuExpanded = false
+                                                onProvinceSelected(province.code)
+                                            }
+                                        )
+                                    }
+                                }
+                            }
                         }
                         OutlinedTextField(
                             value = query,
