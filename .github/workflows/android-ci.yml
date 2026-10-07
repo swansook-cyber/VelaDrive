@@ -49,8 +49,8 @@ jobs:
           rm -rf build/thailand-poi-review app/src/main/assets/poi_provinces
           mkdir -p build/thailand-poi-review app/src/main/assets/poi_provinces
           gh run download "$RUN_ID"             --repo "$GITHUB_REPOSITORY"             --name "VelaDrive-thailand-poi-review"             --dir build/thailand-poi-review
-          cp build/thailand-poi-review/build/thailand-poi/provinces.json             app/src/main/assets/poi_provinces/provinces.json
-          cp build/thailand-poi-review/build/thailand-poi/poi_provinces/*.json             app/src/main/assets/poi_provinces/
+          cp build/thailand-poi-review/provinces.json             app/src/main/assets/poi_provinces/provinces.json
+          cp build/thailand-poi-review/poi_provinces/*.json             app/src/main/assets/poi_provinces/
           test "$(find app/src/main/assets/poi_provinces -maxdepth 1 -name '*.json' | wc -l)" -eq 78
 
       - name: Build debug APK
