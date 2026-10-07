@@ -39,12 +39,14 @@ class GpiProductionAssetsTest {
     fun productionIsuzuAsset_hasExpectedCountAndSearchesInThaiAndEnglish() {
         val dataset = VelaPoiDatasetParser.parse(readProductionAsset("vela_pois.json"))
 
-        assertEquals(289, dataset.pois.size)
+        assertTrue(dataset.pois.size > 80_000)
         assertEquals(dataset.pois.size, dataset.pois.mapNotNull { it.id }.toSet().size)
 
-        dataset.pois.forEach { poi ->
+        val curatedIsuzu = dataset.pois.filter { it.source == PoiSource.VELA_CURATED }
+        assertEquals(289, curatedIsuzu.size)
+
+        curatedIsuzu.forEach { poi ->
             assertEquals(PoiCategory.AUTO_SERVICE, poi.category)
-            assertEquals(PoiSource.VELA_CURATED, poi.source)
             assertTrue(poi.alternateNames.any { it.equals("Isuzu", ignoreCase = true) })
             assertTrue(poi.alternateNames.contains("อีซูซุ"))
         }
