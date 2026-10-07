@@ -1,0 +1,107 @@
+name: Thailand POI Dataset
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "feat/thailand-poi-pipeline-*"
+    paths:
+      - ".github/workflows/thailand-poi-dataset.yml"
+      - "tools/osm_poi_importer/**"
+
+jobs:
+  build-thailand-pois:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install OSM tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y osmium-tool
+          python -m pip install --upgrade pip
+          python -m pip install osmium
+
+      - name: Download Thailand OpenStreetMap extract
+        run: |
+          mkdir -p build/thailand-poi
+          curl --fail --location --retry 3 \
+            https://download.geofabrik.de/asia/thailand-latest.osm.pbf \
+            --output build/thailand-poi/thailand-latest.osm.pbf
+
+      - name: Fetch Thailand administrative boundary
+        run: |
+          python -m tools.osm_poi_importer.fetch_boundary \
+            --query "Thailand" \
+            --osm-relation-id 2067731 \
+            --output build/thailand-poi/thailand-boundary.geojson
+
+      - name: Filter mapped POI tags
+        run: |
+          osmium tags-filter \
+            build/thailand-poi/thailand-latest.osm.pbf \
+            nwr/amenity=fuel nwr/amenity=hospital \
+            nwr/amenity=restaurant nwr/amenity=fast_food nwr/amenity=food_court nwr/amenity=cafe \
+            nwr/amenity=marketplace nwr/amenity=police nwr/amenity=bus_station \
+            nwr/amenity=bank nwr/amenity=atm nwr/amenity=charging_station \
+            nwr/amenity=ferry_terminal nwr/amenity=place_of_worship \
+            nwr/amenity=townhall nwr/amenity=courthouse \
+            nwr/healthcare=hospital \
+            nwr/tourism=hotel nwr/tourism=hostel nwr/tourism=guest_house nwr/tourism=motel \
+            nwr/tourism=resort nwr/tourism=chalet nwr/tourism=attraction \
+            nwr/tourism=aquarium nwr/tourism=artwork nwr/tourism=gallery \
+            nwr/tourism=museum nwr/tourism=theme_park nwr/tourism=viewpoint nwr/tourism=zoo \
+            nwr/shop=mall nwr/shop=department_store nwr/shop=convenience \
+            nwr/shop=car_repair nwr/shop=tyres nwr/craft=car_repair \
+            nwr/aeroway=aerodrome nwr/aeroway=terminal nwr/man_made=pier \
+            nwr/office=government \
+            --overwrite \
+            -o build/thailand-poi/thailand-pois-filtered.osm.pbf
+
+      - name: Generate Vela Thailand POI dataset
+        run: |
+          SNAPSHOT_DATE="$(date -u +%F)"
+          python -m tools.osm_poi_importer.cli \
+            --input build/thailand-poi/thailand-pois-filtered.osm.pbf \
+            --boundary build/thailand-poi/thailand-boundary.geojson \
+            --snapshot-date "$SNAPSHOT_DATE" \
+            --source-url "https://download.geofabrik.de/asia/thailand.html" \
+            --boundary-name "Thailand" \
+            --boundary-reference "relation/2067731" \
+            --dataset-scope "thailand" \
+            --output build/thailand-poi/vela_pois_thailand.json \
+            --report build/thailand-poi/import_report.json \
+            --quarantine build/thailand-poi/quarantine.json
+
+      - name: Summarize dataset
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("build/thailand-poi")
+          data = json.loads((root / "vela_pois_thailand.json").read_text(encoding="utf-8"))
+          report = json.loads((root / "import_report.json").read_text(encoding="utf-8"))
+          size = (root / "vela_pois_thailand.json").stat().st_size
+          print("POIs:", len(data["pois"]))
+          print("JSON bytes:", size)
+          print("Categories:", json.dumps(report["categoryCounts"], ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Upload Thailand POI review artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VelaDrive-thailand-poi-review
+          path: |
+            build/thailand-poi/vela_pois_thailand.json
+            build/thailand-poi/import_report.json
+            build/thailand-poi/quarantine.json
+          retention-days: 14
+          if-no-files-found: error
