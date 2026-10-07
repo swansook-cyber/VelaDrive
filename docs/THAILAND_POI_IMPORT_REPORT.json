@@ -2,7 +2,7 @@
   "categoryCounts": {
     "AIRPORT": 135,
     "ATM": 993,
-    "AUTO_SERVICE": 879,
+    "AUTO_SERVICE": 877,
     "BANK": 2400,
     "BUS_TERMINAL": 490,
     "CONVENIENCE_STORE": 9190,
@@ -24,8 +24,23 @@
   },
   "curatedInputPois": 289,
   "datasetVersion": "thailand-2026-10-07-osm+curated-v1",
-  "dedupedAgainstCurated": 0,
-  "dedupedExamples": [],
+  "dedupedAgainstCurated": 2,
+  "dedupedExamples": [
+    {
+      "curatedId": "gpi-isuzu-0078",
+      "distanceMeters": 67.0,
+      "name": "Isuzu Phetchabun",
+      "osmId": "osm:node:5492536547",
+      "reason": "isuzu_name_100m"
+    },
+    {
+      "curatedId": "gpi-isuzu-0027",
+      "distanceMeters": 19.0,
+      "name": "Isuzu service center",
+      "osmId": "osm:node:3921131089",
+      "reason": "isuzu_name_100m"
+    }
+  ],
   "nearCuratedReview": [
     {
       "category": "AUTO_SERVICE",
@@ -42,22 +57,6 @@
       "distanceMeters": 56.0,
       "osmId": "osm:way:1020780377",
       "osmName": "Bridgestone"
-    },
-    {
-      "category": "AUTO_SERVICE",
-      "curatedId": "gpi-isuzu-0078",
-      "curatedName": "สันติอีซูซุเพชรบูรณ์ - สำนักงานใหญ่",
-      "distanceMeters": 67.0,
-      "osmId": "osm:node:5492536547",
-      "osmName": "Isuzu Phetchabun"
-    },
-    {
-      "category": "AUTO_SERVICE",
-      "curatedId": "gpi-isuzu-0027",
-      "curatedName": "อีซูซุอันดามันเซลส์ - สาขาภูเก็ต",
-      "distanceMeters": 19.0,
-      "osmId": "osm:node:3921131089",
-      "osmName": "Isuzu service center"
     },
     {
       "category": "AUTO_SERVICE",
@@ -84,11 +83,11 @@
       "osmName": "เชลล์ เฮลิกส์ พลัส"
     }
   ],
-  "nearCuratedReviewCount": 7,
+  "nearCuratedReviewCount": 5,
   "osmInputPois": 83587,
   "sourceCounts": {
-    "OPENSTREETMAP": 83587,
+    "OPENSTREETMAP": 83585,
     "VELA_CURATED": 289
   },
-  "totalPois": 83876
+  "totalPois": 83874
 }
