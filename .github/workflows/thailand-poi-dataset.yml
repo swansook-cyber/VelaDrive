@@ -81,6 +81,30 @@ jobs:
             --report build/thailand-poi/import_report.json \
             --quarantine build/thailand-poi/quarantine.json
 
+      - name: Extract province boundaries
+        run: |
+          osmium tags-filter \
+            build/thailand-poi/thailand-latest.osm.pbf \
+            r/admin_level=4 \
+            --overwrite \
+            -o build/thailand-poi/thailand-provinces.osm.pbf
+          osmium export \
+            build/thailand-poi/thailand-provinces.osm.pbf \
+            --overwrite \
+            -f geojson \
+            -o build/thailand-poi/thailand-provinces.geojson
+
+      - name: Split POIs into 77 province shards
+        run: |
+          mkdir -p build/thailand-poi/poi_provinces
+          python -m tools.osm_poi_importer.shard_by_province \
+            --dataset build/thailand-poi/vela_pois_thailand.json \
+            --provinces build/thailand-poi/thailand-provinces.geojson \
+            --output-dir build/thailand-poi/poi_provinces \
+            --index build/thailand-poi/provinces.json \
+            --report build/thailand-poi/province_shard_report.json \
+            --expected-provinces 77
+
       - name: Summarize dataset
         run: |
           python - <<'PY'
@@ -93,6 +117,11 @@ jobs:
           print("POIs:", len(data["pois"]))
           print("JSON bytes:", size)
           print("Categories:", json.dumps(report["categoryCounts"], ensure_ascii=False, sort_keys=True))
+          shard_report = json.loads((root / "province_shard_report.json").read_text(encoding="utf-8"))
+          print("Province shards:", shard_report["provinceCount"])
+          print("Province written POIs:", shard_report["writtenPois"])
+          print("Province unmatched POIs:", shard_report["unmatchedPois"])
+          print("Largest provinces:", json.dumps(shard_report["largestProvinces"], ensure_ascii=False))
           PY
 
       - name: Upload Thailand POI review artifact
@@ -103,5 +132,8 @@ jobs:
             build/thailand-poi/vela_pois_thailand.json
             build/thailand-poi/import_report.json
             build/thailand-poi/quarantine.json
+            build/thailand-poi/provinces.json
+            build/thailand-poi/province_shard_report.json
+            build/thailand-poi/poi_provinces/*.json
           retention-days: 14
           if-no-files-found: error
