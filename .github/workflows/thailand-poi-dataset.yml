@@ -77,6 +77,7 @@ jobs:
             --boundary-name "Thailand" \
             --boundary-reference "relation/2067731" \
             --dataset-scope "thailand" \
+            --skip-boundary-filter \
             --output build/thailand-poi/vela_pois_thailand.json \
             --report build/thailand-poi/import_report.json \
             --quarantine build/thailand-poi/quarantine.json
