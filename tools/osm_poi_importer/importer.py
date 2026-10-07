@@ -17,7 +17,7 @@ OSM_LICENSE = "Open Data Commons Open Database License (ODbL) 1.0"
 OSM_LICENSE_URL = "https://www.openstreetmap.org/copyright"
 OSM_ELEMENT_URL = "https://www.openstreetmap.org/{element_type}/{element_id}"
 SUPPORTED_SCHEMA_VERSION = 1
-IMPORTER_RULES_VERSION = 2
+IMPORTER_RULES_VERSION = 3
 DEDUPLICATION_DISTANCE_METERS = 10.0
 EARTH_RADIUS_METERS = 6_371_000.0
 
@@ -279,7 +279,7 @@ def _load_pbf(path: Path) -> list[OsmElement]:
             else:
                 point = (None, None)
             tags = _clean_tags(dict(node.tags))
-            if tags:
+            if tags and classify(tags) is not None:
                 self.elements.append(OsmElement("node", int(node.id), *point, tags))
 
         def way(self, way: Any) -> None:
@@ -292,7 +292,7 @@ def _load_pbf(path: Path) -> list[OsmElement]:
             if center[0] is not None and center[1] is not None:
                 self.way_centers[int(way.id)] = (center[0], center[1])
             tags = _clean_tags(dict(way.tags))
-            if tags:
+            if tags and classify(tags) is not None:
                 self.elements.append(OsmElement("way", int(way.id), *center, tags))
 
         def relation(self, relation: Any) -> None:
@@ -304,7 +304,7 @@ def _load_pbf(path: Path) -> list[OsmElement]:
                     points.append(self.way_centers.get(int(member.ref), (None, None)))
             center = _representative_point(points)
             tags = _clean_tags(dict(relation.tags))
-            if tags:
+            if tags and classify(tags) is not None:
                 self.elements.append(OsmElement("relation", int(relation.id), *center, tags))
 
     handler = Handler()
@@ -435,7 +435,7 @@ def _is_explicitly_halal(tags: Mapping[str, str]) -> bool:
 def import_elements(
     elements: Iterable[OsmElement],
     *,
-    boundary: GeoJsonBoundary,
+    boundary: GeoJsonBoundary | None,
     snapshot_date: str,
     input_sha256: str,
     boundary_sha256: str,
@@ -444,13 +444,17 @@ def import_elements(
     boundary_reference: str,
     input_format: str,
     source_data_timestamp: str | None = None,
+    dataset_slug: str = "krabi",
 ) -> ImportResult:
     date.fromisoformat(snapshot_date)
     counters = ImportCounters()
     quarantine: list[dict[str, Any]] = []
     candidates: list[dict[str, Any]] = []
+    normalized_slug = re.sub(r"[^a-z0-9-]+", "-", dataset_slug.casefold()).strip("-")
+    if not normalized_slug:
+        raise ValueError("dataset_slug must contain at least one alphanumeric character")
     dataset_version = (
-        f"osm-krabi-{snapshot_date}-v{IMPORTER_RULES_VERSION}-{input_sha256[:12]}"
+        f"osm-{normalized_slug}-{snapshot_date}-v{IMPORTER_RULES_VERSION}-{input_sha256[:12]}"
     )
 
     ordered_elements = sorted(
@@ -475,7 +479,7 @@ def import_elements(
             _quarantine(element, "invalid_coordinates", counters, quarantine)
             continue
         assert element.latitude is not None and element.longitude is not None
-        if not boundary.contains(element.latitude, element.longitude):
+        if boundary is not None and not boundary.contains(element.latitude, element.longitude):
             _quarantine(element, "outside_boundary", counters, quarantine)
             continue
         name, aliases = _names(element.tags)
