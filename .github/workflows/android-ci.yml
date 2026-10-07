@@ -39,6 +39,20 @@ jobs:
       - name: Validate route smoke tool
         run: python3 tools/route_smoke_test.py --self-test
 
+      - name: Install latest Thailand province POI assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          RUN_ID="$(gh run list             --repo "$GITHUB_REPOSITORY"             --workflow "Thailand POI Dataset"             --status success             --limit 1             --json databaseId             --jq '.[0].databaseId')"
+          test -n "$RUN_ID"
+          rm -rf build/thailand-poi-review app/src/main/assets/poi_provinces
+          mkdir -p build/thailand-poi-review app/src/main/assets/poi_provinces
+          gh run download "$RUN_ID"             --repo "$GITHUB_REPOSITORY"             --name "VelaDrive-thailand-poi-review"             --dir build/thailand-poi-review
+          cp build/thailand-poi-review/build/thailand-poi/provinces.json             app/src/main/assets/poi_provinces/provinces.json
+          cp build/thailand-poi-review/build/thailand-poi/poi_provinces/*.json             app/src/main/assets/poi_provinces/
+          test "$(find app/src/main/assets/poi_provinces -maxdepth 1 -name '*.json' | wc -l)" -eq 78
+
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
 
