@@ -1,1 +1,1000 @@
-[]
+[
+  {
+    "id": "gpi-speed-0001",
+    "type": "SPEED_CAMERA",
+    "lat": 13.3993889,
+    "lon": 100.0071583,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0002",
+    "type": "SPEED_CAMERA",
+    "lat": 15.7459474,
+    "lon": 100.0084743,
+    "direction": 180.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 1 - 11",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(SB) Nakhon Sawan",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0003",
+    "type": "SPEED_CAMERA",
+    "lat": 15.3778126,
+    "lon": 100.1527305,
+    "direction": 0.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 32 - 03",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(NB) Tha Chanuan",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0004",
+    "type": "SPEED_CAMERA",
+    "lat": 15.31261,
+    "lon": 100.18383,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0005",
+    "type": "SPEED_CAMERA",
+    "lat": 7.1847812,
+    "lon": 100.2354168,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0006",
+    "type": "SPEED_CAMERA",
+    "lat": 15.1021334,
+    "lon": 100.2933834,
+    "direction": 180.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 32 - 02",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(SB) Chai Nat",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0007",
+    "type": "SPEED_CAMERA",
+    "lat": 15.047067,
+    "lon": 100.330983,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 32 - 01",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(NB & SB) Sing Buri",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0008",
+    "type": "SPEED_CAMERA",
+    "lat": 13.9595,
+    "lon": 100.428067,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0009",
+    "type": "SPEED_CAMERA",
+    "lat": 14.0178836,
+    "lon": 100.4522235,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0010",
+    "type": "SPEED_CAMERA",
+    "lat": 14.049522,
+    "lon": 100.459976,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0011",
+    "type": "SPEED_CAMERA",
+    "lat": 14.0615,
+    "lon": 100.4692833,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0012",
+    "type": "SPEED_CAMERA",
+    "lat": 13.849307,
+    "lon": 100.533366,
+    "direction": 180.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "2nd Stage Expwy 02",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(SB) Ngam Wong Wan - Pracha Chuen",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 1100
+  },
+  {
+    "id": "gpi-speed-0013",
+    "type": "SPEED_CAMERA",
+    "lat": 14.0234874,
+    "lon": 100.5542268,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0014",
+    "type": "SPEED_CAMERA",
+    "lat": 14.1282722,
+    "lon": 100.5697225,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0015",
+    "type": "SPEED_CAMERA",
+    "lat": 13.63042,
+    "lon": 100.58799,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0016",
+    "type": "SPEED_CAMERA",
+    "lat": 13.75115,
+    "lon": 100.59376,
+    "direction": 270.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "2nd Stage Expwy 01",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(WB) Rama 9",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 1400
+  },
+  {
+    "id": "gpi-speed-0017",
+    "type": "SPEED_CAMERA",
+    "lat": 13.7613343,
+    "lon": 100.5976136,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0018",
+    "type": "SPEED_CAMERA",
+    "lat": 14.1695333,
+    "lon": 100.60205,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0019",
+    "type": "SPEED_CAMERA",
+    "lat": 13.92331,
+    "lon": 100.60325,
+    "direction": 0.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Don Mueang Tollway 01",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(NB) Don Mueang",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 1100
+  },
+  {
+    "id": "gpi-speed-0020",
+    "type": "SPEED_CAMERA",
+    "lat": 13.796511,
+    "lon": 100.613179,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0021",
+    "type": "SPEED_CAMERA",
+    "lat": 14.17195,
+    "lon": 100.617,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0022",
+    "type": "SPEED_CAMERA",
+    "lat": 14.1803167,
+    "lon": 100.6200333,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0023",
+    "type": "SPEED_CAMERA",
+    "lat": 13.667707,
+    "lon": 100.635299,
+    "direction": 90.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Burapha Vithi - 01",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(EB) Bangna",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0024",
+    "type": "SPEED_CAMERA",
+    "lat": 13.6650367,
+    "lon": 100.64885,
+    "direction": 90.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Burapha Vithi - 02",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(EB) Bangna",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0025",
+    "type": "SPEED_CAMERA",
+    "lat": 13.60164,
+    "lon": 100.65007,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0026",
+    "type": "SPEED_CAMERA",
+    "lat": 13.73312,
+    "lon": 100.69952,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0027",
+    "type": "SPEED_CAMERA",
+    "lat": 13.7325579,
+    "lon": 100.7025032,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0028",
+    "type": "SPEED_CAMERA",
+    "lat": 13.7293,
+    "lon": 100.74,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0029",
+    "type": "SPEED_CAMERA",
+    "lat": 13.6554843,
+    "lon": 100.7553647,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0030",
+    "type": "SPEED_CAMERA",
+    "lat": 13.6815338,
+    "lon": 100.762223,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0031",
+    "type": "SPEED_CAMERA",
+    "lat": 14.255267,
+    "lon": 100.76645,
+    "direction": 90.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 1 - 06",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(EB) Chamaep",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0032",
+    "type": "SPEED_CAMERA",
+    "lat": 14.264383,
+    "lon": 100.783217,
+    "direction": 90.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 1 - 10",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(EB) Chamaep",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0033",
+    "type": "SPEED_CAMERA",
+    "lat": 13.6864381,
+    "lon": 100.8318638,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0034",
+    "type": "SPEED_CAMERA",
+    "lat": 14.3082056,
+    "lon": 100.8319697,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0035",
+    "type": "SPEED_CAMERA",
+    "lat": 14.3232188,
+    "lon": 100.8421068,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0036",
+    "type": "SPEED_CAMERA",
+    "lat": 14.382618,
+    "lon": 100.8859281,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0037",
+    "type": "SPEED_CAMERA",
+    "lat": 14.4115669,
+    "lon": 100.8917243,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0038",
+    "type": "SPEED_CAMERA",
+    "lat": 13.6327333,
+    "lon": 100.9016334,
+    "direction": 270.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 7 - 01",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(WB) Bang Bo",
+    "source_alert_speed_kmh": 105.012,
+    "source_proximity_m": 2000
+  },
+  {
+    "id": "gpi-speed-0039",
+    "type": "SPEED_CAMERA",
+    "lat": 14.5662968,
+    "lon": 100.9038654,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0040",
+    "type": "SPEED_CAMERA",
+    "lat": 14.4598108,
+    "lon": 100.9046667,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0041",
+    "type": "SPEED_CAMERA",
+    "lat": 14.4885684,
+    "lon": 100.9151411,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0042",
+    "type": "SPEED_CAMERA",
+    "lat": 13.1038834,
+    "lon": 100.9157,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0043",
+    "type": "SPEED_CAMERA",
+    "lat": 13.042675,
+    "lon": 100.927194,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0044",
+    "type": "SPEED_CAMERA",
+    "lat": 13.251917,
+    "lon": 100.933667,
+    "direction": 0.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 3 - 01",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(NB) Bangphra - Bangsaen",
+    "source_alert_speed_kmh": 90.0,
+    "source_proximity_m": 1400
+  },
+  {
+    "id": "gpi-speed-0045",
+    "type": "SPEED_CAMERA",
+    "lat": 13.2399747,
+    "lon": 100.9346581,
+    "direction": 0.0,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": "Hwy 3 - 02",
+    "source_files": [
+      "speed17.gpi",
+      "Thailand Speed Alert 18.gpi"
+    ],
+    "source_description": "(NB) Bangphra - Bangsaen",
+    "source_alert_speed_kmh": 90.0,
+    "source_proximity_m": 1400
+  },
+  {
+    "id": "gpi-speed-0046",
+    "type": "SPEED_CAMERA",
+    "lat": 13.27645,
+    "lon": 100.9360334,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0047",
+    "type": "SPEED_CAMERA",
+    "lat": 13.1987834,
+    "lon": 100.9388333,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0048",
+    "type": "SPEED_CAMERA",
+    "lat": 12.9874906,
+    "lon": 100.9460594,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0049",
+    "type": "SPEED_CAMERA",
+    "lat": 12.9777833,
+    "lon": 100.9615666,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0050",
+    "type": "SPEED_CAMERA",
+    "lat": 12.9734082,
+    "lon": 100.9831608,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0051",
+    "type": "SPEED_CAMERA",
+    "lat": 13.3070719,
+    "lon": 100.9936413,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0052",
+    "type": "SPEED_CAMERA",
+    "lat": 13.5511333,
+    "lon": 100.9987833,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0053",
+    "type": "SPEED_CAMERA",
+    "lat": 13.4346333,
+    "lon": 101.0019833,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0054",
+    "type": "SPEED_CAMERA",
+    "lat": 13.3240228,
+    "lon": 101.0144314,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
+    ],
+    "source_description": null,
+    "source_alert_speed_kmh": null,
+    "source_proximity_m": 1000
+  },
+  {
+    "id": "gpi-speed-0055",
+    "type": "SPEED_CAMERA",
+    "lat": 12.9083737,
+    "lon": 101.0297623,
+    "direction": null,
+    "speed_limit": null,
+    "warning_distance": 700.0,
+    "source": "GPI_IMPORT_2026-10-07",
+    "confidence": 0.7,
+    "label": null,
+    "source_files": [
+      "speed17.gpi"
